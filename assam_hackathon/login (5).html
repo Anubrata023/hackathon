@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Government of Assam Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F9F5F0;
+            --beige: #F2EAD3;
+            --assam-orange: #F4991A;
+            --assam-green: #344F1F;
+            --green-dark: #1a2910;
+            --green-light: #4a6f35;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --shadow-sm: 0 2px 8px rgba(52, 79, 31, 0.08);
+            --shadow-lg: 0 12px 40px rgba(52, 79, 31, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body.assamese-text {
+            font-family: 'Noto Sans Bengali', 'Poppins', sans-serif;
+        }
+
+        /* Decorative background pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(244, 153, 26, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(52, 79, 31, 0.06) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .language-switcher {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 100;
+            background: white;
+            border-radius: 50px;
+            padding: 8px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            gap: 5px;
+        }
+
+        .lang-btn {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, var(--assam-orange), var(--assam-green));
+            color: white;
+            box-shadow: 0 4px 12px rgba(244, 153, 26, 0.3);
+        }
+
+        .lang-btn:hover:not(.active) {
+            background: var(--beige);
+            color: var(--assam-green);
+        }
+
+        /* Voice guidance button */
+        .voice-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+            background: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .voice-btn:hover {
+            background: var(--assam-orange);
+            box-shadow: 0 4px 16px rgba(244, 153, 26, 0.4);
+            transform: scale(1.05);
+        }
+
+        .voice-btn.speaking {
+            background: var(--assam-orange);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(244, 153, 26, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 15px rgba(244, 153, 26, 0);
+            }
+        }
+
+        .voice-icon {
+            width: 28px;
+            height: 28px;
+            fill: var(--assam-green);
+            transition: fill 0.3s ease;
+        }
+
+        .voice-btn:hover .voice-icon,
+        .voice-btn.speaking .voice-icon {
+            fill: white;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: var(--shadow-lg);
+            border: 3px solid var(--beige);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--assam-orange), var(--assam-green));
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--assam-green), var(--green-light));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(52, 79, 31, 0.2);
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--assam-green);
+            margin-bottom: 8px;
+        }
+
+        .logo-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(244, 153, 26, 0.1), rgba(52, 79, 31, 0.1));
+            border-left: 4px solid var(--assam-orange);
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .method-selector {
+            margin-bottom: 30px;
+        }
+
+        .method-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .method-btn {
+            padding: 16px 10px;
+            border: 2px solid var(--beige);
+            background: white;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .method-btn .icon {
+            font-size: 24px;
+        }
+
+        .method-btn.active {
+            background: linear-gradient(135deg, var(--assam-orange), var(--assam-green));
+            color: white;
+            border-color: var(--assam-orange);
+            box-shadow: 0 4px 12px rgba(244, 153, 26, 0.3);
+        }
+
+        .method-btn:hover:not(.active) {
+            border-color: var(--assam-orange);
+            background: var(--beige);
+        }
+
+        .method-content {
+            display: none;
+        }
+
+        .method-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        input[type="tel"],
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 18px 20px;
+            font-size: 18px;
+            border: 2px solid var(--beige);
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--assam-orange);
+            box-shadow: 0 0 0 4px rgba(244, 153, 26, 0.1);
+        }
+
+        .phone-input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .country-code {
+            background: var(--beige);
+            border: 2px solid var(--beige);
+            border-radius: 12px;
+            padding: 18px 20px;
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--text-primary);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .phone-input-group input {
+            flex: 1;
+        }
+
+        .qr-upload-area {
+            border: 2px dashed var(--beige);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--cream);
+        }
+
+        .qr-upload-area:hover {
+            border-color: var(--assam-orange);
+            background: white;
+        }
+
+        .qr-upload-area.active {
+            border-color: var(--assam-green);
+            background: rgba(52, 79, 31, 0.05);
+        }
+
+        .qr-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            background: linear-gradient(135deg, var(--assam-orange), var(--assam-green));
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 6px 20px rgba(244, 153, 26, 0.3);
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 8px 28px rgba(244, 153, 26, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .help-text {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .help-link {
+            color: var(--assam-orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .help-link:hover {
+            color: var(--assam-green);
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--beige);
+        }
+
+        @media (max-width: 1203px) {
+            .language-switcher {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                border-radius: 0;
+                padding: 12px 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                justify-content: center;
+                z-index: 1000;
+                gap: 10px;
+            }
+
+            .lang-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .voice-btn {
+                position: fixed;
+                top: 8px;
+                left: 15px;
+                width: 45px;
+                height: 45px;
+                z-index: 1001;
+            }
+
+            .voice-icon {
+                width: 22px;
+                height: 22px;
+            }
+
+            .container {
+                margin-top: 80px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .login-card {
+                padding: 40px 30px;
+            }
+
+            .method-options {
+                grid-template-columns: 1fr;
+            }
+
+            .method-btn {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Voice Guidance Button -->
+    <button class="voice-btn" id="voiceBtn" aria-label="Voice Guidance">
+        <svg class="voice-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+        </svg>
+    </button>
+
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="en">English</button>
+        <button class="lang-btn" data-lang="hi">हिंदी</button>
+        <button class="lang-btn" data-lang="as">অসমীয়া</button>
+    </div>
+
+    <div class="container">
+        <div class="login-card">
+            <div class="logo-section">
+                <div class="logo">অ</div>
+                <div class="logo-text" data-translate="portalName">Government of Assam</div>
+                <div class="logo-subtitle" data-translate="portalSubtitle">Citizen Services Portal</div>
+            </div>
+
+            <div class="info-box" data-translate="loginInfo">
+                Choose your preferred login method to access government services.
+            </div>
+
+            <div class="method-selector">
+                <div class="method-options">
+                    <button class="method-btn active" data-method="mobile">
+                        <span class="icon">📱</span>
+                        <span data-translate="mobileOTP">Mobile OTP</span>
+                    </button>
+                    <button class="method-btn" data-method="aadhaar">
+                        <span class="icon">🆔</span>
+                        <span data-translate="aadhaar">Aadhaar</span>
+                    </button>
+                    <button class="method-btn" data-method="consumer">
+                        <span class="icon">⚡</span>
+                        <span data-translate="consumerNo">Consumer No.</span>
+                    </button>
+                </div>
+
+                <!-- Mobile OTP Method -->
+                <div class="method-content active" id="mobile-method">
+                    <form id="mobileForm">
+                        <div class="form-group">
+                            <label for="mobile-phone" data-translate="phoneLabel">Mobile Number</label>
+                            <div class="phone-input-group">
+                                <div class="country-code">+91</div>
+                                <input type="tel" id="mobile-phone" placeholder="9876543210" maxlength="10" pattern="[0-9]{10}" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn" data-translate="continueBtn">Continue</button>
+                    </form>
+                </div>
+
+                <!-- Aadhaar Method -->
+                <div class="method-content" id="aadhaar-method">
+                    <div class="form-group">
+                        <label data-translate="aadhaarQRLabel">Scan Aadhaar QR Code</label>
+                        <div class="qr-upload-area" id="qrUpload">
+                            <div class="qr-icon">📸</div>
+                            <div class="upload-text" data-translate="qrUploadText">Click to scan or upload QR code</div>
+                        </div>
+                        <input type="file" id="qrFile" accept="image/*" style="display: none;">
+                    </div>
+
+                    <div class="divider" data-translate="orText">OR</div>
+
+                    <form id="aadhaarForm">
+                        <div class="form-group">
+                            <label for="aadhaar-number" data-translate="aadhaarNumberLabel">Aadhaar Number</label>
+                            <input type="text" id="aadhaar-number" placeholder="XXXX XXXX XXXX" maxlength="14" pattern="[0-9\s]{14}" required>
+                        </div>
+                        <button type="submit" class="submit-btn" data-translate="continueBtn">Continue</button>
+                    </form>
+                </div>
+
+                <!-- Consumer Number Method -->
+                <div class="method-content" id="consumer-method">
+                    <form id="consumerForm">
+                        <div class="form-group">
+                            <label for="service-type" data-translate="serviceTypeLabel">Service Type</label>
+                            <select id="service-type" style="width: 100%; padding: 18px 20px; font-size: 18px; border: 2px solid var(--beige); border-radius: 12px; font-family: 'Poppins', sans-serif; background: white;">
+                                <option value="electricity" data-translate="electricity">Electricity</option>
+                                <option value="gas" data-translate="gas">Gas</option>
+                                <option value="water" data-translate="water">Water</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="consumer-number" data-translate="consumerNumberLabel">Consumer Number</label>
+                            <input type="text" id="consumer-number" placeholder="Enter your consumer number" required>
+                        </div>
+                        <button type="submit" class="submit-btn" data-translate="continueBtn">Continue</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="help-text">
+                <span data-translate="needHelp">Need help?</span>
+                <a href="#" class="help-link" data-translate="contactSupport">Contact Support</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language translations
+        const translations = {
+            en: {
+                portalName: "Government of Assam",
+                portalSubtitle: "Citizen Services Portal",
+                loginInfo: "Choose your preferred login method to access government services.",
+                mobileOTP: "Mobile OTP",
+                aadhaar: "Aadhaar",
+                consumerNo: "Consumer No.",
+                phoneLabel: "Mobile Number",
+                aadhaarQRLabel: "Scan Aadhaar QR Code",
+                qrUploadText: "Click to scan or upload QR code",
+                orText: "OR",
+                aadhaarNumberLabel: "Aadhaar Number",
+                serviceTypeLabel: "Service Type",
+                electricity: "Electricity",
+                gas: "Gas",
+                water: "Water",
+                consumerNumberLabel: "Consumer Number",
+                continueBtn: "Continue",
+                needHelp: "Need help?",
+                contactSupport: "Contact Support",
+                voiceInstruction: "Choose your preferred login method. You can use Mobile O T P, Aadhaar, or Consumer Number to login."
+            },
+            hi: {
+                portalName: "असम सरकार",
+                portalSubtitle: "नागरिक सेवा पोर्टल",
+                loginInfo: "सरकारी सेवाओं तक पहुंचने के लिए अपनी पसंदीदा लॉगिन विधि चुनें।",
+                mobileOTP: "मोबाइल OTP",
+                aadhaar: "आधार",
+                consumerNo: "उपभोक्ता नं.",
+                phoneLabel: "मोबाइल नंबर",
+                aadhaarQRLabel: "आधार QR कोड स्कैन करें",
+                qrUploadText: "QR कोड स्कैन या अपलोड करने के लिए क्लिक करें",
+                orText: "या",
+                aadhaarNumberLabel: "आधार नंबर",
+                serviceTypeLabel: "सेवा प्रकार",
+                electricity: "बिजली",
+                gas: "गैस",
+                water: "पानी",
+                consumerNumberLabel: "उपभोक्ता संख्या",
+                continueBtn: "जारी रखें",
+                needHelp: "मदद चाहिए?",
+                contactSupport: "सहायता से संपर्क करें",
+                voiceInstruction: "अपनी पसंदीदा लॉगिन विधि चुनें। आप लॉगिन करने के लिए मोबाइल ओ टी पी, आधार, या उपभोक्ता संख्या का उपयोग कर सकते हैं।"
+            },
+            as: {
+                portalName: "অসম চৰকাৰ",
+                portalSubtitle: "নাগৰিক সেৱা পৰ্টেল",
+                loginInfo: "চৰকাৰী সেৱা লাভ কৰিবলৈ আপোনাৰ পছন্দৰ লগইন পদ্ধতি বাছনি কৰক।",
+                mobileOTP: "মোবাইল OTP",
+                aadhaar: "আধাৰ",
+                consumerNo: "গ্ৰাহক নং",
+                phoneLabel: "মোবাইল নম্বৰ",
+                aadhaarQRLabel: "আধাৰ QR ক'ড স্কেন কৰক",
+                qrUploadText: "QR ক'ড স্কেন বা আপলোড কৰিবলৈ ক্লিক কৰক",
+                orText: "বা",
+                aadhaarNumberLabel: "আধাৰ নম্বৰ",
+                serviceTypeLabel: "সেৱাৰ প্ৰকাৰ",
+                electricity: "বিদ্যুৎ",
+                gas: "গেছ",
+                water: "পানী",
+                consumerNumberLabel: "গ্ৰাহক নম্বৰ",
+                continueBtn: "আগবাঢ়ক",
+                needHelp: "সহায়ৰ প্ৰয়োজন?",
+                contactSupport: "সহায়তাৰ সৈতে যোগাযোগ কৰক",
+                voiceInstruction: "আপোনাৰ পছন্দৰ লগইন পদ্ধতি বাছনি কৰক। আপুনি লগইন কৰিবলৈ মোবাইল ও টি পি, আধাৰ, বা গ্ৰাহক নম্বৰ ব্যৱহাৰ কৰিব পাৰে।"
+            }
+        };
+
+        let currentLang = 'en';
+        let isSpeaking = false;
+        let voicesLoaded = false;
+
+        // Voice guidance functionality
+        const voiceBtn = document.getElementById('voiceBtn');
+        const synth = window.speechSynthesis;
+
+        // Load voices
+        function loadVoices() {
+            const voices = synth.getVoices();
+            console.log('Available voices:', voices.length);
+            voices.forEach(voice => {
+                console.log(`Voice: ${voice.name}, Lang: ${voice.lang}`);
+            });
+            if (voices.length > 0) {
+                voicesLoaded = true;
+            }
+        }
+
+        // Ensure voices are loaded
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = loadVoices;
+        }
+        
+        // Load voices immediately and after a delay
+        setTimeout(loadVoices, 100);
+        loadVoices();
+
+        voiceBtn.addEventListener('click', () => {
+            // Resume audio context if suspended (required by some browsers)
+            if (synth.paused) {
+                synth.resume();
+            }
+            
+            if (isSpeaking) {
+                synth.cancel();
+                voiceBtn.classList.remove('speaking');
+                isSpeaking = false;
+            } else {
+                // Ensure voices are loaded
+                const voices = synth.getVoices();
+                if (voices.length === 0) {
+                    loadVoices();
+                }
+                speakText(translations[currentLang].voiceInstruction);
+            }
+        });
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                // Make sure we're not already speaking
+                if (synth.speaking) {
+                    console.log('Already speaking, canceling...');
+                    synth.cancel();
+                }
+                
+                // Small delay to ensure clean state
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    const voices = synth.getVoices();
+                    
+                    console.log('Attempting to speak:', text.substring(0, 50));
+                    console.log('Available voices:', voices.length);
+                    
+                    // Set language and find appropriate voice
+                    let selectedVoice = null;
+                    
+                    if (currentLang === 'hi') {
+                        utterance.lang = 'hi-IN';
+                        selectedVoice = voices.find(voice => 
+                            voice.lang.includes('hi') || voice.lang.includes('Hindi')
+                        );
+                    } else if (currentLang === 'as') {
+                        // Try Bengali for Assamese
+                        utterance.lang = 'bn-IN';
+                        selectedVoice = voices.find(voice => 
+                            voice.lang.includes('bn') || voice.lang.includes('Bengali')
+                        );
+                        console.log('Using Bengali voice for Assamese');
+                    } else {
+                        utterance.lang = 'en-IN';
+                        selectedVoice = voices.find(voice => 
+                            voice.lang.includes('en-IN') || voice.lang.includes('en_IN')
+                        );
+                        if (!selectedVoice) {
+                            selectedVoice = voices.find(voice => voice.lang.includes('en'));
+                        }
+                    }
+                    
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                        console.log('Selected voice:', selectedVoice.name, selectedVoice.lang);
+                    } else {
+                        console.log('No specific voice found, using default');
+                    }
+                    
+                    utterance.rate = 0.85;
+                    utterance.pitch = 1;
+                    utterance.volume = 1; // Maximum volume
+                    
+                    utterance.onstart = () => {
+                        voiceBtn.classList.add('speaking');
+                        isSpeaking = true;
+                        console.log('✓ Speech started successfully');
+                    };
+                    
+                    utterance.onend = () => {
+                        voiceBtn.classList.remove('speaking');
+                        isSpeaking = false;
+                        console.log('✓ Speech ended');
+                    };
+                    
+                    utterance.onerror = (event) => {
+                        console.error('✗ Speech error:', event.error, event);
+                        voiceBtn.classList.remove('speaking');
+                        isSpeaking = false;
+                        alert(`Speech error: ${event.error}. Please check your device volume and browser permissions.`);
+                    };
+                    
+                    // Speak
+                    try {
+                        synth.speak(utterance);
+                        console.log('Speech queued');
+                    } catch (error) {
+                        console.error('Error calling speak():', error);
+                        alert('Failed to start speech. Error: ' + error.message);
+                    }
+                }, 150);
+            } else {
+                alert('Sorry, your browser does not support text-to-speech.');
+            }
+        }
+
+        // Language switcher functionality
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLang = btn.dataset.lang;
+                updateLanguage();
+                
+                // Stop current speech and speak in new language
+                if (isSpeaking) {
+                    synth.cancel();
+                    voiceBtn.classList.remove('speaking');
+                    isSpeaking = false;
+                    setTimeout(() => speakText(translations[currentLang].voiceInstruction), 100);
+                }
+            });
+        });
+
+        function updateLanguage() {
+            const trans = translations[currentLang];
+            
+            // Update all elements with data-translate attribute
+            document.querySelectorAll('[data-translate]').forEach(elem => {
+                const key = elem.dataset.translate;
+                if (trans[key]) {
+                    elem.textContent = trans[key];
+                }
+            });
+
+            // Apply Assamese font if selected
+            if (currentLang === 'as') {
+                document.body.classList.add('assamese-text');
+            } else {
+                document.body.classList.remove('assamese-text');
+            }
+        }
+
+        // Method switching
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const method = btn.dataset.method;
+                
+                // Update buttons
+                document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Update content
+                document.querySelectorAll('.method-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${method}-method`).classList.add('active');
+            });
+        });
+
+        // QR Upload functionality
+        const qrUpload = document.getElementById('qrUpload');
+        const qrFile = document.getElementById('qrFile');
+
+        qrUpload.addEventListener('click', () => {
+            qrFile.click();
+        });
+
+        qrFile.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                qrUpload.classList.add('active');
+                qrUpload.querySelector('.upload-text').textContent = e.target.files[0].name;
+                qrUpload.querySelector('.qr-icon').textContent = '✓';
+            }
+        });
+
+        // Form submissions
+        document.getElementById('mobileForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('mobile-phone').value;
+            
+            if (phone.length === 10) {
+                alert(`OTP will be sent to: +91 ${phone}`);
+                // Add actual OTP logic here
+            }
+        });
+
+        document.getElementById('aadhaarForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const aadhaar = document.getElementById('aadhaar-number').value;
+            
+            if (aadhaar.replace(/\s/g, '').length === 12) {
+                alert(`Aadhaar verification initiated for: ${aadhaar}`);
+                // Add actual Aadhaar verification logic here
+            }
+        });
+
+        document.getElementById('consumerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const serviceType = document.getElementById('service-type').value;
+            const consumerNumber = document.getElementById('consumer-number').value;
+            
+            if (consumerNumber) {
+                alert(`Verifying ${serviceType} consumer number: ${consumerNumber}`);
+                // Add actual consumer number verification logic here
+            }
+        });
+
+        // Phone number input validation
+        document.getElementById('mobile-phone').addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+
+        // Aadhaar number formatting
+        document.getElementById('aadhaar-number').addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+            if (value.length > 12) value = value.slice(0, 12);
+            
+            // Format as XXXX XXXX XXXX
+            const formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+            e.target.value = formatted;
+        });
+    </script>
+</body>
+</html>
