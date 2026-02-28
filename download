@@ -1,35 +1,33 @@
-const router                    = require('express').Router();
-const ctrl                      = require('../controllers/adminController');
-const { authenticate, requireAdmin } = require('../middleware/auth');
+const express = require('express');
+const router = express.Router();
+const db = require('../db');
 
-// All admin routes require authentication + admin role
-router.use(authenticate, requireAdmin);
+/**
+ * GET /api/bills/:billId
+ * Get a single bill by its ID
+ */
+router.get('/:billId', (req, res) => {
+  const bill = db.prepare(`SELECT * FROM bills WHERE id = ?`).get(req.params.billId);
+  if (!bill) return res.status(404).json({ success: false, message: 'Bill not found.' });
+  res.json({ success: true, data: bill });
+});
 
-// Dashboard
-router.get('/dashboard',                       ctrl.getDashboard);
+/**
+ * GET /api/bills/consumer/:consumerId/month/:month
+ * Get bill for a specific consumer + month
+ */
+router.get('/consumer/:consumerId/month/:month', (req, res) => {
+  const { consumerId, month } = req.params;
 
-// Users
-router.get('/users',                           ctrl.getAllUsers);
-router.patch('/users/:id/role',                ctrl.updateUserRole);
+  const bill = db.prepare(`
+    SELECT * FROM bills
+    WHERE consumer_id = ? AND bill_month LIKE ?
+    ORDER BY due_date DESC
+    LIMIT 1
+  `).get(consumerId, `%${month}%`);
 
-// Connections
-router.get('/connections',                     ctrl.getAllConnections);
-router.patch('/connections/:id/status',        ctrl.updateConnectionStatus);
-
-// Service Requests
-router.get('/service-requests',                ctrl.getAllServiceRequests);
-router.patch('/service-requests/:id',          ctrl.updateServiceRequest);
-
-// Complaints
-router.get('/complaints',                      ctrl.getAllComplaints);
-router.patch('/complaints/:id',                ctrl.resolveComplaint);
-
-// Billing
-router.get('/bills',                           ctrl.getAllBills);
-router.post('/bills/generate',                 ctrl.generateBill);
-router.post('/bills/mark-overdue',             ctrl.markBillOverdue);
-
-// Notifications
-router.post('/notifications/broadcast',        ctrl.broadcastNotification);
+  if (!bill) return res.status(404).json({ success: false, message: 'Bill not found for that month.' });
+  res.json({ success: true, data: bill });
+});
 
 module.exports = router;

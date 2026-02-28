@@ -1,0 +1,238 @@
+const express = require('express');
+const router = express.Router();
+const { v4: uuidv4 } = require('uuid');
+const db = require('../db');
+
+// ── helpers ─────────────────────────────────────────────────────
+function generateTxnId() {
+  const now = new Date();
+  const ts = now.toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+  return `TXN-APDCL-${ts}-${Math.floor(1000 + Math.random() * 9000)}`;
+}
+
+function simulateGateway(method, detail) {
+  // Simulate 95% success, 5% random failure (for demo)
+  const shouldFail = Math.random() < 0.05;
+  if (shouldFail) {
+    return { success: false, code: 'GATEWAY_DECLINED', message: 'Payment declined by gateway. Please retry.' };
+  }
+
+  const refs = {
+    UPI:    `UPI${Date.now()}`,
+    Card:   `CARD${Date.now()}`,
+    'Net Banking': `NETBK${Date.now()}`,
+    Cash:   `CASH${Date.now()}`
+  };
+
+  return {
+    success: true,
+    gateway_ref: refs[method] || `GW${Date.now()}`,
+    processed_at: new Date().toISOString()
+  };
+}
+
+// ── Initiate Payment ─────────────────────────────────────────────
+/**
+ * POST /api/payments/initiate
+ * Body: { consumer_id, bill_id, amount, payment_method, payment_detail }
+ * Creates a PENDING payment record and returns a transaction_id
+ */
+router.post('/initiate', (req, res) => {
+  const { consumer_id, bill_id, amount, payment_method, payment_detail } = req.body;
+
+  // Validation
+  if (!consumer_id || !amount || !payment_method) {
+    return res.status(400).json({ success: false, message: 'consumer_id, amount, and payment_method are required.' });
+  }
+
+  const validMethods = ['UPI', 'Card', 'Net Banking', 'Cash'];
+  if (!validMethods.includes(payment_method)) {
+    return res.status(400).json({ success: false, message: `Invalid payment_method. Must be one of: ${validMethods.join(', ')}` });
+  }
+
+  const parsedAmount = parseFloat(amount);
+  if (isNaN(parsedAmount) || parsedAmount < 100) {
+    return res.status(400).json({ success: false, message: 'Amount must be a number and at least ₹100.' });
+  }
+
+  // Verify consumer exists
+  const consumer = db.prepare(`SELECT consumer_id FROM consumers WHERE consumer_id = ?`).get(consumer_id);
+  if (!consumer) return res.status(404).json({ success: false, message: 'Consumer not found.' });
+
+  // Verify bill if provided
+  if (bill_id) {
+    const bill = db.prepare(`SELECT id, status FROM bills WHERE id = ? AND consumer_id = ?`).get(bill_id, consumer_id);
+    if (!bill) return res.status(404).json({ success: false, message: 'Bill not found for this consumer.' });
+    if (bill.status === 'PAID') return res.status(409).json({ success: false, message: 'This bill has already been paid.' });
+  }
+
+  const transaction_id = generateTxnId();
+
+  db.prepare(`
+    INSERT INTO payments (transaction_id, consumer_id, bill_id, amount_paid, payment_method, payment_detail, status)
+    VALUES (?, ?, ?, ?, ?, ?, 'PENDING')
+  `).run(
+    transaction_id, consumer_id, bill_id || null, parsedAmount,
+    payment_method, payment_detail ? JSON.stringify(payment_detail) : null
+  );
+
+  res.status(201).json({
+    success: true,
+    message: 'Payment initiated. Proceed to confirm.',
+    data: { transaction_id, amount: parsedAmount, payment_method }
+  });
+});
+
+// ── Confirm / Process Payment ────────────────────────────────────
+/**
+ * POST /api/payments/confirm
+ * Body: { transaction_id }
+ * Simulates gateway processing and finalises the payment
+ */
+router.post('/confirm', (req, res) => {
+  const { transaction_id } = req.body;
+  if (!transaction_id) return res.status(400).json({ success: false, message: 'transaction_id is required.' });
+
+  const payment = db.prepare(`SELECT * FROM payments WHERE transaction_id = ?`).get(transaction_id);
+  if (!payment) return res.status(404).json({ success: false, message: 'Transaction not found.' });
+
+  if (payment.status === 'SUCCESS') {
+    return res.status(409).json({ success: false, message: 'This transaction has already been processed.' });
+  }
+  if (payment.status === 'FAILED') {
+    return res.status(409).json({ success: false, message: 'Transaction failed. Please initiate a new payment.' });
+  }
+
+  // Simulate gateway
+  const gatewayResult = simulateGateway(payment.payment_method, payment.payment_detail);
+
+  if (!gatewayResult.success) {
+    db.prepare(`UPDATE payments SET status = 'FAILED' WHERE transaction_id = ?`).run(transaction_id);
+    return res.status(402).json({ success: false, message: gatewayResult.message, code: gatewayResult.code });
+  }
+
+  const paidAt = new Date().toISOString().replace('T', ' ').split('.')[0];
+
+  // Mark payment SUCCESS
+  db.prepare(`
+    UPDATE payments
+    SET status = 'SUCCESS', gateway_ref = ?, paid_at = ?
+    WHERE transaction_id = ?
+  `).run(gatewayResult.gateway_ref, paidAt, transaction_id);
+
+  // Update bill status if bill_id provided
+  if (payment.bill_id) {
+    const bill = db.prepare(`SELECT * FROM bills WHERE id = ?`).get(payment.bill_id);
+    if (bill) {
+      const newStatus = payment.amount_paid >= bill.total_payable ? 'PAID' : 'PARTIALLY_PAID';
+      db.prepare(`UPDATE bills SET status = ? WHERE id = ?`).run(newStatus, payment.bill_id);
+    }
+  }
+
+  // Get bill month for history
+  let bill_month = 'Unknown';
+  if (payment.bill_id) {
+    const bill = db.prepare(`SELECT bill_month FROM bills WHERE id = ?`).get(payment.bill_id);
+    if (bill) bill_month = bill.bill_month;
+  }
+
+  // Insert into payment_history
+  db.prepare(`
+    INSERT INTO payment_history (consumer_id, bill_month, amount_paid, payment_method, transaction_id, status, paid_at)
+    VALUES (?, ?, ?, ?, ?, 'PAID', ?)
+  `).run(payment.consumer_id, bill_month, payment.amount_paid, payment.payment_method, transaction_id, paidAt);
+
+  // Fetch updated payment
+  const updatedPayment = db.prepare(`SELECT * FROM payments WHERE transaction_id = ?`).get(transaction_id);
+  const consumer = db.prepare(`SELECT name, consumer_id FROM consumers WHERE consumer_id = ?`).get(payment.consumer_id);
+
+  res.json({
+    success: true,
+    message: 'Payment successful! Receipt generated.',
+    data: {
+      transaction_id,
+      gateway_ref: gatewayResult.gateway_ref,
+      consumer_name: consumer?.name,
+      consumer_id: payment.consumer_id,
+      amount_paid: payment.amount_paid,
+      payment_method: payment.payment_method,
+      bill_month,
+      paid_at: paidAt,
+      receipt_number: `RCPT-${transaction_id}`
+    }
+  });
+});
+
+// ── Get Payment Status ───────────────────────────────────────────
+/**
+ * GET /api/payments/status/:transactionId
+ */
+router.get('/status/:transactionId', (req, res) => {
+  const payment = db.prepare(`SELECT * FROM payments WHERE transaction_id = ?`).get(req.params.transactionId);
+  if (!payment) return res.status(404).json({ success: false, message: 'Transaction not found.' });
+
+  res.json({ success: true, data: payment });
+});
+
+// ── Get Receipt ──────────────────────────────────────────────────
+/**
+ * GET /api/payments/receipt/:transactionId
+ */
+router.get('/receipt/:transactionId', (req, res) => {
+  const payment = db.prepare(`SELECT * FROM payments WHERE transaction_id = ?`).get(req.params.transactionId);
+  if (!payment) return res.status(404).json({ success: false, message: 'Receipt not found.' });
+  if (payment.status !== 'SUCCESS') return res.status(400).json({ success: false, message: 'Payment not yet successful.' });
+
+  const consumer = db.prepare(`SELECT * FROM consumers WHERE consumer_id = ?`).get(payment.consumer_id);
+  const bill = payment.bill_id ? db.prepare(`SELECT * FROM bills WHERE id = ?`).get(payment.bill_id) : null;
+
+  res.json({
+    success: true,
+    data: {
+      receipt_number: `RCPT-${payment.transaction_id}`,
+      transaction_id: payment.transaction_id,
+      gateway_ref: payment.gateway_ref,
+      consumer: {
+        name: consumer?.name,
+        consumer_id: consumer?.consumer_id,
+        meter_number: consumer?.meter_number,
+        address: consumer?.address,
+        division: consumer?.division
+      },
+      bill: bill ? {
+        bill_month: bill.bill_month,
+        billing_period: bill.billing_period,
+        units_consumed: bill.units_consumed,
+        total_payable: bill.total_payable
+      } : null,
+      amount_paid: payment.amount_paid,
+      payment_method: payment.payment_method,
+      paid_at: payment.paid_at,
+      issued_by: 'APDCL — Assam Power Distribution Company Ltd.',
+      note: 'This is a computer-generated receipt and does not require a physical signature.'
+    }
+  });
+});
+
+// ── List all payments (admin use) ────────────────────────────────
+/**
+ * GET /api/payments?consumer_id=&status=&limit=&offset=
+ */
+router.get('/', (req, res) => {
+  const { consumer_id, status, limit = 20, offset = 0 } = req.query;
+  let query = `SELECT * FROM payments WHERE 1=1`;
+  const params = [];
+
+  if (consumer_id) { query += ` AND consumer_id = ?`; params.push(consumer_id); }
+  if (status) { query += ` AND status = ?`; params.push(status.toUpperCase()); }
+
+  query += ` ORDER BY created_at DESC LIMIT ? OFFSET ?`;
+  params.push(Number(limit), Number(offset));
+
+  const payments = db.prepare(query).all(...params);
+  const total = db.prepare(`SELECT COUNT(*) as c FROM payments WHERE 1=1${consumer_id ? ' AND consumer_id=?' : ''}${status ? ' AND status=?' : ''}`).get(...params.slice(0, -2)).c;
+
+  res.json({ success: true, data: payments, meta: { total, limit: Number(limit), offset: Number(offset) } });
+});
+
+module.exports = router;
