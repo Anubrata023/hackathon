@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Meter Consumption — Government of Assam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════════ */
+    :root {
+      --white:        #FFFFFF;
+      --charcoal:     #1C231F;
+      --forest:       #3B6939;
+      --leaf:         #5CBA60;
+      --amber:        #F5A623;
+      --soft-gray:    #E2E8F0;
+      --mid-gray:     #8A9BA8;
+      --light-green:  #EBF5EC;
+
+      --forest-dark:  #2a5028;
+      --forest-deep:  #1e3a1c;
+      --amber-light:  #FEF3DC;
+      --card-border:  rgba(59,105,57,0.13);
+      --red:          #dc2626;
+      --red-light:    #fee2e2;
+      --blue:         #1d4ed8;
+      --blue-light:   #dbeafe;
+
+      --shadow-sm:    0 1px 3px rgba(28,35,31,0.06), 0 3px 10px rgba(59,105,57,0.06);
+      --shadow-md:    0 2px 8px rgba(28,35,31,0.07), 0 10px 28px rgba(59,105,57,0.10);
+      --shadow-lg:    0 4px 14px rgba(28,35,31,0.09), 0 18px 44px rgba(59,105,57,0.14);
+
+      --radius:       11px;
+      --ease:         0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #f2f5f2;
+      color: var(--charcoal);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: var(--forest); text-decoration: none; }
+    a:hover { color: var(--leaf); }
+
+    /* ═══════════════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════════════ */
+    .navbar {
+      background: var(--white);
+      border-bottom: 2.5px solid var(--forest);
+      position: sticky; top: 0; z-index: 600;
+      box-shadow: 0 2px 10px rgba(28,35,31,0.09);
+    }
+    .navbar-top {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 1.25rem; height: 54px;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0.55rem; flex-shrink: 0; text-decoration: none; }
+    .nav-brand-icon {
+      width: 30px; height: 30px;
+      background: linear-gradient(145deg, var(--forest), var(--forest-dark));
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 7px rgba(59,105,57,0.35); flex-shrink: 0;
+    }
+    .nav-brand-icon svg { width: 17px; height: 17px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-brand-text { font-size: 0.9rem; font-weight: 600; color: var(--charcoal); letter-spacing: -0.01em; line-height: 1.2; white-space: nowrap; }
+    .nav-brand-text small { display: block; font-size: 0.63rem; font-weight: 400; color: var(--mid-gray); letter-spacing: 0.02em; }
+
+    .nav-hamburger {
+      display: none; flex-shrink: 0; background: none;
+      border: 1.5px solid var(--soft-gray); border-radius: 7px;
+      width: 36px; height: 34px; cursor: pointer;
+      align-items: center; justify-content: center;
+      transition: border-color var(--ease), background var(--ease); margin-left: 0.25rem;
+    }
+    .nav-hamburger:hover { border-color: var(--forest); background: var(--light-green); }
+    .nav-hamburger svg { width: 18px; height: 18px; stroke: var(--charcoal); fill: none; stroke-width: 2; stroke-linecap: round; transition: stroke var(--ease); }
+    .nav-hamburger:hover svg { stroke: var(--forest); }
+    .navbar-links-wrap { background: var(--white); border-top: 1px solid var(--soft-gray); }
+    .navbar-links {
+      max-width: 1280px; margin: 0 auto; padding: 0 1.25rem;
+      display: flex; align-items: center; gap: 0.1rem; height: 36px; list-style: none;
+    }
+    .navbar-links li a {
+      display: block; font-size: 0.77rem; font-weight: 500; color: var(--mid-gray);
+      padding: 0.28rem 0.68rem; border-radius: 6px; white-space: nowrap;
+      position: relative; transition: background var(--ease), color var(--ease);
+    }
+    .navbar-links li a::after {
+      content: ''; position: absolute; bottom: -1px; left: 50%; right: 50%;
+      height: 2px; background: var(--forest); border-radius: 2px 2px 0 0;
+      transition: left var(--ease), right var(--ease);
+    }
+    .navbar-links li a:hover { background: var(--light-green); color: var(--forest); }
+    .navbar-links li a:hover::after { left: 10%; right: 10%; }
+    .navbar-links li a.active { background: var(--light-green); color: var(--forest); font-weight: 600; }
+    .navbar-links li a.active::after { left: 10%; right: 10%; }
+
+    @media (max-width: 900px) {
+      .navbar-links-wrap { display: none; }
+      .nav-hamburger { display: flex; }
+      .navbar-links-wrap.open { display: block; border-top: 1px solid var(--soft-gray); border-bottom: 2px solid var(--forest); box-shadow: 0 8px 24px rgba(28,35,31,0.12); animation: dropDown 0.2s ease-out; }
+      .navbar-links.open { height: auto; flex-direction: column; align-items: stretch; padding: 0.5rem 1rem 0.7rem; gap: 2px; }
+      .navbar-links.open li a { padding: 0.6rem 0.85rem; font-size: 0.86rem; border-radius: 8px; }
+      .navbar-links.open li a::after { display: none; }
+    }
+    @media (max-width: 560px) { .nav-brand-text { font-size: 0.83rem; } }
+    @keyframes dropDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ═══════════════════════════════════════════════
+       HERO BAND
+    ═══════════════════════════════════════════════ */
+    .hero-band {
+      background: linear-gradient(135deg, var(--charcoal) 0%, #253327 55%, var(--forest-deep) 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero-band::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 65% 70% at 88% 50%, rgba(59,105,57,0.38) 0%, transparent 70%),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 0, transparent 36px);
+    }
+    .hero-band::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--forest) 0%, var(--leaf) 45%, var(--amber) 100%);
+    }
+    .hero-inner {
+      max-width: 1280px; margin: 0 auto; padding: 2.2rem 1.5rem;
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+    }
+    .hero-eyebrow {
+      font-size: 0.67rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--leaf); opacity: 0.9; display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.42rem;
+    }
+    .hero-eyebrow::before { content: ''; width: 18px; height: 1.5px; background: var(--leaf); border-radius: 2px; }
+    .hero-title { font-family: 'DM Serif Display', serif; font-size: 1.85rem; line-height: 1.2; color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.4rem; }
+    .hero-sub { font-size: 0.84rem; font-weight: 300; color: rgba(235,245,236,0.68); max-width: 420px; line-height: 1.6; }
+    .hero-stats {
+      display: flex; flex-shrink: 0;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius); backdrop-filter: blur(6px); overflow: hidden;
+    }
+    .hero-stat { padding: 0.95rem 1.4rem; text-align: center; border-right: 1px solid rgba(255,255,255,0.09); }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-num { font-family: 'DM Serif Display', serif; font-size: 1.55rem; color: var(--amber); line-height: 1; }
+    .hero-stat-label { font-size: 0.63rem; font-weight: 500; color: rgba(235,245,236,0.58); letter-spacing: 0.07em; text-transform: uppercase; margin-top: 0.18rem; }
+    @media (max-width: 720px) { .hero-stats { width: 100%; } .hero-stat { flex: 1; padding: 0.7rem 0.5rem; } }
+
+    /* ═══════════════════════════════════════════════
+       BREADCRUMB
+    ═══════════════════════════════════════════════ */
+    .breadcrumb-bar {
+      background: var(--white); border-bottom: 1px solid var(--soft-gray);
+      padding: 0.55rem 0;
+    }
+    .breadcrumb {
+      max-width: 1280px; margin: 0 auto; padding: 0 1.5rem;
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.73rem; color: var(--mid-gray);
+    }
+    .breadcrumb a { color: var(--forest); font-weight: 500; }
+    .breadcrumb a:hover { color: var(--leaf); }
+    .breadcrumb-sep { opacity: 0.4; }
+    .breadcrumb-current { color: var(--charcoal); font-weight: 500; }
+
+    /* ═══════════════════════════════════════════════
+       MAIN
+    ═══════════════════════════════════════════════ */
+    .main { max-width: 1280px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .section-hdr { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1rem; }
+    .section-label { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--forest); margin-bottom: 0.17rem; }
+    .section-title { font-family: 'DM Serif Display', serif; font-size: 1.35rem; color: var(--charcoal); letter-spacing: -0.02em; }
+    .section-link { font-size: 0.77rem; font-weight: 600; color: var(--forest); white-space: nowrap; display: flex; align-items: center; gap: 0.3rem; transition: gap var(--ease), color var(--ease); }
+    .section-link:hover { gap: 0.55rem; color: var(--leaf); }
+    .section-link svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ═══════════════════════════════════════════════
+       CONSUMER LOOKUP BANNER
+    ═══════════════════════════════════════════════ */
+    .lookup-banner {
+      background: linear-gradient(135deg, var(--forest), var(--forest-dark));
+      border-radius: var(--radius);
+      padding: 1.3rem 1.6rem;
+      display: flex; align-items: center; gap: 1.2rem;
+      margin-bottom: 2.25rem;
+      box-shadow: var(--shadow-md); flex-wrap: wrap;
+    }
+    .lkp-icon {
+      width: 44px; height: 44px; background: rgba(255,255,255,0.12);
+      border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .lkp-icon svg { width: 22px; height: 22px; stroke: var(--amber); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .lkp-text { flex: 1; min-width: 160px; }
+    .lkp-text strong { font-size: 0.92rem; font-weight: 600; color: var(--white); display: block; }
+    .lkp-text span { font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+    .lkp-form { display: flex; gap: 0.5rem; flex-shrink: 0; flex-wrap: wrap; }
+    .lkp-form input {
+      height: 36px; padding: 0 0.9rem; border-radius: 7px;
+      border: 1.5px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.10);
+      color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; outline: none;
+      width: 210px; transition: border-color var(--ease), background var(--ease);
+    }
+    .lkp-form input::placeholder { color: rgba(255,255,255,0.45); }
+    .lkp-form input:focus { border-color: var(--leaf); background: rgba(255,255,255,0.15); }
+    .lkp-form button {
+      height: 36px; padding: 0 1.1rem; border-radius: 7px; border: none;
+      background: var(--amber); color: var(--charcoal);
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 700;
+      cursor: pointer; white-space: nowrap; transition: opacity var(--ease);
+    }
+    .lkp-form button:hover { opacity: 0.88; }
+
+    /* ═══════════════════════════════════════════════
+       CONSUMER INFO CARD
+    ═══════════════════════════════════════════════ */
+    .consumer-card {
+      background: var(--white); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow-sm); margin-bottom: 1.75rem;
+      display: flex; align-items: center; gap: 1.4rem; flex-wrap: wrap;
+      animation: fadeSlideUp 0.38s ease-out both;
+    }
+    .consumer-avatar {
+      width: 52px; height: 52px; border-radius: 12px;
+      background: linear-gradient(145deg, var(--forest), var(--leaf));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--white);
+      flex-shrink: 0; box-shadow: 0 3px 10px rgba(59,105,57,0.35);
+    }
+    .consumer-details { flex: 1; min-width: 200px; }
+    .consumer-name { font-size: 1.0rem; font-weight: 600; color: var(--charcoal); letter-spacing: -0.01em; }
+    .consumer-meta { font-size: 0.77rem; color: var(--mid-gray); margin-top: 0.18rem; }
+    .consumer-meta span { margin-right: 0.9rem; }
+    .consumer-meta strong { color: var(--charcoal); font-weight: 600; }
+    .consumer-tags { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.55rem; }
+    .ctag {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.18rem 0.5rem; border-radius: 4px;
+    }
+    .ctag-green { background: var(--light-green); color: var(--forest); }
+    .ctag-amber { background: var(--amber-light); color: #92400e; }
+    .ctag-blue  { background: var(--blue-light); color: var(--blue); }
+    .consumer-meter { margin-left: auto; text-align: right; flex-shrink: 0; }
+    .meter-id { font-size: 0.72rem; color: var(--mid-gray); }
+    .meter-reading { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--forest); line-height: 1; }
+    .meter-unit { font-size: 0.7rem; color: var(--mid-gray); }
+    .meter-status { display: flex; align-items: center; gap: 0.35rem; margin-top: 0.35rem; font-size: 0.7rem; color: var(--forest); font-weight: 600; justify-content: flex-end; }
+    .meter-dot { width: 7px; height: 7px; background: var(--leaf); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.3); } }
+
+    /* ═══════════════════════════════════════════════
+       KPI STAT CARDS
+    ═══════════════════════════════════════════════ */
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1rem; margin-bottom: 1.75rem;
+    }
+    @media (max-width: 900px) { .kpi-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 480px) { .kpi-grid { grid-template-columns: 1fr; } }
+
+    .kpi-card {
+      background: var(--white); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 1.2rem 1.25rem;
+      box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+      transition: box-shadow var(--ease), transform var(--ease);
+      animation: fadeSlideUp 0.42s ease-out both;
+      cursor: default;
+    }
+    .kpi-card:nth-child(1){animation-delay:.05s} .kpi-card:nth-child(2){animation-delay:.10s}
+    .kpi-card:nth-child(3){animation-delay:.15s} .kpi-card:nth-child(4){animation-delay:.20s}
+    .kpi-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .kpi-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--forest), var(--leaf));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+    }
+    .kpi-card:hover::after { transform: scaleX(1); }
+    .kpi-card-amber::after { background: linear-gradient(90deg, var(--amber), #f9c74f); }
+    .kpi-card-red::after   { background: linear-gradient(90deg, var(--red), #f87171); }
+    .kpi-card-blue::after  { background: linear-gradient(90deg, var(--blue), #60a5fa); }
+
+    .kpi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .kpi-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--light-green); display: flex; align-items: center; justify-content: center; }
+    .kpi-icon svg { width: 17px; height: 17px; stroke: var(--forest); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .kpi-icon-amber { background: var(--amber-light); }
+    .kpi-icon-amber svg { stroke: #92400e; }
+    .kpi-icon-red { background: var(--red-light); }
+    .kpi-icon-red svg { stroke: var(--red); }
+    .kpi-icon-blue { background: var(--blue-light); }
+    .kpi-icon-blue svg { stroke: var(--blue); }
+    .kpi-change { font-size: 0.67rem; font-weight: 600; padding: 0.15rem 0.42rem; border-radius: 20px; }
+    .kpi-change-up   { background: var(--red-light); color: var(--red); }
+    .kpi-change-down { background: var(--light-green); color: var(--forest); }
+    .kpi-change-same { background: var(--soft-gray); color: var(--mid-gray); }
+    .kpi-value { font-family: 'DM Serif Display', serif; font-size: 1.9rem; color: var(--charcoal); line-height: 1; letter-spacing: -0.02em; }
+    .kpi-unit { font-size: 0.75rem; color: var(--mid-gray); font-family: 'DM Sans', sans-serif; }
+    .kpi-label { font-size: 0.73rem; color: var(--mid-gray); margin-top: 0.3rem; }
+
+    /* ═══════════════════════════════════════════════
+       MAIN CONTENT GRID
+    ═══════════════════════════════════════════════ */
+    .content-grid {
+      display: grid; grid-template-columns: 1fr 310px;
+      gap: 1.2rem; margin-bottom: 1.75rem;
+    }
+    @media (max-width: 960px) { .content-grid { grid-template-columns: 1fr; } }
+
+    /* ═══════════════════════════════════════════════
+       CONSUMPTION CHART CARD
+    ═══════════════════════════════════════════════ */
+    .chart-card {
+      background: var(--white); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 1.4rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      animation: fadeSlideUp 0.45s ease-out both; animation-delay: 0.1s;
+    }
+    .chart-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.6rem; }
+    .chart-title-grp .chart-label { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--forest); margin-bottom: 0.12rem; }
+    .chart-title-grp .chart-title { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: var(--charcoal); }
+    .period-tabs { display: flex; gap: 0.3rem; }
+    .period-tab {
+      height: 27px; padding: 0 0.7rem;
+      border-radius: 6px; border: 1.5px solid var(--soft-gray);
+      background: var(--white); color: var(--mid-gray);
+      font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500;
+      cursor: pointer; transition: all var(--ease);
+    }
+    .period-tab:hover { border-color: var(--forest); color: var(--forest); background: var(--light-green); }
+    .period-tab.active { background: var(--forest); border-color: var(--forest); color: var(--white); }
+
+    /* SVG Bar Chart */
+    .chart-wrap { position: relative; width: 100%; }
+    .chart-svg { width: 100%; height: 200px; display: block; }
+    .bar-group rect { rx: 4; transition: opacity 0.2s; }
+    .bar-group:hover rect { opacity: 0.82; }
+    .chart-tooltip {
+      position: absolute; background: var(--charcoal); color: var(--white);
+      font-size: 0.7rem; padding: 0.35rem 0.6rem; border-radius: 6px;
+      pointer-events: none; opacity: 0; transition: opacity 0.15s;
+      white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .chart-tooltip.show { opacity: 1; }
+
+    .chart-legend { display: flex; gap: 1.2rem; margin-top: 0.9rem; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; color: var(--mid-gray); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+    /* Avg line */
+    .avg-line-label { font-size: 0.65rem; fill: var(--amber); font-family: 'DM Sans', sans-serif; font-weight: 600; }
+
+    /* ═══════════════════════════════════════════════
+       BILLING SUMMARY CARD
+    ═══════════════════════════════════════════════ */
+    .bill-card {
+      background: var(--white); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 1.4rem 1.3rem;
+      box-shadow: var(--shadow-sm);
+      animation: fadeSlideUp 0.45s ease-out both; animation-delay: 0.15s;
+      display: flex; flex-direction: column;
+    }
+    .bill-due-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      background: var(--red-light); color: var(--red);
+      padding: 0.22rem 0.55rem; border-radius: 5px; margin-bottom: 0.7rem; width: fit-content;
+    }
+    .bill-due-badge svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+    .bill-amount { font-family: 'DM Serif Display', serif; font-size: 2.1rem; color: var(--charcoal); line-height: 1; letter-spacing: -0.02em; }
+    .bill-amount-label { font-size: 0.73rem; color: var(--mid-gray); margin-top: 0.18rem; margin-bottom: 1rem; }
+    .bill-divider { height: 1px; background: var(--soft-gray); margin-bottom: 0.9rem; }
+    .bill-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+    .bill-row:last-of-type { margin-bottom: 0; }
+    .bill-row-label { font-size: 0.77rem; color: var(--mid-gray); }
+    .bill-row-value { font-size: 0.77rem; font-weight: 600; color: var(--charcoal); }
+    .bill-row-value.highlight { color: var(--red); }
+    .bill-row-value.green { color: var(--forest); }
+    .bill-pay-btn {
+      display: block; width: 100%; margin-top: 1.1rem;
+      padding: 0.7rem 0; border-radius: 8px; border: none;
+      background: linear-gradient(135deg, var(--forest), var(--forest-dark));
+      color: var(--white); font-family: 'DM Sans', sans-serif;
+      font-size: 0.84rem; font-weight: 600; cursor: pointer;
+      transition: opacity var(--ease), box-shadow var(--ease);
+      box-shadow: 0 3px 10px rgba(59,105,57,0.35);
+    }
+    .bill-pay-btn:hover { opacity: 0.9; box-shadow: 0 5px 18px rgba(59,105,57,0.45); }
+    .bill-download { display: block; width: 100%; margin-top: 0.5rem;
+      padding: 0.62rem 0; border-radius: 8px; cursor: pointer;
+      border: 1.5px solid var(--soft-gray); background: transparent;
+      font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500;
+      color: var(--charcoal); transition: all var(--ease);
+    }
+    .bill-download:hover { border-color: var(--forest); color: var(--forest); background: var(--light-green); }
+    .bill-tariff-note { font-size: 0.67rem; color: var(--mid-gray); margin-top: 0.8rem; line-height: 1.5; padding: 0.55rem 0.7rem; background: #f6f8f6; border-radius: 6px; }
+
+    /* ═══════════════════════════════════════════════
+       LOWER GRID: HISTORY + APPLIANCE
+    ═══════════════════════════════════════════════ */
+    .lower-grid {
+      display: grid; grid-template-columns: 1fr;
+      gap: 1.2rem; margin-bottom: 1.75rem;
+    }
+
+    /* ── Consumption History ── */
+    .history-card {
+      background: var(--white); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 1.4rem 1.35rem;
+      box-shadow: var(--shadow-sm);
+      animation: fadeSlideUp 0.48s ease-out both; animation-delay: 0.18s;
+    }
+    .history-tabs { display: flex; gap: 0.3rem; margin-bottom: 1rem; }
+    .htab {
+      height: 27px; padding: 0 0.7rem; border-radius: 6px;
+      border: 1.5px solid var(--soft-gray); background: var(--white); color: var(--mid-gray);
+      font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500; cursor: pointer;
+      transition: all var(--ease);
+    }
+    .htab:hover { border-color: var(--forest); color: var(--forest); background: var(--light-green); }
+    .htab.active { background: var(--forest); border-color: var(--forest); color: var(--white); }
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--mid-gray); padding: 0.4rem 0; border-bottom: 1px solid var(--soft-gray); text-align: left; }
+    .history-table th:last-child, .history-table td:last-child { text-align: right; }
+    .history-table td { font-size: 0.78rem; color: var(--charcoal); padding: 0.62rem 0; border-bottom: 1px solid rgba(226,232,240,0.55); vertical-align: middle; }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: #fafcfa; }
+    .ht-units { font-weight: 600; }
+    .ht-bar-wrap { display: flex; align-items: center; gap: 0.5rem; }
+    .ht-bar { height: 5px; border-radius: 3px; background: linear-gradient(90deg, var(--forest), var(--leaf)); transition: width 0.5s ease; }
+    .ht-status { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.05em; padding: 0.16rem 0.4rem; border-radius: 4px; }
+    .ht-paid { background: var(--light-green); color: var(--forest); }
+    .ht-pending { background: var(--amber-light); color: #92400e; }
+
+
+
+    /* ═══════════════════════════════════════════════
+       ALERTS + TIPS ROW
+    ═══════════════════════════════════════════════ */
+    .bottom-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.2rem; margin-bottom: 1.75rem;
+    }
+    @media (max-width: 800px) { .bottom-grid { grid-template-columns: 1fr; } }
+
+    /* ── Alerts ── */
+    .alerts-card {
+      background: var(--white); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 1.4rem 1.35rem;
+      box-shadow: var(--shadow-sm);
+      animation: fadeSlideUp 0.5s ease-out both; animation-delay: 0.25s;
+    }
+    .alert-item {
+      display: flex; gap: 0.85rem; padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(226,232,240,0.55);
+    }
+    .alert-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .alert-item:first-child { padding-top: 0.4rem; }
+    .alert-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 0.3rem; }
+    .alert-dot-red { background: var(--red); box-shadow: 0 0 0 3px rgba(220,38,38,0.15); }
+    .alert-dot-amber { background: var(--amber); box-shadow: 0 0 0 3px rgba(245,166,35,0.18); }
+    .alert-dot-green { background: var(--leaf); box-shadow: 0 0 0 3px rgba(92,186,96,0.18); }
+    .alert-dot-blue { background: var(--blue); box-shadow: 0 0 0 3px rgba(29,78,216,0.12); }
+    .alert-body { flex: 1; }
+    .alert-text { font-size: 0.79rem; color: var(--charcoal); line-height: 1.45; margin-bottom: 0.2rem; }
+    .alert-text strong { font-weight: 600; }
+    .alert-meta { font-size: 0.67rem; color: var(--mid-gray); }
+
+    /* ── Energy Tips ── */
+    .tips-card {
+      background: linear-gradient(145deg, var(--light-green), #dff0e0);
+      border: 1px solid rgba(92,186,96,0.22); border-radius: var(--radius);
+      padding: 1.4rem 1.35rem; box-shadow: var(--shadow-sm);
+      animation: fadeSlideUp 0.5s ease-out both; animation-delay: 0.3s;
+    }
+    .tips-header { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem; }
+    .tips-header-icon { width: 36px; height: 36px; background: var(--forest); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .tips-header-icon svg { width: 18px; height: 18px; stroke: var(--amber); fill: none; stroke-width: 1.8; }
+    .tips-header-label { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--forest); }
+    .tips-header-title { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--charcoal); }
+    .tip-item { display: flex; gap: 0.75rem; margin-bottom: 0.85rem; align-items: flex-start; }
+    .tip-item:last-child { margin-bottom: 0; }
+    .tip-num { width: 22px; height: 22px; background: var(--forest); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--white); flex-shrink: 0; margin-top: 0.05rem; }
+    .tip-text { font-size: 0.78rem; color: #2d4a2b; line-height: 1.5; }
+    .tip-text strong { color: var(--forest-dark); font-weight: 600; }
+    .tip-savings { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.67rem; font-weight: 700; color: var(--forest); background: rgba(59,105,57,0.12); border-radius: 4px; padding: 0.12rem 0.38rem; margin-top: 0.2rem; margin-left: 0; }
+
+    /* ═══════════════════════════════════════════════
+       TARIFF INFO STRIP
+    ═══════════════════════════════════════════════ */
+    .tariff-strip {
+      background: var(--white); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow-sm); margin-bottom: 1.75rem;
+      animation: fadeSlideUp 0.5s ease-out both; animation-delay: 0.28s;
+    }
+    .tariff-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-top: 1rem; }
+    @media (max-width: 720px) { .tariff-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 400px) { .tariff-grid { grid-template-columns: 1fr; } }
+    .tariff-slab { padding: 0.85rem; background: #f6f8f6; border-radius: 8px; border: 1.5px solid var(--soft-gray); text-align: center; }
+    .tariff-slab-range { font-size: 0.68rem; color: var(--mid-gray); margin-bottom: 0.25rem; }
+    .tariff-slab-rate { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--forest); }
+    .tariff-slab-unit { font-size: 0.65rem; color: var(--mid-gray); }
+    .tariff-slab.current-slab { background: var(--light-green); border-color: var(--leaf); }
+    .tariff-slab.current-slab .tariff-slab-rate { color: var(--forest-dark); }
+    .current-badge { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--forest); color: var(--white); padding: 0.12rem 0.4rem; border-radius: 3px; display: inline-block; margin-bottom: 0.25rem; }
+
+    /* ═══════════════════════════════════════════════
+       DOWNLOAD + REPORT ROW
+    ═══════════════════════════════════════════════ */
+    .action-strip {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 0.85rem;
+      margin-bottom: 1.75rem;
+    }
+    @media (max-width: 800px) { .action-strip { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 480px) { .action-strip { grid-template-columns: 1fr; } }
+    .action-tile {
+      background: var(--white); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 1rem 1.1rem;
+      box-shadow: var(--shadow-sm); cursor: pointer;
+      display: flex; align-items: center; gap: 0.75rem;
+      transition: box-shadow var(--ease), transform var(--ease), border-color var(--ease);
+      animation: fadeSlideUp 0.5s ease-out both;
+    }
+    .action-tile:nth-child(1){animation-delay:.30s} .action-tile:nth-child(2){animation-delay:.35s}
+    .action-tile:nth-child(3){animation-delay:.40s} .action-tile:nth-child(4){animation-delay:.45s}
+    .action-tile:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: rgba(59,105,57,0.2); }
+    .at-icon { width: 38px; height: 38px; border-radius: 9px; background: var(--light-green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .at-icon svg { width: 17px; height: 17px; stroke: var(--forest); fill: none; stroke-width: 1.7; stroke-linecap: round; }
+    .at-icon-amber { background: var(--amber-light); }
+    .at-icon-amber svg { stroke: #92400e; }
+    .at-icon-blue { background: var(--blue-light); }
+    .at-icon-blue svg { stroke: var(--blue); }
+    .at-icon-red { background: var(--red-light); }
+    .at-icon-red svg { stroke: var(--red); }
+    .at-title { font-size: 0.8rem; font-weight: 600; color: var(--charcoal); }
+    .at-desc { font-size: 0.68rem; color: var(--mid-gray); margin-top: 0.12rem; }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    .page-footer {
+      background: var(--white); border-top: 1.5px solid var(--soft-gray);
+      max-width: 100%; padding: 1.1rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem;
+      font-size: 0.72rem; color: var(--mid-gray);
+    }
+    .footer-links { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+    .footer-links a { color: var(--mid-gray); transition: color var(--ease); }
+    .footer-links a:hover { color: var(--forest); }
+    .footer-status { display: flex; align-items: center; gap: 0.4rem; font-size: 0.68rem; color: #22c55e; font-weight: 500; }
+    .status-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; animation: pulse 2.5s ease-in-out infinite; }
+
+
+
+    /* Tooltip popup on chart hover */
+    .bar-hit:hover ~ .chart-tooltip { opacity: 1; }
+
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════ -->
+<nav class="navbar" aria-label="Site navigation">
+  <div class="navbar-top">
+    <a class="nav-brand" href="#">
+      <div class="nav-brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <div class="nav-brand-text">
+        APDCL · Electricity Services
+        <small>Government of Assam</small>
+      </div>
+    </a>
+    <button class="nav-hamburger" id="navToggle" aria-expanded="false" aria-label="Toggle menu">
+      <svg id="hamburgerSvg" viewBox="0 0 24 24">
+        <line x1="3" y1="6"  x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="navbar-links-wrap" id="navLinksWrap">
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Pay Bill</a></li>
+      <li><a href="#" class="active">Smart Meter</a></li>
+      <li><a href="#">Fault Report</a></li>
+      <li><a href="#">New Connection</a></li>
+      <li><a href="#">Solar Subsidy</a></li>
+      <li><a href="#">Tariff Info</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HERO BAND
+══════════════════════════════════════════ -->
+<div class="hero-band">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Smart Grid Division — APDCL</div>
+      <h1 class="hero-title">Smart Meter Consumption</h1>
+      <p class="hero-sub">Real-time electricity usage, billing details, and consumption analytics for your APDCL smart meter account.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">2.4L+</div>
+        <div class="hero-stat-label">Smart Meters</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">15 min</div>
+        <div class="hero-stat-label">Data Refresh</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">99.2%</div>
+        <div class="hero-stat-label">Uptime</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="#">Home</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="#">Smart Meter</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">Consumption Dashboard</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- CONSUMER LOOKUP BANNER -->
+  <div class="lookup-banner">
+    <div class="lkp-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+    </div>
+    <div class="lkp-text">
+      <strong>View Another Account</strong>
+      <span>Enter Consumer ID or Meter Number to load consumption data</span>
+    </div>
+    <div class="lkp-form">
+      <input type="text" placeholder="Consumer ID / Meter No." />
+      <button>Fetch Data →</button>
+    </div>
+  </div>
+
+  <!-- CONSUMER INFO CARD -->
+  <div class="consumer-card">
+    <div class="consumer-avatar">R</div>
+    <div class="consumer-details">
+      <div class="consumer-name">Rajib Kumar Deka</div>
+      <div class="consumer-meta">
+        <span>Consumer ID: <strong>ASM-GHY-048271</strong></span>
+        <span>Zone: <strong>Guwahati North</strong></span>
+        <span>Division: <strong>APDCL-GHY-D2</strong></span>
+      </div>
+      <div class="consumer-tags">
+        <span class="ctag ctag-blue">LT-B Domestic</span>
+        <span class="ctag ctag-green">Smart Meter Active</span>
+        <span class="ctag ctag-amber">Payment Due</span>
+      </div>
+    </div>
+    <div class="consumer-meter">
+      <div class="meter-id">Meter No. SM-9847203-GHY</div>
+      <div class="meter-reading">412.8 <span class="meter-unit">kWh</span></div>
+      <div class="meter-unit">Current reading (Feb 28, 2026)</div>
+      <div class="meter-status">
+        <div class="meter-dot"></div> Live Transmission Active
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <span class="kpi-change kpi-change-up">↑ 8.2%</span>
+      </div>
+      <div class="kpi-value">284 <span class="kpi-unit">kWh</span></div>
+      <div class="kpi-label">Units Consumed — Feb 2026</div>
+    </div>
+    <div class="kpi-card kpi-card-amber">
+      <div class="kpi-top">
+        <div class="kpi-icon kpi-icon-amber">
+          <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <span class="kpi-change kpi-change-up">Due 5 Mar</span>
+      </div>
+      <div class="kpi-value">₹2,348 <span class="kpi-unit"></span></div>
+      <div class="kpi-label">Current Bill Amount</div>
+    </div>
+    <div class="kpi-card kpi-card-blue">
+      <div class="kpi-top">
+        <div class="kpi-icon kpi-icon-blue">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <span class="kpi-change kpi-change-down">↓ 3.1%</span>
+      </div>
+      <div class="kpi-value">10.1 <span class="kpi-unit">kWh/day</span></div>
+      <div class="kpi-label">Avg. Daily Consumption</div>
+    </div>
+    <div class="kpi-card kpi-card-red">
+      <div class="kpi-top">
+        <div class="kpi-icon kpi-icon-red">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <span class="kpi-change kpi-change-same">6:00–9:00 PM</span>
+      </div>
+      <div class="kpi-value">18.4 <span class="kpi-unit">kWh</span></div>
+      <div class="kpi-label">Peak Day Usage (Feb 14)</div>
+    </div>
+  </div>
+
+  <!-- CHART + BILLING -->
+  <div class="content-grid">
+
+    <!-- Consumption Bar Chart -->
+    <div class="chart-card">
+      <div class="chart-hdr">
+        <div class="chart-title-grp">
+          <div class="chart-label">Usage Analytics</div>
+          <div class="chart-title">Daily Consumption — Feb 2026</div>
+        </div>
+        <div class="period-tabs">
+          <button class="period-tab active" onclick="switchPeriod(this,'daily')">Daily</button>
+          <button class="period-tab" onclick="switchPeriod(this,'weekly')">Weekly</button>
+          <button class="period-tab" onclick="switchPeriod(this,'monthly')">Monthly</button>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <svg class="chart-svg" id="barChart" viewBox="0 0 680 200" preserveAspectRatio="none"></svg>
+        <div class="chart-tooltip" id="chartTooltip"></div>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--forest);"></div>Consumption (kWh)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amber);"></div>Daily Average</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(59,105,57,0.18);"></div>Off-peak</div>
+      </div>
+    </div>
+
+    <!-- Billing Summary -->
+    <div class="bill-card">
+      <div class="bill-due-badge">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Payment Due
+      </div>
+      <div class="bill-amount">₹2,348</div>
+      <div class="bill-amount-label">Bill for February 2026 · Due 5 March 2026</div>
+      <div class="bill-divider"></div>
+      <div class="bill-row"><span class="bill-row-label">Energy Charges (284 kWh)</span><span class="bill-row-value">₹1,976</span></div>
+      <div class="bill-row"><span class="bill-row-label">Fixed / Demand Charge</span><span class="bill-row-value">₹150</span></div>
+      <div class="bill-row"><span class="bill-row-label">Electricity Duty (5%)</span><span class="bill-row-value">₹106</span></div>
+      <div class="bill-row"><span class="bill-row-label">Meter Rental</span><span class="bill-row-value">₹30</span></div>
+      <div class="bill-row"><span class="bill-row-label">Arrears / Adjustments</span><span class="bill-row-value green">-₹0</span></div>
+      <div class="bill-row"><span class="bill-row-label">Late Payment Surcharge</span><span class="bill-row-value">₹86</span></div>
+      <div class="bill-divider" style="margin-top:0.55rem"></div>
+      <div class="bill-row" style="margin-top:0.4rem"><span class="bill-row-label" style="font-weight:700;color:var(--charcoal)">Total Payable</span><span class="bill-row-value highlight" style="font-size:1rem">₹2,348</span></div>
+      <button class="bill-pay-btn">Pay Now →</button>
+      <button class="bill-download">⬇ Download Bill PDF</button>
+      <div class="bill-tariff-note">📋 Tariff Category: LT-B Domestic (Single Phase) · Connected Load: 3 kW · Sanctioned Load: 5 kW</div>
+    </div>
+
+  </div><!-- /content-grid -->
+
+  <!-- TARIFF SLAB INFO -->
+  <div class="section-hdr"><div><div class="section-label">Applicable Rates</div><div class="section-title">Tariff Slab Structure — LT-B Domestic</div></div><a href="#" class="section-link">View Full Tariff <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
+  <div class="tariff-strip">
+    <div class="tariff-grid">
+      <div class="tariff-slab">
+        <div class="tariff-slab-range">0 – 100 kWh</div>
+        <div class="tariff-slab-rate">₹3.60</div>
+        <div class="tariff-slab-unit">per unit</div>
+      </div>
+      <div class="tariff-slab">
+        <div class="tariff-slab-range">101 – 200 kWh</div>
+        <div class="tariff-slab-rate">₹4.80</div>
+        <div class="tariff-slab-unit">per unit</div>
+      </div>
+      <div class="tariff-slab current-slab">
+        <div class="current-badge">Your Slab</div>
+        <div class="tariff-slab-range">201 – 300 kWh</div>
+        <div class="tariff-slab-rate">₹6.05</div>
+        <div class="tariff-slab-unit">per unit</div>
+      </div>
+      <div class="tariff-slab">
+        <div class="tariff-slab-range">Above 300 kWh</div>
+        <div class="tariff-slab-rate">₹7.25</div>
+        <div class="tariff-slab-unit">per unit</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY + APPLIANCE BREAKDOWN -->
+  <div class="section-hdr"><div><div class="section-label">Usage Record</div><div class="section-title">Consumption History</div></div><a href="#" class="section-link">View All Months <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>
+  <div class="lower-grid">
+
+    <!-- History Table -->
+    <div class="history-card">
+      <div class="history-tabs">
+        <button class="htab active" onclick="activeHTab(this)">Monthly</button>
+        <button class="htab" onclick="activeHTab(this)">Quarterly</button>
+        <button class="htab" onclick="activeHTab(this)">Yearly</button>
+      </div>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Billing Period</th>
+            <th>Units (kWh)</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Feb 2026</td>
+            <td><div class="ht-bar-wrap"><div class="ht-bar" style="width:95%"></div><span class="ht-units">284</span></div></td>
+            <td>₹2,348</td>
+            <td><span class="ht-status ht-pending">Pending</span></td>
+          </tr>
+          <tr>
+            <td>Jan 2026</td>
+            <td><div class="ht-bar-wrap"><div class="ht-bar" style="width:88%"></div><span class="ht-units">263</span></div></td>
+            <td>₹2,148</td>
+            <td><span class="ht-status ht-paid">Paid</span></td>
+          </tr>
+          <tr>
+            <td>Dec 2025</td>
+            <td><div class="ht-bar-wrap"><div class="ht-bar" style="width:100%"></div><span class="ht-units">301</span></div></td>
+            <td>₹2,498</td>
+            <td><span class="ht-status ht-paid">Paid</span></td>
+          </tr>
+          <tr>
+            <td>Nov 2025</td>
+            <td><div class="ht-bar-wrap"><div class="ht-bar" style="width:72%"></div><span class="ht-units">218</span></div></td>
+            <td>₹1,764</td>
+            <td><span class="ht-status ht-paid">Paid</span></td>
+          </tr>
+          <tr>
+            <td>Oct 2025</td>
+            <td><div class="ht-bar-wrap"><div class="ht-bar" style="width:68%"></div><span class="ht-units">204</span></div></td>
+            <td>₹1,628</td>
+            <td><span class="ht-status ht-paid">Paid</span></td>
+          </tr>
+          <tr>
+            <td>Sep 2025</td>
+            <td><div class="ht-bar-wrap"><div class="ht-bar" style="width:82%"></div><span class="ht-units">246</span></div></td>
+            <td>₹1,992</td>
+            <td><span class="ht-status ht-paid">Paid</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+  </div><!-- /lower-grid -->
+
+  <!-- ALERTS + TIPS -->
+  <div class="section-hdr"><div><div class="section-label">Notifications</div><div class="section-title">Alerts & Energy Tips</div></div></div>
+  <div class="bottom-grid">
+
+    <!-- Smart Alerts -->
+    <div class="alerts-card">
+      <div class="section-hdr" style="margin-bottom:0.6rem">
+        <div><div class="section-label">Live</div><div class="section-title" style="font-size:1.05rem">Smart Meter Alerts</div></div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-dot alert-dot-red"></div>
+        <div class="alert-body">
+          <div class="alert-text"><strong>High Consumption Alert:</strong> Your usage today (14.2 kWh) is 40% above your daily average. This will push you into the ₹7.25/unit slab.</div>
+          <div class="alert-meta">Today, 09:34 AM · Smart Grid System</div>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-dot alert-dot-amber"></div>
+        <div class="alert-body">
+          <div class="alert-text"><strong>Bill Due Reminder:</strong> Your February 2026 bill of ₹2,348 is due on 5 March 2026. Late payment surcharge of ₹86 has already been applied.</div>
+          <div class="alert-meta">27 Feb 2026 · Billing Department</div>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-dot alert-dot-green"></div>
+        <div class="alert-body">
+          <div class="alert-text"><strong>Power Restored:</strong> The planned outage for Guwahati North Zone (2:00 PM – 5:00 PM) has been restored ahead of schedule at 4:12 PM.</div>
+          <div class="alert-meta">27 Feb 2026, 04:12 PM · Operations</div>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-dot alert-dot-blue"></div>
+        <div class="alert-body">
+          <div class="alert-text"><strong>Smart Meter Firmware Updated:</strong> Your meter (SM-9847203-GHY) received a remote firmware update improving measurement accuracy.</div>
+          <div class="alert-meta">25 Feb 2026 · Smart Grid Division</div>
+        </div>
+      </div>
+      <div class="alert-item">
+        <div class="alert-dot alert-dot-amber"></div>
+        <div class="alert-body">
+          <div class="alert-text"><strong>Unusual Peak Detected:</strong> A usage spike of 18.4 kWh was recorded on 14 Feb between 6:00–9:00 PM. Review your appliance usage if unexpected.</div>
+          <div class="alert-meta">14 Feb 2026 · Anomaly Detection</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Energy Saving Tips -->
+    <div class="tips-card">
+      <div class="tips-header">
+        <div class="tips-header-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 4-3 6-3 9H8c0-3-3-5-3-9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg>
+        </div>
+        <div>
+          <div class="tips-header-label">Personalised For You</div>
+          <div class="tips-header-title">Energy Saving Tips</div>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">1</div>
+        <div class="tip-text">
+          <strong>Set AC to 24°C:</strong> Your AC runs at ~18°C (detected). Raising it to 24°C can cut cooling costs by up to 24%.
+          <br><span class="tip-savings">💰 Save ~₹430/month</span>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">2</div>
+        <div class="tip-text">
+          <strong>Shift geyser use to off-peak hours:</strong> Use geyser before 7:00 AM or after 10:00 PM to reduce load during evening peak.
+          <br><span class="tip-savings">💰 Save ~₹180/month</span>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">3</div>
+        <div class="tip-text">
+          <strong>Enable auto-cutoff for AC:</strong> Set a sleep timer on your AC. Overnight running adds ~3 kWh per night unnecessarily.
+          <br><span class="tip-savings">💰 Save ~₹270/month</span>
+        </div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-num">4</div>
+        <div class="tip-text">
+          <strong>Consider solar rooftop:</strong> Based on your ~284 kWh/month usage, a 2 kW rooftop solar system can offset 60–70% of your bill under PM Surya Ghar Yojana.
+          <br><span class="tip-savings">💰 Save ~₹1,400/month after subsidy</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /bottom-grid -->
+
+  <!-- QUICK ACTIONS -->
+  <div class="section-hdr"><div><div class="section-label">Quick Access</div><div class="section-title">Account Actions</div></div></div>
+  <div class="action-strip">
+    <div class="action-tile">
+      <div class="at-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+      <div><div class="at-title">Pay Bill Online</div><div class="at-desc">UPI, Net Banking, Card</div></div>
+    </div>
+    <div class="action-tile">
+      <div class="at-icon at-icon-amber"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></div>
+      <div><div class="at-title">Download Bill PDF</div><div class="at-desc">Last 12 months available</div></div>
+    </div>
+    <div class="action-tile">
+      <div class="at-icon at-icon-blue"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div><div class="at-title">Consumption Report</div><div class="at-desc">Monthly usage analytics</div></div>
+    </div>
+    <div class="action-tile">
+      <div class="at-icon at-icon-red"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 15a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 4.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 11.1a16 16 0 0 0 5 5l.94-.94a2 2 0 0 1 2.11-.45c.908.339 1.85.573 2.81.7A2 2 0 0 1 20.21 17.2z"/></svg></div>
+      <div><div class="at-title">Raise Complaint</div><div class="at-desc">Billing errors, meter faults</div></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <span>© 2026 Assam Power Distribution Company Ltd. (APDCL) · Government of Assam</span>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Disclaimer</a>
+    <a href="#">Sitemap</a>
+    <a href="#">Accessibility</a>
+  </div>
+  <div class="footer-status">
+    <span class="status-dot"></span>
+    All systems operational
+  </div>
+</footer>
+
+<script>
+/* ── Navbar Hamburger ── */
+const toggle    = document.getElementById('navToggle');
+const linksWrap = document.getElementById('navLinksWrap');
+const navLinks  = document.getElementById('navLinks');
+const hamSvg    = document.getElementById('hamburgerSvg');
+const OPEN_ICON  = `<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>`;
+const CLOSE_ICON = `<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>`;
+function setOpen(open) {
+  if (open) { linksWrap.classList.add('open'); navLinks.classList.add('open'); hamSvg.innerHTML = CLOSE_ICON; toggle.setAttribute('aria-expanded','true'); }
+  else { linksWrap.classList.remove('open'); navLinks.classList.remove('open'); hamSvg.innerHTML = OPEN_ICON; toggle.setAttribute('aria-expanded','false'); }
+}
+toggle.addEventListener('click', () => setOpen(!linksWrap.classList.contains('open')));
+document.querySelectorAll('.navbar-links a').forEach(a => { a.addEventListener('click', () => { if (window.innerWidth <= 900) setOpen(false); }); });
+window.addEventListener('resize', () => { if (window.innerWidth > 900) setOpen(false); });
+
+/* ── Nav active ── */
+document.querySelectorAll('.navbar-links a').forEach(link => {
+  link.addEventListener('click', function() {
+    document.querySelectorAll('.navbar-links a').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+/* ── History Tabs ── */
+function activeHTab(el) {
+  document.querySelectorAll('.htab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ── Period Tabs ── */
+function switchPeriod(el, period) {
+  document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderChart(period);
+}
+
+/* ══════════════════════════════════════════
+   BAR CHART RENDERER
+══════════════════════════════════════════ */
+const datasets = {
+  daily: {
+    labels: ['1','3','5','7','9','11','13','15','17','19','21','23','25','27','28'],
+    values: [8.2, 9.4, 10.1, 11.8, 9.7, 12.3, 14.1, 18.4, 9.2, 10.8, 11.2, 8.9, 12.6, 14.3, 14.2],
+    avg: 11.0
+  },
+  weekly: {
+    labels: ['Wk 1','Wk 2','Wk 3','Wk 4'],
+    values: [62.4, 78.1, 71.5, 72.0],
+    avg: 71.0
+  },
+  monthly: {
+    labels: ['Sep','Oct','Nov','Dec','Jan','Feb'],
+    values: [246, 204, 218, 301, 263, 284],
+    avg: 252.7
+  }
+};
+
+function renderChart(period) {
+  const svg = document.getElementById('barChart');
+  const data = datasets[period];
+  const W = 680, H = 200, padL = 10, padR = 10, padT = 12, padB = 30;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const maxVal = Math.max(...data.values) * 1.12;
+  const n = data.values.length;
+  const barW = Math.min(38, (chartW / n) * 0.55);
+  const gap = chartW / n;
+  const avgY = padT + chartH - (data.avg / maxVal) * chartH;
+  const tooltip = document.getElementById('chartTooltip');
+
+  let bars = '';
+  data.values.forEach((v, i) => {
+    const bH = (v / maxVal) * chartH;
+    const x = padL + i * gap + gap / 2 - barW / 2;
+    const y = padT + chartH - bH;
+    const isHigh = v > data.avg * 1.25;
+    const fill = isHigh ? 'url(#barHighGrad)' : 'url(#barGrad)';
+    bars += `
+      <g class="bar-group" data-label="${data.labels[i]}" data-val="${v}" data-period="${period}">
+        <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW}" height="${bH.toFixed(1)}" rx="3" fill="${fill}" />
+        <text x="${(x + barW/2).toFixed(1)}" y="${(H - padB + 12).toFixed(1)}" text-anchor="middle" font-size="8" fill="#8A9BA8" font-family="DM Sans,sans-serif">${data.labels[i]}</text>
+      </g>`;
+  });
+
+  // avg line
+  const lineEnd = padL + (n-1) * gap + gap/2 + barW/2;
+  const avgLine = `
+    <line x1="${padL}" y1="${avgY.toFixed(1)}" x2="${lineEnd.toFixed(1)}" y2="${avgY.toFixed(1)}" stroke="#F5A623" stroke-width="1.2" stroke-dasharray="5,3" opacity="0.8"/>
+    <text x="${(lineEnd + 5).toFixed(1)}" y="${(avgY + 3).toFixed(1)}" class="avg-line-label" font-size="7.5">avg ${data.avg}</text>`;
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3B6939"/>
+        <stop offset="100%" stop-color="#5CBA60" stop-opacity="0.7"/>
+      </linearGradient>
+      <linearGradient id="barHighGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#dc2626"/>
+        <stop offset="100%" stop-color="#f87171" stop-opacity="0.7"/>
+      </linearGradient>
+    </defs>
+    <rect x="${padL}" y="${padT}" width="${chartW}" height="${chartH}" fill="rgba(235,245,236,0.35)" rx="4"/>
+    ${bars}
+    ${avgLine}`;
+
+  // Tooltip hover
+  svg.querySelectorAll('.bar-group').forEach(g => {
+    g.addEventListener('mouseenter', (e) => {
+      const rect = svg.getBoundingClientRect();
+      const gRect = g.querySelector('rect').getBoundingClientRect();
+      const unit = period === 'weekly' ? 'kWh' : period === 'monthly' ? 'kWh' : 'kWh';
+      tooltip.textContent = `${g.dataset.label}: ${g.dataset.val} ${unit}`;
+      tooltip.classList.add('show');
+      tooltip.style.left = (gRect.left - rect.left + gRect.width/2 - tooltip.offsetWidth/2) + 'px';
+      tooltip.style.top  = (gRect.top - rect.top - 32) + 'px';
+    });
+    g.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+  });
+}
+
+renderChart('daily');
+</script>
+</body>
+</html>
