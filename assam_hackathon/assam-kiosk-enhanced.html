@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government of Assam - Citizen Services Kiosk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            /* Warm Earthy Color Palette */
+            --cream: #f9f5f0;
+            --beige: #f2ead3;
+            --orange: #f4991a;
+            --green: #344f1f;
+            --green-dark: #283d18;
+            --green-light: #4a6f2d;
+            --orange-light: #ffa940;
+            --orange-dark: #d97706;
+            --background: #f9f5f0;
+            --surface: #ffffff;
+            --text-primary: #2d2d2d;
+            --text-secondary: #5a5a5a;
+            --text-muted: #8a8a8a;
+            --border: #e8dcc4;
+            --border-hover: #d9c9a8;
+            --success: #4a6f2d;
+            --warning: #f4991a;
+            --error: #c53030;
+            --emergency: #b91c1c;
+            
+            --shadow-xs: 0 1px 2px 0 rgba(52, 79, 31, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(52, 79, 31, 0.1), 0 1px 2px -1px rgba(52, 79, 31, 0.08);
+            --shadow-md: 0 4px 6px -1px rgba(52, 79, 31, 0.1), 0 2px 4px -2px rgba(52, 79, 31, 0.08);
+            --shadow-lg: 0 10px 15px -3px rgba(52, 79, 31, 0.12), 0 4px 6px -4px rgba(52, 79, 31, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(52, 79, 31, 0.15), 0 8px 10px -6px rgba(52, 79, 31, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            min-height: 100vh;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 4px solid var(--orange);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-emblem {
+            width: 56px;
+            height: 56px;
+            background: rgba(244, 153, 26, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(244, 153, 26, 0.3);
+        }
+
+        .header-text h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.025em;
+        }
+
+        .header-text p {
+            font-size: 0.875rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-home-btn {
+            background: rgba(244, 153, 26, 0.2);
+            color: white;
+            border: 2px solid rgba(244, 153, 26, 0.4);
+            padding: 0.625rem 1.125rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.025em;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-home-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(244, 153, 26, 0.3);
+            border-color: rgba(244, 153, 26, 0.6);
+            box-shadow: 0 4px 14px 0 rgba(244, 153, 26, 0.3);
+        }
+
+        .emergency-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.625rem 1.125rem;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 14px 0 rgba(231, 76, 60, 0.3);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: 0.025em;
+        }
+
+        .emergency-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(231, 76, 60, 0.4);
+            background: #dc3545;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Screen */
+        .screen {
+            display: none;
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            min-height: calc(100vh - 180px);
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .screen-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .screen-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .screen-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Service Grid */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--orange);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--orange);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Payment Options */
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+
+        .payment-option {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .payment-option:hover {
+            border-color: var(--orange);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .payment-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .payment-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        /* QR Code Container */
+        .qr-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+        }
+
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .qr-timer {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            margin: 1rem 0;
+        }
+
+        .qr-instructions {
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        /* Bank Grid */
+        .bank-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+
+        .bank-option {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .bank-option:hover {
+            border-color: var(--orange);
+            transform: scale(1.05);
+        }
+
+        /* Card Payment Form */
+        .card-form {
+            max-width: 500px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: var(--error);
+            font-weight: 700;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--orange);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1rem;
+        }
+
+        /* OTP Input */
+        .otp-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--orange);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--orange-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--green);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--green-dark);
+        }
+
+        .btn-block {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Receipt */
+        .receipt {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+        }
+
+        .receipt-header {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px dashed var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .receipt-logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        .receipt-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 0.5rem;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .receipt-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .receipt-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .receipt-total {
+            font-size: 1.5rem;
+            color: var(--green);
+            margin-top: 1rem;
+        }
+
+        .receipt-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Modal/Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .screen {
+                padding: 1.5rem;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .bank-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-container">
+                    <div class="logo-emblem">🏛️</div>
+                    <div class="header-text">
+                        <h1 id="headerTitle">Government of Assam</h1>
+                        <p>Citizen Services Kiosk Portal</p>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-home-btn" onclick="showScreen('main-menu')">
+                    🏠 Home
+                </button>
+                <button class="emergency-btn">
+                    🚨 Emergency
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Main Menu Screen -->
+        <div id="screen-main-menu" class="screen active">
+            <div class="screen-header">
+                <h2 class="screen-title">Welcome to Citizen Services</h2>
+                <p class="screen-subtitle">Select a service to continue</p>
+            </div>
+            <div class="service-grid">
+                <div class="service-card" onclick="showScreen('bill-payment')">
+                    <div class="service-icon">💳</div>
+                    <h3 class="service-title">Pay Bills</h3>
+                    <p class="service-description">Water, electricity, property tax, and more</p>
+                </div>
+                <div class="service-card" onclick="showScreen('gas-booking')">
+                    <div class="service-icon">🔥</div>
+                    <h3 class="service-title">Gas Booking</h3>
+                    <p class="service-description">Book LPG cylinder delivery online</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📝</div>
+                    <h3 class="service-title">Lodge Complaint</h3>
+                    <p class="service-description">Report civic issues and track their resolution</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bill Payment Screen -->
+        <div id="screen-bill-payment" class="screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Bill Payment</h2>
+                <p class="screen-subtitle">Enter your details to proceed</p>
+            </div>
+            <div class="card-form">
+                <div class="form-group">
+                    <label class="form-label">Bill Type</label>
+                    <select class="form-input" id="billType">
+                        <option>Electricity Bill</option>
+                        <option>Water Bill</option>
+                        <option>Property Tax</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Consumer Number</label>
+                    <input type="text" class="form-input" id="billConsumerNumber" placeholder="Enter consumer number">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="validateAndShowBillDetails()">
+                    View Bill Details
+                </button>
+            </div>
+        </div>
+
+        <!-- Bill Details Screen -->
+        <div id="screen-bill-details" class="screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Bill Details</h2>
+                <p class="screen-subtitle">Review your bill and proceed to payment</p>
+            </div>
+            <div class="receipt">
+                <div class="receipt-row">
+                    <span class="receipt-label">Consumer Name:</span>
+                    <span class="receipt-value">Rajesh Kumar</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Consumer Number:</span>
+                    <span class="receipt-value">1234567890</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Bill Period:</span>
+                    <span class="receipt-value">Jan 2026</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Due Date:</span>
+                    <span class="receipt-value">15 Feb 2026</span>
+                </div>
+                <div class="receipt-row receipt-total">
+                    <span class="receipt-label">Total Amount:</span>
+                    <span class="receipt-value">₹1,245.00</span>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="showScreen('payment-method')">
+                    Proceed to Payment
+                </button>
+            </div>
+        </div>
+
+        <!-- Payment Method Selection -->
+        <div id="screen-payment-method" class="screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Select Payment Method</h2>
+                <p class="screen-subtitle">Choose your preferred payment option</p>
+            </div>
+            <div class="payment-options">
+                <div class="payment-option" onclick="showUPIPayment()">
+                    <div class="payment-icon">📱</div>
+                    <div class="payment-label">UPI Payment</div>
+                </div>
+                <div class="payment-option" onclick="showScreen('netbanking-selection')">
+                    <div class="payment-icon">🏦</div>
+                    <div class="payment-label">Net Banking</div>
+                </div>
+                <div class="payment-option" onclick="showScreen('card-type-selection')">
+                    <div class="payment-icon">💳</div>
+                    <div class="payment-label">Card Payment</div>
+                </div>
+                <div class="payment-option" onclick="showCashPayment()">
+                    <div class="payment-icon">💵</div>
+                    <div class="payment-label">Cash Payment</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UPI QR Code Screen -->
+        <div id="screen-upi-qr" class="screen">
+            <div class="screen-header">
+                <h2 class="screen-title">UPI Payment</h2>
+                <p class="screen-subtitle">Scan QR code to complete payment</p>
+            </div>
+            <div class="qr-container">
+                <h3>Amount to Pay: ₹1,245.00</h3>
+                <div id="qrcode"></div>
+                <div class="qr-timer">
+                    Time Remaining: <span id="qr-timer">30</span>s
+                </div>
+                <p class="qr-instructions">
+                    Scan this QR code using any UPI app (Google Pay, PhonePe, Paytm, etc.)
+                </p>
+                <button class="btn btn-primary btn-block" onclick="confirmUPIPayment()">
+                    I Have Paid - Continue
+                </button>
+            </div>
+        </div>
+
+        <!-- Net Banking Selection -->
+        <div id="screen-netbanking-selection" class="screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Select Your Bank</h2>
+                <p class="screen-subtitle">Choose your bank for net banking</p>
+            </div>
+            <div class="bank-grid">
+                <div class="bank-option" onclick="processNetBanking('SBI')">State Bank of India</div>
+                <div class="bank-option" onclick="processNetBanking('HDFC')">HDFC Bank</div>
+                <div class="bank-option" onclick="processNetBanking('ICICI')">ICICI Bank</div>
+                <div class="bank-option" onclick="processNetBanking('Axis')">Axis Bank</div>
+                <div class="bank-option" onclick="processNetBanking('PNB')">Punjab National Bank</div>
+                <div class="bank-option" onclick="processNetBanking('BOB')">Bank of Baroda</div>
+                <div class="bank-option" onclick="processNetBanking('Canara')">Canara Bank</div>
+                <div class="bank-option" onclick="processNetBanking('Kotak')">Kotak Mahindra</div>
+            </div>
+        </div>
+
+        <!-- Card Type Selection -->
+        <div id="screen-card-type-selection" class="screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Card Payment</h2>
+                <p class="screen-subtitle">Select your card issuing bank</p>
+            </div>
+            <div class="bank-grid">
+                <div class="bank-option" onclick="showCardForm('SBI')">SBI Card</div>
+                <div class="bank-option" onclick="showCardForm('HDFC')">HDFC Card</div>
+                <div class="bank-option" onclick="showCardForm('ICICI')">ICICI Card</div>
+                <div class="bank-option" onclick="showCardForm('Axis')">Axis Card</div>
+                <div class="bank-option" onclick="showCardForm('Kotak')">Kotak Card</div>
+                <div class="bank-option" onclick="showCardForm('Other')">Other Banks</div>
+            </div>
+        </div>
+
+        <!-- Card Details Form -->
+        <div id="screen-card-form" class="screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Enter Card Details</h2>
+                <p class="screen-subtitle">Please fill in your card information</p>
+            </div>
+            <div class="card-form">
+                <div class="form-group">
+                    <label class="form-label required">Card Number</label>
+                    <input type="text" id="cardNumber" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label required">Valid Through</label>
+                        <input type="text" id="cardExpiry" class="form-input" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">CVV</label>
+                        <input type="password" id="cardCVV" class="form-input" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Cardholder Name</label>
+                    <input type="text" id="cardName" class="form-input" placeholder="As on card">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="processCardPayment()">
+                    Proceed to Pay ₹1,245.00
+                </button>
+            </div>
+        </div>
+
+        <!-- OTP Verification Screen -->
+        <div id="screen-otp-verification" class="screen">
+            <div class="screen-header">
+                <h2 class="screen-title">OTP Verification</h2>
+                <p class="screen-subtitle">Enter the OTP sent to your registered mobile number</p>
+            </div>
+            <div class="otp-container">
+                <p style="margin-bottom: 1rem;">OTP sent to: <strong>+91 98765****21</strong></p>
+                <div class="otp-inputs">
+                    <input type="text" class="otp-input" maxlength="1" id="otp1" onkeyup="moveToNext(this, 'otp2')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp2" onkeyup="moveToNext(this, 'otp3')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp3" onkeyup="moveToNext(this, 'otp4')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp4" onkeyup="moveToNext(this, 'otp5')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp5" onkeyup="moveToNext(this, 'otp6')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp6">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="verifyOTP()">
+                    Verify OTP
+                </button>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">
+                    Didn't receive OTP? <a href="#" style="color: var(--orange); text-decoration: none; font-weight: 600;">Resend</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="screen-loading" class="screen">
+            <div class="loading-screen">
+                <div class="spinner"></div>
+                <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Processing Payment...</h3>
+                <p style="color: var(--text-secondary);">Please wait while we confirm your transaction</p>
+            </div>
+        </div>
+
+        <!-- Payment Success Screen -->
+        <div id="screen-payment-success" class="screen">
+            <div class="screen-header">
+                <div class="success-icon">✅</div>
+                <h2 class="screen-title" style="color: var(--success);">Payment Successful!</h2>
+                <p class="screen-subtitle">Your payment has been processed successfully</p>
+            </div>
+            <div class="receipt">
+                <div class="receipt-header">
+                    <div class="receipt-logo">🏛️</div>
+                    <h3>Government of Assam</h3>
+                    <p>Payment Receipt</p>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Transaction ID:</span>
+                    <span class="receipt-value" id="txnId">TXN202602091234567</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Date & Time:</span>
+                    <span class="receipt-value" id="txnDateTime"></span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Bill Type:</span>
+                    <span class="receipt-value">Electricity Bill</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Consumer Number:</span>
+                    <span class="receipt-value">1234567890</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Payment Method:</span>
+                    <span class="receipt-value" id="paymentMethod">UPI</span>
+                </div>
+                <div class="receipt-row receipt-total">
+                    <span class="receipt-label">Amount Paid:</span>
+                    <span class="receipt-value">₹1,245.00</span>
+                </div>
+                <div class="receipt-actions">
+                    <button class="btn btn-primary" onclick="downloadReceipt()" style="flex: 1;">
+                        📥 Download Receipt
+                    </button>
+                    <button class="btn btn-secondary" onclick="logout()" style="flex: 1;">
+                        🚪 Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gas Booking Screen -->
+        <div id="screen-gas-booking" class="screen">
+            <div class="screen-header">
+                <h2 class="screen-title">Gas Booking</h2>
+                <p class="screen-subtitle">Book your LPG cylinder</p>
+            </div>
+            <div class="card-form">
+                <div class="form-group">
+                    <label class="form-label required">Consumer Number</label>
+                    <input type="text" class="form-input" id="gasConsumerNumber" placeholder="Enter LPG consumer number">
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Mobile Number</label>
+                    <input type="text" class="form-input" id="gasMobileNumber" placeholder="Enter registered mobile number" maxlength="10">
+                </div>
+                <button class="btn btn-primary btn-block" onclick="validateAndProceedGasBooking()">
+                    Proceed to Book
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let qrTimer;
+        let qrTimeLeft = 30;
+        let selectedBank = '';
+        let selectedPaymentMethod = '';
+
+        // Initialize
+        function init() {
+            updateDateTime();
+        }
+
+        // Validation Functions
+        function validateAndShowBillDetails() {
+            const consumerNumber = document.getElementById('billConsumerNumber').value.trim();
+            
+            if (!consumerNumber) {
+                alert('⚠️ Please enter Consumer Number to proceed');
+                document.getElementById('billConsumerNumber').focus();
+                return false;
+            }
+            
+            if (consumerNumber.length < 5) {
+                alert('⚠️ Please enter a valid Consumer Number (minimum 5 digits)');
+                document.getElementById('billConsumerNumber').focus();
+                return false;
+            }
+            
+            showScreen('bill-details');
+        }
+
+        function validateAndProceedGasBooking() {
+            const consumerNumber = document.getElementById('gasConsumerNumber').value.trim();
+            const mobileNumber = document.getElementById('gasMobileNumber').value.trim();
+            
+            if (!consumerNumber) {
+                alert('⚠️ Please enter LPG Consumer Number');
+                document.getElementById('gasConsumerNumber').focus();
+                return false;
+            }
+            
+            if (!mobileNumber) {
+                alert('⚠️ Please enter Mobile Number');
+                document.getElementById('gasMobileNumber').focus();
+                return false;
+            }
+            
+            if (mobileNumber.length !== 10 || !/^\d{10}$/.test(mobileNumber)) {
+                alert('⚠️ Please enter a valid 10-digit Mobile Number');
+                document.getElementById('gasMobileNumber').focus();
+                return false;
+            }
+            
+            showScreen('payment-method');
+        }
+
+        function validateCardPayment() {
+            const cardNumber = document.getElementById('cardNumber').value.trim().replace(/\s/g, '');
+            const cardExpiry = document.getElementById('cardExpiry').value.trim();
+            const cardCVV = document.getElementById('cardCVV').value.trim();
+            const cardName = document.getElementById('cardName').value.trim();
+            
+            if (!cardNumber) {
+                alert('⚠️ Please enter Card Number');
+                document.getElementById('cardNumber').focus();
+                return false;
+            }
+            
+            if (cardNumber.length < 13 || cardNumber.length > 19) {
+                alert('⚠️ Please enter a valid Card Number (13-19 digits)');
+                document.getElementById('cardNumber').focus();
+                return false;
+            }
+            
+            if (!/^\d+$/.test(cardNumber)) {
+                alert('⚠️ Card Number must contain only digits');
+                document.getElementById('cardNumber').focus();
+                return false;
+            }
+            
+            if (!cardExpiry) {
+                alert('⚠️ Please enter Card Expiry Date');
+                document.getElementById('cardExpiry').focus();
+                return false;
+            }
+            
+            if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+                alert('⚠️ Please enter expiry date in MM/YY format');
+                document.getElementById('cardExpiry').focus();
+                return false;
+            }
+            
+            // Validate expiry date
+            const [month, year] = cardExpiry.split('/');
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear() % 100;
+            const currentMonth = currentDate.getMonth() + 1;
+            
+            if (parseInt(month) < 1 || parseInt(month) > 12) {
+                alert('⚠️ Please enter a valid month (01-12)');
+                document.getElementById('cardExpiry').focus();
+                return false;
+            }
+            
+            if (parseInt(year) < currentYear || (parseInt(year) === currentYear && parseInt(month) < currentMonth)) {
+                alert('⚠️ Card has expired. Please enter a valid expiry date');
+                document.getElementById('cardExpiry').focus();
+                return false;
+            }
+            
+            if (!cardCVV) {
+                alert('⚠️ Please enter CVV');
+                document.getElementById('cardCVV').focus();
+                return false;
+            }
+            
+            if (cardCVV.length < 3 || cardCVV.length > 4 || !/^\d+$/.test(cardCVV)) {
+                alert('⚠️ Please enter a valid CVV (3 or 4 digits)');
+                document.getElementById('cardCVV').focus();
+                return false;
+            }
+            
+            if (!cardName) {
+                alert('⚠️ Please enter Cardholder Name');
+                document.getElementById('cardName').focus();
+                return false;
+            }
+            
+            if (cardName.length < 3) {
+                alert('⚠️ Please enter a valid Cardholder Name');
+                document.getElementById('cardName').focus();
+                return false;
+            }
+            
+            return true;
+        }
+
+        function validateOTP() {
+            const otp1 = document.getElementById('otp1').value;
+            const otp2 = document.getElementById('otp2').value;
+            const otp3 = document.getElementById('otp3').value;
+            const otp4 = document.getElementById('otp4').value;
+            const otp5 = document.getElementById('otp5').value;
+            const otp6 = document.getElementById('otp6').value;
+            
+            const otp = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
+            
+            if (otp.length !== 6) {
+                alert('⚠️ Please enter complete 6-digit OTP');
+                document.getElementById('otp1').focus();
+                return false;
+            }
+            
+            if (!/^\d{6}$/.test(otp)) {
+                alert('⚠️ OTP must contain only digits');
+                document.getElementById('otp1').focus();
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Screen Navigation
+        function showScreen(screenId) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            document.getElementById('screen-' + screenId).classList.add('active');
+        }
+
+        // UPI Payment Flow
+        function showUPIPayment() {
+            selectedPaymentMethod = 'UPI';
+            showScreen('upi-qr');
+            generateQRCode();
+            startQRTimer();
+        }
+
+        function generateQRCode() {
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            
+            const upiString = 'upi://pay?pa=assam.gov@paytm&pn=Government of Assam&am=1245.00&cu=INR&tn=Bill Payment';
+            
+            new QRCode(qrcodeDiv, {
+                text: upiString,
+                width: 250,
+                height: 250,
+                colorDark: "#344f1f",
+                colorLight: "#ffffff",
+            });
+        }
+
+        function startQRTimer() {
+            qrTimeLeft = 30;
+            document.getElementById('qr-timer').textContent = qrTimeLeft;
+            
+            qrTimer = setInterval(() => {
+                qrTimeLeft--;
+                document.getElementById('qr-timer').textContent = qrTimeLeft;
+                
+                if (qrTimeLeft <= 0) {
+                    clearInterval(qrTimer);
+                    alert('QR Code expired. Please try again.');
+                    showScreen('payment-method');
+                }
+            }, 1000);
+        }
+
+        function confirmUPIPayment() {
+            clearInterval(qrTimer);
+            processPayment();
+        }
+
+        // Net Banking Flow
+        function processNetBanking(bank) {
+            selectedBank = bank;
+            selectedPaymentMethod = 'Net Banking - ' + bank;
+            
+            // Simulate bank redirect
+            alert('Redirecting to ' + bank + ' Net Banking...\n\nThis is a demo. In production, you would be redirected to your bank\'s secure payment gateway.');
+            
+            processPayment();
+        }
+
+        // Card Payment Flow
+        function showCardForm(bank) {
+            selectedBank = bank;
+            showScreen('card-form');
+        }
+
+        function processCardPayment() {
+            // Validate all card details
+            if (!validateCardPayment()) {
+                return;
+            }
+            
+            selectedPaymentMethod = 'Card - ' + selectedBank;
+            
+            // Show OTP screen
+            showScreen('otp-verification');
+            
+            // Auto-focus first OTP input
+            setTimeout(() => {
+                document.getElementById('otp1').focus();
+            }, 100);
+        }
+
+        // OTP Functions
+        function moveToNext(current, nextFieldId) {
+            if (current.value.length >= 1) {
+                if (nextFieldId) {
+                    document.getElementById(nextFieldId).focus();
+                }
+            }
+        }
+
+        function verifyOTP() {
+            // Validate OTP
+            if (!validateOTP()) {
+                return;
+            }
+            
+            // Simulate OTP verification
+            processPayment();
+        }
+
+        // Cash Payment Flow
+        function showCashPayment() {
+            selectedPaymentMethod = 'Cash';
+            
+            // Generate receipt directly for cash
+            updateDateTime();
+            document.getElementById('paymentMethod').textContent = 'Cash';
+            document.getElementById('txnId').textContent = 'CASH' + Date.now();
+            
+            showScreen('payment-success');
+        }
+
+        // Process Payment (Common)
+        function processPayment() {
+            // Show loading screen
+            showScreen('loading');
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                updateDateTime();
+                document.getElementById('paymentMethod').textContent = selectedPaymentMethod;
+                document.getElementById('txnId').textContent = 'TXN' + Date.now();
+                
+                showScreen('payment-success');
+            }, 2000);
+        }
+
+        // Download Receipt
+        function downloadReceipt() {
+            // In production, this would generate a PDF
+            alert('Receipt downloaded successfully!\n\nIn production, a PDF receipt would be downloaded to your device.');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear all forms
+                document.querySelectorAll('input').forEach(input => input.value = '');
+                
+                // Reset variables
+                selectedBank = '';
+                selectedPaymentMethod = '';
+                
+                // Show thank you message
+                alert('Logged out successfully. Thank you for using our services!');
+                
+                // Redirect to home page (main menu)
+                window.location.reload();
+            }
+        }
+
+        // Utility Functions
+        function updateDateTime() {
+            const now = new Date();
+            const formatted = now.toLocaleString('en-IN', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+            
+            const element = document.getElementById('txnDateTime');
+            if (element) {
+                element.textContent = formatted;
+            }
+        }
+
+        // Auto-format card number
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardNumberInput = document.getElementById('cardNumber');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\s/g, '');
+                    let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+                    e.target.value = formattedValue;
+                });
+            }
+            
+            const cardExpiryInput = document.getElementById('cardExpiry');
+            if (cardExpiryInput) {
+                cardExpiryInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                    }
+                    e.target.value = value;
+                });
+            }
+        });
+
+        // Initialize on page load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
