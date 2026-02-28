@@ -1,0 +1,443 @@
+// prisma/schema.prisma
+// GMC Scholarship Portal - Complete Database Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+//  ENUMS
+// ─────────────────────────────────────────────
+
+enum Role {
+  STUDENT
+  ADMIN
+  VERIFIER       // School/institution verifier
+  SUPER_ADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum Category {
+  GENERAL
+  OBC
+  SC
+  ST
+  EWS
+  MINORITY
+}
+
+enum IncomeGroup {
+  BELOW_1L      // Below ₹1,00,000
+  BELOW_2L      // ₹1,00,001 – ₹2,00,000
+  BELOW_3_5L    // ₹2,00,001 – ₹3,50,000
+  BELOW_8L      // ₹3,50,001 – ₹8,00,000
+  ABOVE_8L      // Above ₹8,00,000
+}
+
+enum AcademicLevel {
+  PRE_MATRIC       // Class 1–9
+  MATRIC           // Class 10
+  POST_MATRIC      // Class 11–12
+  GRADUATION       // UG
+  POST_GRADUATION  // PG
+  DIPLOMA
+  VOCATIONAL
+  PHD
+}
+
+enum ScholarshipStatus {
+  DRAFT
+  ACTIVE
+  CLOSING_SOON
+  CLOSED
+  ARCHIVED
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  INSTITUTION_VERIFIED
+  PENDING_APPROVAL
+  APPROVED
+  DISBURSED
+  REJECTED
+  CANCELLED
+  RENEWAL_DUE
+}
+
+enum DocumentType {
+  MARKSHEET
+  INCOME_CERTIFICATE
+  CASTE_CERTIFICATE
+  AADHAAR
+  PHOTO
+  BANK_PASSBOOK
+  DOMICILE
+  DISABILITY_CERTIFICATE
+  MINORITY_CERTIFICATE
+  OTHER
+}
+
+enum NoticeTag {
+  DEADLINE
+  NOTICE
+  RESULT
+  NEW
+  ALERT
+  INFO
+}
+
+enum DisbursementStatus {
+  PENDING
+  INITIATED
+  PROCESSED
+  FAILED
+  REVERSED
+}
+
+// ─────────────────────────────────────────────
+//  USERS
+// ─────────────────────────────────────────────
+
+model User {
+  id                String   @id @default(uuid())
+  email             String?  @unique
+  phone             String   @unique
+  aadhaarHash       String?  @unique   // Hashed Aadhaar number
+  passwordHash      String?
+  role              Role     @default(STUDENT)
+  isActive          Boolean  @default(true)
+  isEmailVerified   Boolean  @default(false)
+  isPhoneVerified   Boolean  @default(false)
+  lastLoginAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  profile           StudentProfile?
+  applications      Application[]
+  notifications     Notification[]
+  sessions          UserSession[]
+  otpTokens         OtpToken[]
+  auditLogs         AuditLog[]
+
+  @@map("users")
+}
+
+model UserSession {
+  id          String   @id @default(uuid())
+  userId      String
+  token       String   @unique
+  ipAddress   String?
+  userAgent   String?
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+model OtpToken {
+  id          String   @id @default(uuid())
+  userId      String
+  code        String
+  purpose     String   // "login", "phone_verify", "reset_password"
+  attempts    Int      @default(0)
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("otp_tokens")
+}
+
+model StudentProfile {
+  id              String       @id @default(uuid())
+  userId          String       @unique
+  firstName       String
+  lastName        String
+  dob             DateTime
+  gender          Gender
+  category        Category
+  incomeGroup     IncomeGroup
+  academicLevel   AcademicLevel
+  institution     String
+  institutionCode String?
+  course          String
+  yearOfStudy     Int
+  percentage      Float?
+  rollNumber      String?
+  district        String       @default("Kamrup Metropolitan")
+  ward            String?
+  address         String
+  pincode         String
+  bankAccountNo   String?
+  bankName        String?
+  bankIFSC        String?
+  bankBranch      String?
+  isMinority      Boolean      @default(false)
+  isDisabled      Boolean      @default(false)
+  disabilityPct   Int?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents       Document[]
+
+  @@map("student_profiles")
+}
+
+// ─────────────────────────────────────────────
+//  SCHOLARSHIPS
+// ─────────────────────────────────────────────
+
+model Scholarship {
+  id              String             @id @default(uuid())
+  slug            String             @unique
+  name            String
+  shortName       String?
+  issuer          String             // "GMC Education Cell", "Assam Govt.", etc.
+  description     String
+  status          ScholarshipStatus  @default(DRAFT)
+  isFeatured      Boolean            @default(false)
+
+  // Eligibility criteria
+  eligibleCategories   Category[]
+  eligibleIncomeGroups IncomeGroup[]
+  eligibleAcademicLevels AcademicLevel[]
+  minPercentage        Float?
+  minAge               Int?
+  maxAge               Int?
+  requiresDistrict     Boolean        @default(true)
+  onlyForGirls         Boolean        @default(false)
+  onlyForMinority      Boolean        @default(false)
+  onlyForDisabled      Boolean        @default(false)
+
+  // Financial
+  amountPerYear   Float
+  amountFrequency String           @default("yearly")  // "yearly", "monthly", "one-time"
+  totalSeats      Int?
+  seatsRemaining  Int?
+
+  // Dates
+  applicationStartDate DateTime
+  applicationEndDate   DateTime
+  academicYear         String   // "2025-26"
+
+  // Documents required
+  requiredDocuments    DocumentType[]
+
+  // External
+  externalUrl     String?
+  nspSchemeCode   String?      // National Scholarship Portal code
+  iconType        String?      // For frontend icon selection
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  applications    Application[]
+  disbursements   Disbursement[]
+
+  @@map("scholarships")
+}
+
+// ─────────────────────────────────────────────
+//  APPLICATIONS
+// ─────────────────────────────────────────────
+
+model Application {
+  id              String            @id @default(uuid())
+  applicationNo   String            @unique  // GMC-2526-XXXXX
+  userId          String
+  scholarshipId   String
+  status          ApplicationStatus @default(DRAFT)
+  academicYear    String
+
+  // Form data (snapshot at submission)
+  formData        Json?
+
+  // Remarks
+  studentRemarks    String?
+  verifierRemarks   String?
+  adminRemarks      String?
+
+  // Timestamps
+  submittedAt     DateTime?
+  verifiedAt      DateTime?
+  approvedAt      DateTime?
+  rejectedAt      DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relations
+  user            User              @relation(fields: [userId], references: [id])
+  scholarship     Scholarship       @relation(fields: [scholarshipId], references: [id])
+  documents       ApplicationDocument[]
+  statusHistory   ApplicationStatusHistory[]
+  disbursement    Disbursement?
+
+  @@unique([userId, scholarshipId, academicYear])
+  @@map("applications")
+}
+
+model ApplicationStatusHistory {
+  id              String            @id @default(uuid())
+  applicationId   String
+  fromStatus      ApplicationStatus?
+  toStatus        ApplicationStatus
+  changedBy       String            // userId
+  remarks         String?
+  changedAt       DateTime          @default(now())
+
+  application     Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("application_status_history")
+}
+
+// ─────────────────────────────────────────────
+//  DOCUMENTS
+// ─────────────────────────────────────────────
+
+model Document {
+  id              String       @id @default(uuid())
+  profileId       String
+  type            DocumentType
+  filename        String
+  originalName    String
+  mimeType        String
+  sizeBytes       Int
+  storageKey      String       @unique  // S3/local storage key
+  isVerified      Boolean      @default(false)
+  verifiedBy      String?
+  uploadedAt      DateTime     @default(now())
+
+  profile         StudentProfile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  applicationDocs ApplicationDocument[]
+
+  @@map("documents")
+}
+
+model ApplicationDocument {
+  id              String   @id @default(uuid())
+  applicationId   String
+  documentId      String
+
+  application     Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  document        Document    @relation(fields: [documentId], references: [id])
+
+  @@unique([applicationId, documentId])
+  @@map("application_documents")
+}
+
+// ─────────────────────────────────────────────
+//  DISBURSEMENTS
+// ─────────────────────────────────────────────
+
+model Disbursement {
+  id              String             @id @default(uuid())
+  applicationId   String             @unique
+  scholarshipId   String
+  amount          Float
+  status          DisbursementStatus @default(PENDING)
+  transactionRef  String?
+  bankAccount     String?
+  ifscCode        String?
+  initiatedAt     DateTime?
+  processedAt     DateTime?
+  failureReason   String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  application     Application @relation(fields: [applicationId], references: [id])
+  scholarship     Scholarship @relation(fields: [scholarshipId], references: [id])
+
+  @@map("disbursements")
+}
+
+// ─────────────────────────────────────────────
+//  NOTICES
+// ─────────────────────────────────────────────
+
+model Notice {
+  id          String    @id @default(uuid())
+  title       String
+  body        String
+  tag         NoticeTag
+  issuedBy    String    // Dept name
+  publishedAt DateTime  @default(now())
+  expiresAt   DateTime?
+  isPinned    Boolean   @default(false)
+  isActive    Boolean   @default(true)
+  slug        String    @unique
+  attachmentUrl String?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("notices")
+}
+
+// ─────────────────────────────────────────────
+//  ELIGIBILITY CHECKER
+// ─────────────────────────────────────────────
+
+model EligibilityCheck {
+  id              String   @id @default(uuid())
+  sessionId       String
+  inputData       Json     // User's answers
+  matchedSchemas  Json     // List of matched scholarship IDs and scores
+  createdAt       DateTime @default(now())
+
+  @@map("eligibility_checks")
+}
+
+// ─────────────────────────────────────────────
+//  NOTIFICATIONS
+// ─────────────────────────────────────────────
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  body        String
+  type        String   // "application_update", "deadline_reminder", "disbursement", etc.
+  isRead      Boolean  @default(false)
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────────
+//  AUDIT LOG
+// ─────────────────────────────────────────────
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  action      String   // "APPLICATION_SUBMITTED", "STATUS_CHANGED", etc.
+  entityType  String   // "Application", "Scholarship", etc.
+  entityId    String?
+  metadata    Json?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
