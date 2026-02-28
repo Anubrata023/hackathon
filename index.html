@@ -1,4 +1,265 @@
-PORT=3000
-NODE_ENV=development
-DB_PATH=./data/apdcl.db
-FRONTEND_URL=http://localhost:5500
+const Database = require('better-sqlite3');
+const path = require('path');
+
+const db = new Database(path.join(__dirname, 'electricity.db'));
+
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+
+function initializeDatabase() {
+  db.exec(`
+
+    -- ─────────────────────────────────────────────
+    -- USERS
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS users (
+      id            INTEGER PRIMARY KEY AUTOINCREMENT,
+      name          TEXT NOT NULL,
+      email         TEXT UNIQUE NOT NULL,
+      phone         TEXT UNIQUE NOT NULL,
+      password      TEXT NOT NULL,
+      consumer_id   TEXT UNIQUE,
+      address       TEXT,
+      district      TEXT,
+      role          TEXT NOT NULL DEFAULT 'customer',
+      is_active     INTEGER NOT NULL DEFAULT 1,
+      created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    -- ─────────────────────────────────────────────
+    -- METERS
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS meters (
+      id                INTEGER PRIMARY KEY AUTOINCREMENT,
+      consumer_id       TEXT UNIQUE NOT NULL,
+      user_id           INTEGER NOT NULL,
+      meter_number      TEXT UNIQUE NOT NULL,
+      meter_type        TEXT NOT NULL DEFAULT 'single_phase',
+      connection_type   TEXT NOT NULL DEFAULT 'domestic',
+      sanctioned_load   REAL NOT NULL DEFAULT 2.0,
+      installation_date TEXT,
+      status            TEXT NOT NULL DEFAULT 'active',
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    -- ─────────────────────────────────────────────
+    -- SMART METER READINGS  (hourly/daily usage for live charts)
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS meter_readings (
+      id               INTEGER PRIMARY KEY AUTOINCREMENT,
+      meter_id         INTEGER NOT NULL,
+      consumer_id      TEXT NOT NULL,
+      reading_date     TEXT NOT NULL,
+      previous_reading REAL NOT NULL DEFAULT 0,
+      current_reading  REAL NOT NULL,
+      units_consumed   REAL NOT NULL,
+      recorded_by      INTEGER,
+      created_at       TEXT NOT NULL DEFAULT (datetime('now')),
+      FOREIGN KEY (meter_id) REFERENCES meters(id)
+    );
+
+    -- ─────────────────────────────────────────────
+    -- BILLS
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS bills (
+      id              INTEGER PRIMARY KEY AUTOINCREMENT,
+      bill_number     TEXT UNIQUE NOT NULL,
+      consumer_id     TEXT NOT NULL,
+      user_id         INTEGER NOT NULL,
+      meter_id        INTEGER,
+      billing_month   TEXT NOT NULL,
+      billing_year    INTEGER NOT NULL,
+      units_consumed  REAL NOT NULL,
+      energy_charges  REAL NOT NULL DEFAULT 0,
+      fixed_charges   REAL NOT NULL DEFAULT 0,
+      fuel_adjustment REAL NOT NULL DEFAULT 0,
+      taxes           REAL NOT NULL DEFAULT 0,
+      arrears         REAL NOT NULL DEFAULT 0,
+      total_amount    REAL NOT NULL,
+      due_date        TEXT NOT NULL,
+      status          TEXT NOT NULL DEFAULT 'unpaid',
+      generated_at    TEXT NOT NULL DEFAULT (datetime('now')),
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (meter_id) REFERENCES meters(id)
+    );
+
+    -- ─────────────────────────────────────────────
+    -- PAYMENTS
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS payments (
+      id              INTEGER PRIMARY KEY AUTOINCREMENT,
+      transaction_id  TEXT UNIQUE NOT NULL,
+      bill_id         INTEGER NOT NULL,
+      consumer_id     TEXT NOT NULL,
+      user_id         INTEGER NOT NULL,
+      amount          REAL NOT NULL,
+      payment_method  TEXT NOT NULL,
+      payment_status  TEXT NOT NULL DEFAULT 'success',
+      payment_date    TEXT NOT NULL DEFAULT (datetime('now')),
+      receipt_number  TEXT UNIQUE NOT NULL,
+      remarks         TEXT,
+      FOREIGN KEY (bill_id) REFERENCES bills(id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
+    -- ─────────────────────────────────────────────
+    -- COMPLAINTS & GRIEVANCES
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS complaints (
+      id               INTEGER PRIMARY KEY AUTOINCREMENT,
+      complaint_number TEXT UNIQUE NOT NULL,
+      consumer_id      TEXT,
+      user_id          INTEGER,
+      name             TEXT NOT NULL,
+      phone            TEXT NOT NULL,
+      email            TEXT,
+      complaint_type   TEXT NOT NULL,
+      subject          TEXT NOT NULL,
+      description      TEXT NOT NULL,
+      address          TEXT,
+      district         TEXT,
+      status           TEXT NOT NULL DEFAULT 'pending',
+      priority         TEXT NOT NULL DEFAULT 'normal',
+      assigned_to      INTEGER,
+      resolution       TEXT,
+      resolved_at      TEXT,
+      created_at       TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at       TEXT NOT NULL DEFAULT (datetime('now')),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
+    -- ─────────────────────────────────────────────
+    -- NEW CONNECTION REQUESTS
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS connection_requests (
+      id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+      application_number TEXT UNIQUE NOT NULL,
+      applicant_name     TEXT NOT NULL,
+      phone              TEXT NOT NULL,
+      email              TEXT,
+      address            TEXT NOT NULL,
+      district           TEXT NOT NULL,
+      connection_type    TEXT NOT NULL,
+      load_required      REAL NOT NULL,
+      purpose            TEXT,
+      id_proof_type      TEXT,
+      id_proof_number    TEXT,
+      status             TEXT NOT NULL DEFAULT 'pending',
+      remarks            TEXT,
+      approved_by        INTEGER,
+      approved_at        TEXT,
+      consumer_id        TEXT,
+      created_at         TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at         TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    -- ─────────────────────────────────────────────
+    -- OUTAGES / PLANNED MAINTENANCE NOTICES
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS outages (
+      id             INTEGER PRIMARY KEY AUTOINCREMENT,
+      title          TEXT NOT NULL,
+      description    TEXT NOT NULL,
+      affected_areas TEXT NOT NULL,
+      outage_type    TEXT NOT NULL DEFAULT 'unplanned',
+      district       TEXT,
+      start_time     TEXT NOT NULL,
+      end_time       TEXT,
+      status         TEXT NOT NULL DEFAULT 'active',
+      created_by     INTEGER,
+      created_at     TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    -- ─────────────────────────────────────────────
+    -- TARIFF RATES  (slab-based billing)
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS tariffs (
+      id              INTEGER PRIMARY KEY AUTOINCREMENT,
+      connection_type TEXT NOT NULL,
+      slab_from       REAL NOT NULL,
+      slab_to         REAL,
+      rate_per_unit   REAL NOT NULL,
+      fixed_charge    REAL NOT NULL DEFAULT 0,
+      effective_from  TEXT NOT NULL,
+      effective_to    TEXT,
+      is_active       INTEGER NOT NULL DEFAULT 1
+    );
+
+    -- ─────────────────────────────────────────────
+    -- SOLAR CALCULATOR SUBMISSIONS
+    -- ─────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS solar_calculations (
+      id                INTEGER PRIMARY KEY AUTOINCREMENT,
+      name              TEXT NOT NULL,
+      phone             TEXT NOT NULL,
+      email             TEXT,
+      district          TEXT,
+      monthly_units     REAL NOT NULL,
+      roof_area_sqft    REAL,
+      recommended_kw    REAL,
+      estimated_cost    REAL,
+      subsidy_amount    REAL,
+      annual_savings    REAL,
+      payback_years     REAL,
+      created_at        TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    -- ─────────────────────────────────────────────
+    -- SEED: default admin  (password = "password")
+    -- ─────────────────────────────────────────────
+    INSERT OR IGNORE INTO users (name, email, phone, password, role, consumer_id, district)
+    VALUES (
+      'APDCL Admin',
+      'admin@apdcl.assam.gov.in',
+      '9999999999',
+      '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+      'admin',
+      'ADMIN001',
+      'Guwahati'
+    );
+
+    -- ─────────────────────────────────────────────
+    -- SEED: tariff slabs (APDCL 2024 rates)
+    -- ─────────────────────────────────────────────
+    INSERT OR IGNORE INTO tariffs (connection_type, slab_from, slab_to, rate_per_unit, fixed_charge, effective_from)
+    VALUES
+      ('domestic',   0,    100,  3.50,  30,  '2024-04-01'),
+      ('domestic',   101,  200,  4.50,  30,  '2024-04-01'),
+      ('domestic',   201,  300,  5.50,  50,  '2024-04-01'),
+      ('domestic',   301,  NULL, 6.50,  50,  '2024-04-01'),
+      ('commercial', 0,    100,  5.50,  80,  '2024-04-01'),
+      ('commercial', 101,  200,  6.50,  80,  '2024-04-01'),
+      ('commercial', 201,  NULL, 7.50,  100, '2024-04-01'),
+      ('industrial', 0,    NULL, 6.00,  150, '2024-04-01'),
+      ('agricultural',0,   NULL, 1.50,  20,  '2024-04-01');
+
+    -- ─────────────────────────────────────────────
+    -- SEED: sample outage notices (matches frontend map)
+    -- ─────────────────────────────────────────────
+    INSERT OR IGNORE INTO outages (title, description, affected_areas, outage_type, district, start_time, end_time, status)
+    VALUES
+      ('Major Outage — Barpeta District',
+       'Major outage in Barpeta district — restoration crew dispatched. Est. 3 hrs.',
+       'Barpeta Town, Sarthebari, Bajali',
+       'unplanned', 'Barpeta',
+       datetime('now', '-2 hours'), datetime('now', '+3 hours'), 'active'),
+
+      ('Scheduled Maintenance — Guwahati Zone-3',
+       'Scheduled maintenance: Guwahati Zone-3 shut from 2:00 PM – 5:00 PM today',
+       'Zoo Road, Ulubari, Six Mile',
+       'planned', 'Kamrup Metro',
+       datetime('now', '+2 hours'), datetime('now', '+5 hours'), 'upcoming'),
+
+      ('Smart Meter Rollout — Nagaon',
+       'Smart meter rollout commences in Nagaon district from 5 March 2026',
+       'Nagaon Town, Hojai, Lumding',
+       'planned', 'Nagaon',
+       '2026-03-05 08:00:00', '2026-03-05 18:00:00', 'upcoming');
+  `);
+
+  console.log('✅ Database initialised');
+}
+
+initializeDatabase();
+module.exports = db;

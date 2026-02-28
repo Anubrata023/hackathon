@@ -1,181 +1,256 @@
-# ⛽ Gas Services Portal — Backend API
+# ⚡ Assam Electricity Services — Backend API
 
-A production-ready **Node.js + Express + SQLite** backend for the Gas Services Portal.
+Node.js + Express + SQLite backend for the **APDCL (Assam Power Distribution Company Ltd.)** digital portal.
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
 ```bash
+# 1. Install dependencies
 npm install
-```
 
-### 2. Configure Environment
-```bash
+# 2. Create environment file
 cp .env.example .env
-# Edit .env and change JWT_SECRET to something secure
-```
 
-### 3. Start the Server
-```bash
-# Development (hot-reload)
-npm run dev
-
-# Production
-npm start
-```
-
-### 4. (Optional) Seed Demo Data
-```bash
+# 3. (Optional) Load demo data
 node seed.js
+
+# 4. Start server
+npm start          # production
+npm run dev        # development with auto-reload
 ```
-This creates:
-- **Admin**: `admin@gasportal.com` / `Admin@123`
-- **Customer**: `customer@example.com` / `Customer@123`
-- Demo connection, bills, complaint, and notification
+
+Server runs at **http://localhost:5000**
 
 ---
 
-## 🗂️ Project Structure
+## 📁 Project Structure
 
 ```
-gas-backend/
-├── server.js                  # Entry point
-├── seed.js                    # Demo data seeder
-├── .env                       # Environment variables
-├── database/
-│   └── db.js                  # SQLite init & schema
+assam-electricity-backend/
+├── server.js              # Express app entry point
+├── database.js            # SQLite schema + seeding
+├── seed.js                # Demo data loader
 ├── middleware/
-│   ├── auth.js                # JWT authentication
-│   └── validate.js            # Request validation
+│   └── auth.js            # JWT authenticate + isAdmin guards
 ├── routes/
-│   ├── auth.js
-│   ├── connections.js
-│   ├── services.js
-│   ├── billing.js
-│   ├── complaints.js
-│   ├── notifications.js
-│   └── admin.js
-├── controllers/
-│   ├── authController.js
-│   ├── connectionController.js
-│   ├── serviceController.js
-│   ├── billingController.js
-│   ├── complaintController.js
-│   ├── notificationController.js
-│   └── adminController.js
-└── public/                    # Place your HTML frontend here
-    └── index.html             # → gas_services_portal.html
+│   ├── auth.js            # Register, login, profile
+│   ├── bills.js           # Bill lookup, generation
+│   ├── payments.js        # Pay bills, receipts
+│   ├── complaints.js      # Lodge & track complaints
+│   ├── connections.js     # New connection applications
+│   ├── usage.js           # Smart meter / usage data
+│   ├── solar.js           # Solar rooftop calculator
+│   ├── outages.js         # Live outage map feed
+│   └── admin.js           # Admin dashboard & management
+├── public/                # ← Place the frontend HTML here as index.html
+├── .env.example
+└── package.json
 ```
 
 ---
 
-## 📡 API Reference
+## 🔑 Default Credentials
 
-> All protected routes require: `Authorization: Bearer <token>`
-
-### 🔐 Auth
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/auth/register` | ❌ | Register new user |
-| POST | `/api/auth/login` | ❌ | Login → returns JWT |
-| GET | `/api/auth/profile` | ✅ | Get own profile |
-| PUT | `/api/auth/profile` | ✅ | Update profile |
-| PUT | `/api/auth/change-password` | ✅ | Change password |
-
-### 🔗 Connections
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/connections` | ✅ | My connections |
-| GET | `/api/connections/:id` | ✅ | Single connection |
-| POST | `/api/connections/apply` | ✅ | Apply for new connection |
-
-### 🔧 Service Requests
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/services/types` | ❌ | Available service types |
-| POST | `/api/services` | ✅ | Create service request |
-| GET | `/api/services` | ✅ | My requests (filter: `?status=`) |
-| GET | `/api/services/:id` | ✅ | Single request |
-| DELETE | `/api/services/:id` | ✅ | Cancel request |
-
-### 💳 Billing
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/billing` | ✅ | My bills (filter: `?status=`) |
-| GET | `/api/billing/payments` | ✅ | Payment history |
-| GET | `/api/billing/:id` | ✅ | Single bill |
-| POST | `/api/billing/:id/pay` | ✅ | Pay a bill |
-
-### 📢 Complaints
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/complaints/categories` | ❌ | Complaint categories |
-| POST | `/api/complaints` | ✅ | Submit complaint |
-| GET | `/api/complaints` | ✅ | My complaints |
-| GET | `/api/complaints/:id` | ✅ | Single complaint |
-
-### 🔔 Notifications
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/notifications` | ✅ | My notifications |
-| PATCH | `/api/notifications/:id/read` | ✅ | Mark as read |
-| PATCH | `/api/notifications/read-all` | ✅ | Mark all as read |
-| DELETE | `/api/notifications/:id` | ✅ | Delete notification |
-
-### 👑 Admin (requires admin role)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/admin/dashboard` | Stats overview |
-| GET | `/api/admin/users` | All users |
-| PATCH | `/api/admin/users/:id/role` | Update user role |
-| GET | `/api/admin/connections` | All connections |
-| PATCH | `/api/admin/connections/:id/status` | Update connection status |
-| GET | `/api/admin/service-requests` | All service requests |
-| PATCH | `/api/admin/service-requests/:id` | Update request status |
-| GET | `/api/admin/complaints` | All complaints |
-| PATCH | `/api/admin/complaints/:id` | Resolve complaint |
-| GET | `/api/admin/bills` | All bills |
-| POST | `/api/admin/bills/generate` | Generate bill for connection |
-| POST | `/api/admin/bills/mark-overdue` | Mark unpaid past-due bills as overdue |
-| POST | `/api/admin/notifications/broadcast` | Notify all customers |
+| Role     | Email                          | Password   |
+|----------|-------------------------------|------------|
+| Admin    | admin@apdcl.assam.gov.in      | password   |
+| Customer | rajesh@example.com (after seed)| demo1234  |
 
 ---
 
-## 🗄️ Database Schema
+## 🌐 API Reference
 
-| Table | Description |
-|-------|-------------|
-| `users` | Customers and admins |
-| `connections` | Gas connections linked to users |
-| `service_requests` | All service requests |
-| `bills` | Bills per connection per period |
-| `payments` | Payment transactions |
-| `complaints` | Customer complaints |
-| `notifications` | In-app notifications |
+All responses follow: `{ success: boolean, data?: any, message?: string }`
 
----
+### 🔐 Auth  `/api/auth`
 
-## 📦 Deploying to GitHub
+| Method | Endpoint               | Auth | Description                          |
+|--------|------------------------|------|--------------------------------------|
+| POST   | /register              | —    | Register new customer                |
+| POST   | /login                 | —    | Login (email / phone / consumer_id)  |
+| GET    | /profile               | ✅   | Get own profile                      |
+| PUT    | /profile               | ✅   | Update name, phone, address          |
+| PUT    | /change-password       | ✅   | Change password                      |
 
-```bash
-git init
-git add .
-git commit -m "Initial commit - Gas Services Portal Backend"
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-git push -u origin main
+**Register body:**
+```json
+{ "name":"Rajesh Sharma", "email":"user@example.com", "phone":"9876543210",
+  "password":"secret123", "address":"MG Road", "district":"Kamrup Metro" }
 ```
 
-> ⚠️ The `.gitignore` already excludes `node_modules/`, `.env`, and `*.db` files.
-> Make sure to set environment variables in your hosting platform (Render, Railway, etc.)
+**Login body** (use any one identifier):
+```json
+{ "email":"user@example.com", "password":"secret123" }
+{ "consumer_id":"AS-2400-1000", "password":"secret123" }
+```
 
 ---
 
-## 🛠️ Tech Stack
+### 💳 Bills  `/api/bills`
 
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: SQLite via `better-sqlite3`
-- **Auth**: JWT (`jsonwebtoken`) + bcrypt (`bcryptjs`)
-- **Other**: `uuid`, `cors`, `dotenv`
+| Method | Endpoint         | Auth     | Description                          |
+|--------|-----------------|----------|--------------------------------------|
+| GET    | /               | ✅ Customer | Own bills                         |
+| GET    | /latest         | ✅ Customer | Latest unpaid bill                |
+| GET    | /:id            | ✅ Customer | Single bill detail                |
+| POST   | /check          | —        | Quick lookup by consumer_id          |
+| POST   | /generate       | ✅ Admin  | Generate a bill                      |
+| DELETE | /:id            | ✅ Admin  | Delete unpaid bill                   |
+
+**Quick check (public — used by homepage Quick Pay):**
+```json
+{ "consumer_id": "AS-2400-1000" }
+```
+
+**Generate bill (admin):**
+```json
+{ "consumer_id":"AS-2400-1000", "units_consumed":250,
+  "billing_month":"February", "billing_year":2026, "arrears":0 }
+```
+
+---
+
+### 💰 Payments  `/api/payments`
+
+| Method | Endpoint                      | Auth     | Description            |
+|--------|-------------------------------|----------|------------------------|
+| POST   | /pay                          | ✅ Customer | Pay a bill           |
+| GET    | /                             | ✅ Customer | Payment history      |
+| GET    | /receipt/:transaction_id      | ✅ Customer | Download receipt     |
+| GET    | /:id                          | ✅ Customer | Single payment       |
+
+**Pay body:**
+```json
+{ "bill_id": 3, "payment_method": "upi" }
+```
+
+Payment methods: `upi`, `netbanking`, `credit_card`, `debit_card`, `wallet`, `neft`
+
+---
+
+### 📋 Complaints  `/api/complaints`
+
+| Method | Endpoint               | Auth      | Description              |
+|--------|------------------------|-----------|--------------------------|
+| POST   | /                      | —         | Submit complaint (public)|
+| GET    | /track/:number         | —         | Track by complaint no.   |
+| GET    | /my                    | ✅ Customer| Own complaints          |
+| GET    | /                      | ✅ Admin  | All complaints           |
+| PUT    | /:id                   | ✅ Admin  | Update status            |
+| GET    | /types/list            | —         | Valid complaint types    |
+
+**Submit body:**
+```json
+{ "name":"John", "phone":"9876543210", "complaint_type":"power_outage",
+  "subject":"No power since 6am", "description":"Details here...",
+  "consumer_id":"AS-2400-1000", "district":"Barpeta" }
+```
+
+Complaint types: `power_outage`, `billing_error`, `voltage_fluctuation`,
+`transformer_fault`, `meter_fault`, `new_connection`, `street_light`, `other`
+
+---
+
+### 🔌 New Connections  `/api/connections`
+
+| Method | Endpoint                     | Auth     | Description              |
+|--------|------------------------------|----------|--------------------------|
+| POST   | /apply                       | —        | Apply (public)           |
+| GET    | /track/:application_number   | —        | Track application        |
+| GET    | /                            | ✅ Admin | All applications         |
+| PUT    | /:id/approve                 | ✅ Admin | Approve + assign cons. ID|
+| PUT    | /:id/reject                  | ✅ Admin | Reject with reason       |
+| GET    | /districts/list              | —        | All Assam districts      |
+
+---
+
+### 📊 Smart Meter Usage  `/api/usage`
+
+| Method | Endpoint      | Auth      | Description                      |
+|--------|--------------|-----------|----------------------------------|
+| GET    | /            | ✅ Customer| Full usage history + monthly     |
+| GET    | /meter-info  | ✅ Customer| Meter details                    |
+| GET    | /live        | ✅ Customer| Simulated live hourly load curve |
+| POST   | /reading     | ✅ Admin  | Record a meter reading           |
+
+---
+
+### ☀️ Solar Calculator  `/api/solar`
+
+| Method | Endpoint         | Auth | Description                          |
+|--------|-----------------|------|--------------------------------------|
+| POST   | /calculate      | —    | Calculate system size, cost, savings |
+| GET    | /subsidy-info   | —    | PM Surya Ghar Yojana subsidy info    |
+
+**Calculate body:**
+```json
+{ "name":"Rajesh", "phone":"9876543210", "monthly_units":300,
+  "roof_area_sqft":500, "district":"Kamrup Metro" }
+```
+
+---
+
+### 🗺️ Outages  `/api/outages`
+
+| Method | Endpoint              | Auth     | Description          |
+|--------|-----------------------|----------|----------------------|
+| GET    | /                     | —        | All outages (public) |
+| GET    | /district/:district   | —        | Filter by district   |
+| POST   | /                     | ✅ Admin | Create notice        |
+| PUT    | /:id                  | ✅ Admin | Update status        |
+| DELETE | /:id                  | ✅ Admin | Delete              |
+
+---
+
+### 🛠️ Admin  `/api/admin`
+
+| Method | Endpoint                     | Auth     | Description           |
+|--------|------------------------------|----------|-----------------------|
+| GET    | /dashboard                   | ✅ Admin | Stats overview        |
+| GET    | /consumers                   | ✅ Admin | All customers         |
+| GET    | /consumers/:id               | ✅ Admin | Customer detail       |
+| PUT    | /consumers/:id/toggle        | ✅ Admin | Activate/deactivate   |
+| POST   | /meters                      | ✅ Admin | Register a meter      |
+| GET    | /tariffs                     | ✅ Admin | View tariff slabs     |
+| POST   | /tariffs                     | ✅ Admin | Add tariff slab       |
+| GET    | /reports/revenue             | ✅ Admin | Revenue reports       |
+
+---
+
+## 🧮 Billing Logic
+
+Bills are calculated using slab-based tariffs stored in the `tariffs` table:
+
+| Connection  | 0–100 units | 101–200 | 201–300 | 301+    |
+|-------------|------------|---------|---------|---------|
+| Domestic    | ₹3.50/unit | ₹4.50  | ₹5.50  | ₹6.50  |
+| Commercial  | ₹5.50/unit | ₹6.50  | ₹7.50  | —       |
+| Industrial  | ₹6.00/unit | —       | —       | —       |
+| Agricultural| ₹1.50/unit | —       | —       | —       |
+
+Plus:
+- **Fixed charge** based on slab
+- **Fuel Adjustment Charge (FAC)**: ₹0.10/unit
+- **GST**: 5% on (energy + fixed charges)
+
+---
+
+## 🔒 Security Notes
+
+- Passwords are hashed with **bcryptjs** (10 rounds)
+- JWT tokens expire in **7 days** (configurable via `.env`)
+- Change `JWT_SECRET` in production
+- CORS is open (`*`) — restrict in production
+- SQLite WAL mode enabled for concurrent reads
+
+---
+
+## 🌍 Connecting the Frontend
+
+The frontend HTML file makes API calls. To connect:
+
+1. Copy `assam_electricity_services_v2__1_.html` → `public/index.html`
+2. Update JS `fetch()` calls in the HTML to point to `/api/...` endpoints
+3. Start the server — `http://localhost:5000` serves both frontend and API
