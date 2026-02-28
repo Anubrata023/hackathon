@@ -1,119 +1,181 @@
-// src/server.js — Main entry point for GMC Water Supply Portal API
-require('dotenv').config();
+# ⛽ Gas Services Portal — Backend API
 
-const express      = require('express');
-const helmet       = require('helmet');
-const cors         = require('cors');
-const morgan       = require('morgan');
-const cookieParser = require('cookie-parser');
-const rateLimit    = require('express-rate-limit');
-const path         = require('path');
+A production-ready **Node.js + Express + SQLite** backend for the Gas Services Portal.
 
-// ── Routes ────────────────────────────────────────────────────────────────────
-const authRoutes        = require('./routes/auth');
-const connectionsRoutes = require('./routes/connections');
-const billsRoutes       = require('./routes/bills');
-const leakageRoutes     = require('./routes/leakage');
-const tankerRoutes      = require('./routes/tanker');
-const meterRoutes       = require('./routes/meterReadings');
-const transfersRoutes   = require('./routes/transfers');
-const supplyRoutes      = require('./routes/supplyStatus');
-const miscRoutes        = require('./routes/misc');
+---
 
-const { notFound, errorHandler } = require('./middleware/errorHandler');
+## 🚀 Quick Start
 
-// ── App Init ──────────────────────────────────────────────────────────────────
-const app  = express();
-const PORT = process.env.PORT || 3000;
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-// ── Security & Parsing ────────────────────────────────────────────────────────
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || 'http://localhost:5500',
-  credentials: true,
-}));
-app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
-app.use(express.json({ limit: '2mb' }));
-app.use(express.urlencoded({ extended: true, limit: '2mb' }));
-app.use(cookieParser());
+### 2. Configure Environment
+```bash
+cp .env.example .env
+# Edit .env and change JWT_SECRET to something secure
+```
 
-// ── Rate Limiting ─────────────────────────────────────────────────────────────
-app.use('/api/', rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || 900000),  // 15 min
-  max:      parseInt(process.env.RATE_LIMIT_MAX || 100),
-  standardHeaders: true, legacyHeaders: false,
-  message: { success: false, message: 'Too many requests. Please try again later.' },
-}));
-app.use('/api/auth/login',    rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: { success: false, message: 'Too many login attempts. Wait 15 minutes.' } }));
-app.use('/api/auth/register', rateLimit({ windowMs: 60 * 60 * 1000, max: 5,  message: { success: false, message: 'Too many registrations from this IP.' } }));
-app.use('/api/search',        rateLimit({ windowMs: 60 * 1000, max: 30, message: { success: false, message: 'Too many search requests.' } }));
+### 3. Start the Server
+```bash
+# Development (hot-reload)
+npm run dev
 
-// ── Static Files ──────────────────────────────────────────────────────────────
-app.use('/uploads', express.static(path.resolve(process.env.UPLOAD_DIR || './uploads')));
-app.use(express.static(path.join(__dirname, '../public')));
+# Production
+npm start
+```
 
-// ── API Routes ────────────────────────────────────────────────────────────────
-app.use('/api/auth',        authRoutes);
-app.use('/api/connections', connectionsRoutes);
-app.use('/api/bills',       billsRoutes);
-app.use('/api/leakage',     leakageRoutes);
-app.use('/api/tanker',      tankerRoutes);
-app.use('/api/meter',       meterRoutes);
-app.use('/api/transfers',   transfersRoutes);
-app.use('/api/supply',      supplyRoutes);
-app.use('/api',             miscRoutes);
+### 4. (Optional) Seed Demo Data
+```bash
+node seed.js
+```
+This creates:
+- **Admin**: `admin@gasportal.com` / `Admin@123`
+- **Customer**: `customer@example.com` / `Customer@123`
+- Demo connection, bills, complaint, and notification
 
-// ── Serve Frontend ────────────────────────────────────────────────────────────
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+---
 
-// ── Error Handling ────────────────────────────────────────────────────────────
-app.use(notFound);
-app.use(errorHandler);
+## 🗂️ Project Structure
 
-// ── Start ─────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`
-💧  GMC Water Supply Portal — Backend API
-    Running on:  http://localhost:${PORT}
-    Health:      http://localhost:${PORT}/api/health
-    Environment: ${process.env.NODE_ENV || 'development'}
+```
+gas-backend/
+├── server.js                  # Entry point
+├── seed.js                    # Demo data seeder
+├── .env                       # Environment variables
+├── database/
+│   └── db.js                  # SQLite init & schema
+├── middleware/
+│   ├── auth.js                # JWT authentication
+│   └── validate.js            # Request validation
+├── routes/
+│   ├── auth.js
+│   ├── connections.js
+│   ├── services.js
+│   ├── billing.js
+│   ├── complaints.js
+│   ├── notifications.js
+│   └── admin.js
+├── controllers/
+│   ├── authController.js
+│   ├── connectionController.js
+│   ├── serviceController.js
+│   ├── billingController.js
+│   ├── complaintController.js
+│   ├── notificationController.js
+│   └── adminController.js
+└── public/                    # Place your HTML frontend here
+    └── index.html             # → gas_services_portal.html
+```
 
-📡  API Endpoints:
-    POST   /api/auth/register                  Register citizen
-    POST   /api/auth/login                     Login
-    GET    /api/auth/me                        My profile
+---
 
-    GET    /api/connections                    My connections
-    POST   /api/connections                    Apply new connection
-    GET    /api/connections/track/:appNum      Track application (public)
+## 📡 API Reference
 
-    GET    /api/bills                          My bills
-    POST   /api/bills/:id/pay                  Pay a bill
-    POST   /api/bills/:id/dispute              Dispute a bill
+> All protected routes require: `Authorization: Bearer <token>`
 
-    POST   /api/leakage                        Report leakage (public)
-    GET    /api/leakage/track/:ticketId        Track complaint (public)
+### 🔐 Auth
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/auth/register` | ❌ | Register new user |
+| POST | `/api/auth/login` | ❌ | Login → returns JWT |
+| GET | `/api/auth/profile` | ✅ | Get own profile |
+| PUT | `/api/auth/profile` | ✅ | Update profile |
+| PUT | `/api/auth/change-password` | ✅ | Change password |
 
-    POST   /api/tanker                         Request tanker (public)
-    GET    /api/tanker/track/:reqNum           Track tanker (public)
+### 🔗 Connections
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/connections` | ✅ | My connections |
+| GET | `/api/connections/:id` | ✅ | Single connection |
+| POST | `/api/connections/apply` | ✅ | Apply for new connection |
 
-    POST   /api/meter/readings                 Submit meter reading
-    POST   /api/meter/complaints               File meter complaint
+### 🔧 Service Requests
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/services/types` | ❌ | Available service types |
+| POST | `/api/services` | ✅ | Create service request |
+| GET | `/api/services` | ✅ | My requests (filter: `?status=`) |
+| GET | `/api/services/:id` | ✅ | Single request |
+| DELETE | `/api/services/:id` | ✅ | Cancel request |
 
-    POST   /api/transfers                      Apply transfer / NOC
+### 💳 Billing
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/billing` | ✅ | My bills (filter: `?status=`) |
+| GET | `/api/billing/payments` | ✅ | Payment history |
+| GET | `/api/billing/:id` | ✅ | Single bill |
+| POST | `/api/billing/:id/pay` | ✅ | Pay a bill |
 
-    GET    /api/supply/schedules               Ward schedules (public)
-    GET    /api/supply/quality                 Water quality (public)
-    GET    /api/supply/quality/latest          Latest reading (public)
+### 📢 Complaints
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/complaints/categories` | ❌ | Complaint categories |
+| POST | `/api/complaints` | ✅ | Submit complaint |
+| GET | `/api/complaints` | ✅ | My complaints |
+| GET | `/api/complaints/:id` | ✅ | Single complaint |
 
-    GET    /api/notices                        Notices (public)
-    GET    /api/stats                          Hero counters (public)
-    GET    /api/search?q=term                  Search (public)
+### 🔔 Notifications
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/api/notifications` | ✅ | My notifications |
+| PATCH | `/api/notifications/:id/read` | ✅ | Mark as read |
+| PATCH | `/api/notifications/read-all` | ✅ | Mark all as read |
+| DELETE | `/api/notifications/:id` | ✅ | Delete notification |
 
-    GET    /api/admin/dashboard                Admin summary (admin only)
-  `);
-});
+### 👑 Admin (requires admin role)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/admin/dashboard` | Stats overview |
+| GET | `/api/admin/users` | All users |
+| PATCH | `/api/admin/users/:id/role` | Update user role |
+| GET | `/api/admin/connections` | All connections |
+| PATCH | `/api/admin/connections/:id/status` | Update connection status |
+| GET | `/api/admin/service-requests` | All service requests |
+| PATCH | `/api/admin/service-requests/:id` | Update request status |
+| GET | `/api/admin/complaints` | All complaints |
+| PATCH | `/api/admin/complaints/:id` | Resolve complaint |
+| GET | `/api/admin/bills` | All bills |
+| POST | `/api/admin/bills/generate` | Generate bill for connection |
+| POST | `/api/admin/bills/mark-overdue` | Mark unpaid past-due bills as overdue |
+| POST | `/api/admin/notifications/broadcast` | Notify all customers |
 
-module.exports = app;
+---
+
+## 🗄️ Database Schema
+
+| Table | Description |
+|-------|-------------|
+| `users` | Customers and admins |
+| `connections` | Gas connections linked to users |
+| `service_requests` | All service requests |
+| `bills` | Bills per connection per period |
+| `payments` | Payment transactions |
+| `complaints` | Customer complaints |
+| `notifications` | In-app notifications |
+
+---
+
+## 📦 Deploying to GitHub
+
+```bash
+git init
+git add .
+git commit -m "Initial commit - Gas Services Portal Backend"
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main
+```
+
+> ⚠️ The `.gitignore` already excludes `node_modules/`, `.env`, and `*.db` files.
+> Make sure to set environment variables in your hosting platform (Render, Railway, etc.)
+
+---
+
+## 🛠️ Tech Stack
+
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: SQLite via `better-sqlite3`
+- **Auth**: JWT (`jsonwebtoken`) + bcrypt (`bcryptjs`)
+- **Other**: `uuid`, `cors`, `dotenv`
