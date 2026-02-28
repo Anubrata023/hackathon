@@ -1,120 +1,149 @@
-// src/db/seed.js
-// Seeds realistic initial data for the Assam Government Portal
+// src/db/seed.js — Seeds realistic initial data
+// Usage: npm run seed
 
 require('dotenv').config({ path: require('path').join(__dirname, '../../.env') });
 const Database = require('better-sqlite3');
-const bcrypt = require('bcryptjs');
+const bcrypt   = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
-const path = require('path');
+const path     = require('path');
+const fs       = require('fs');
 
-const db = new Database(path.resolve(process.env.DB_PATH || './db/assam_portal.db'));
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
-
-console.log('🌱 Seeding database...');
-
-// ─── ADMIN USER ─────────────────────────────────────────────────────────────
-const adminExists = db.prepare('SELECT id FROM users WHERE role = ?').get('admin');
-if (!adminExists) {
-  const hash = bcrypt.hashSync(process.env.ADMIN_PASSWORD || 'Admin@Assam2026!', 12);
-  db.prepare(`INSERT INTO users (id, name, email, phone, password, role) VALUES (?,?,?,?,?,?)`)
-    .run(uuidv4(), 'Portal Administrator', process.env.ADMIN_EMAIL || 'admin@assam.gov.in',
-        '+91-9999900000', hash, 'admin');
-  console.log('  ✅ Admin user created');
+const dbPath = path.resolve(process.env.DB_PATH || './db/water_portal.db');
+if (!fs.existsSync(path.dirname(dbPath))) {
+  console.error('❌ Run "npm run setup" first to create the database.');
+  process.exit(1);
 }
 
-// ─── DEPARTMENTS ─────────────────────────────────────────────────────────────
-const depts = [
-  { id: uuidv4(), name_en: 'Health & Family Welfare', name_hi: 'स्वास्थ्य एवं परिवार कल्याण', name_bn: 'স্বাস্থ্য ও পরিবার কল্যাণ', name_as: 'স্বাস্থ্য আৰু পৰিয়াল কল্যাণ', icon: '🏥', url: 'https://health.assam.gov.in', sort_order: 1 },
-  { id: uuidv4(), name_en: 'Education', name_hi: 'शिक्षा', name_bn: 'শিক্ষা', name_as: 'শিক্ষা', icon: '🎓', url: 'https://education.assam.gov.in', sort_order: 2 },
-  { id: uuidv4(), name_en: 'Agriculture', name_hi: 'कृषि', name_bn: 'কৃষি', name_as: 'কৃষি', icon: '🌾', url: 'https://agri.assam.gov.in', sort_order: 3 },
-  { id: uuidv4(), name_en: 'Finance', name_hi: 'वित्त', name_bn: 'অর্থ', name_as: 'বিত্ত', icon: '💰', url: 'https://finance.assam.gov.in', sort_order: 4 },
-  { id: uuidv4(), name_en: 'Home & Political', name_hi: 'गृह एवं राजनीतिक', name_bn: 'স্বরাষ্ট্র ও রাজনৈতিক', name_as: 'গৃহ আৰু ৰাজনৈতিক', icon: '🏛️', url: 'https://home.assam.gov.in', sort_order: 5 },
-  { id: uuidv4(), name_en: 'Public Works', name_hi: 'लोक निर्माण', name_bn: 'পূর্ত কার্য', name_as: 'ৰাজহুৱা নিৰ্মাণ', icon: '🏗️', url: 'https://pwd.assam.gov.in', sort_order: 6 },
-  { id: uuidv4(), name_en: 'Transport', name_hi: 'परिवहन', name_bn: 'পরিবহন', name_as: 'পৰিবহন', icon: '🚌', url: 'https://transport.assam.gov.in', sort_order: 7 },
-  { id: uuidv4(), name_en: 'Revenue & Disaster Management', name_hi: 'राजस्व एवं आपदा प्रबंधन', name_bn: 'রাজস্ব ও দুর্যোগ ব্যবস্থাপনা', name_as: 'ৰাজহ আৰু দুৰ্যোগ ব্যৱস্থাপনা', icon: '📋', url: 'https://revenue.assam.gov.in', sort_order: 8 },
-  { id: uuidv4(), name_en: 'Forest & Environment', name_hi: 'वन एवं पर्यावरण', name_bn: 'বন ও পরিবেশ', name_as: 'বন আৰু পৰিবেশ', icon: '🌳', url: 'https://forests.assam.gov.in', sort_order: 9 },
-  { id: uuidv4(), name_en: 'Social Welfare', name_hi: 'समाज कल्याण', name_bn: 'সমাজ কল্যাণ', name_as: 'সমাজ কল্যাণ', icon: '🤝', url: 'https://socialwelfare.assam.gov.in', sort_order: 10 },
-  { id: uuidv4(), name_en: 'Water Resources', name_hi: 'जल संसाधन', name_bn: 'জল সম্পদ', name_as: 'জলসম্পদ', icon: '💧', url: 'https://water.assam.gov.in', sort_order: 11 },
-  { id: uuidv4(), name_en: 'Industries & Commerce', name_hi: 'उद्योग एवं वाणिज्य', name_bn: 'শিল্প ও বাণিজ্য', name_as: 'উদ্যোগ আৰু বাণিজ্য', icon: '🏭', url: 'https://industrycommerce.assam.gov.in', sort_order: 12 },
-];
+const db = new Database(dbPath);
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+console.log('🌱 Seeding database...\n');
 
-const insertDept = db.prepare(`INSERT OR IGNORE INTO departments (id, name_en, name_hi, name_bn, name_as, icon, url, sort_order) VALUES (?,?,?,?,?,?,?,?)`);
-for (const d of depts) insertDept.run(d.id, d.name_en, d.name_hi, d.name_bn, d.name_as, d.icon, d.url, d.sort_order);
-console.log(`  ✅ ${depts.length} departments seeded`);
+// ─── USERS ────────────────────────────────────────────────────────────────────
+const adminEmail = process.env.ADMIN_EMAIL || 'admin@gmc.assam.gov.in';
+const adminPass  = process.env.ADMIN_PASSWORD || 'Admin@Water2026!';
+const adminExists = db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
 
-// ─── SERVICES ────────────────────────────────────────────────────────────────
-const services = [
-  // Municipal
-  { id: uuidv4(), category: 'municipal', title_en: 'Property Tax Payment', title_hi: 'संपत्ति कर भुगतान', title_bn: 'সম্পত্তি কর পরিশোধ', title_as: 'সম্পত্তি কৰ পৰিশোধ', desc_en: 'Pay your municipal property tax online.', icon: '🏠', sort_order: 1 },
-  { id: uuidv4(), category: 'municipal', title_en: 'Trade Licence', title_hi: 'व्यापार लाइसेंस', title_bn: 'ট্রেড লাইসেন্স', title_as: 'ব্যৱসায়িক অনুজ্ঞাপত্ৰ', desc_en: 'Apply or renew trade licence for your business.', icon: '📜', sort_order: 2 },
-  { id: uuidv4(), category: 'municipal', title_en: 'Birth Certificate', title_hi: 'जन्म प्रमाण पत्र', title_bn: 'জন্ম সনদ', title_as: 'জন্ম প্ৰমাণপত্ৰ', desc_en: 'Apply for birth certificate online.', icon: '👶', sort_order: 3 },
-  { id: uuidv4(), category: 'municipal', title_en: 'Death Certificate', title_hi: 'मृत्यु प्रमाण पत्र', title_bn: 'মৃত্যু সনদ', title_as: 'মৃত্যু প্ৰমাণপত্ৰ', desc_en: 'Apply for death certificate online.', icon: '📃', sort_order: 4 },
-  // Gas
-  { id: uuidv4(), category: 'gas', title_en: 'New Gas Connection', title_hi: 'नया गैस कनेक्शन', title_bn: 'নতুন গ্যাস সংযোগ', title_as: 'নতুন গেছ সংযোগ', desc_en: 'Apply for a new domestic gas connection.', icon: '🔥', sort_order: 1 },
-  { id: uuidv4(), category: 'gas', title_en: 'Cylinder Booking', title_hi: 'सिलेंडर बुकिंग', title_bn: 'সিলিন্ডার বুকিং', title_as: 'চিলিণ্ডাৰ বুকিং', desc_en: 'Book your LPG cylinder refill online.', icon: '🛢️', sort_order: 2 },
-  { id: uuidv4(), category: 'gas', title_en: 'Subsidy Status', title_hi: 'सब्सिडी स्थिति', title_bn: 'ভর্তুকি অবস্থা', title_as: 'ভৰ্তুকি স্থিতি', desc_en: 'Check your LPG subsidy transfer status.', icon: '💵', sort_order: 3 },
-  // Electricity
-  { id: uuidv4(), category: 'electricity', title_en: 'Bill Payment', title_hi: 'बिल भुगतान', title_bn: 'বিল পরিশোধ', title_as: 'বিল পৰিশোধ', desc_en: 'Pay your electricity bill online.', icon: '⚡', sort_order: 1 },
-  { id: uuidv4(), category: 'electricity', title_en: 'New Connection', title_hi: 'नया कनेक्शन', title_bn: 'নতুন সংযোগ', title_as: 'নতুন সংযোগ', desc_en: 'Apply for a new electricity connection.', icon: '🔌', sort_order: 2 },
-  { id: uuidv4(), category: 'electricity', title_en: 'Outage Report', title_hi: 'बिजली शिकायत', title_bn: 'বিদ্যুৎ অভিযোগ', title_as: 'বিদ্যুৎ অভিযোগ', desc_en: 'Report a power outage in your area.', icon: '🔦', sort_order: 3 },
-  // Scholarship
-  { id: uuidv4(), category: 'scholarship', title_en: 'Pre-Matric Scholarship', title_hi: 'प्री-मैट्रिक छात्रवृत्ति', title_bn: 'প্রি-ম্যাট্রিক বৃত্তি', title_as: 'প্ৰি-মেট্ৰিক বৃত্তি', desc_en: 'Scholarship for students in classes 1–10.', icon: '📚', sort_order: 1 },
-  { id: uuidv4(), category: 'scholarship', title_en: 'Post-Matric Scholarship', title_hi: 'पोस्ट-मैट्रिक छात्रवृत्ति', title_bn: 'পোস্ট-ম্যাট্রিক বৃত্তি', title_as: 'পোষ্ট-মেট্ৰিক বৃত্তি', desc_en: 'Scholarship for students from class 11 onwards.', icon: '🎓', sort_order: 2 },
-  { id: uuidv4(), category: 'scholarship', title_en: 'Orunodoi Scheme', title_hi: 'ओरुनोदोई योजना', title_bn: 'অরুণোদই প্রকল্প', title_as: 'অৰুণোদয় আঁচনি', desc_en: 'Financial assistance to economically backward families.', icon: '🌅', sort_order: 3 },
-  // Other
-  { id: uuidv4(), category: 'other', title_en: 'Income Certificate', title_hi: 'आय प्रमाण पत्र', title_bn: 'আয় সনদ', title_as: 'আয় প্ৰমাণপত্ৰ', desc_en: 'Apply for an income certificate from the concerned Circle Office.', icon: '💼', sort_order: 1 },
-  { id: uuidv4(), category: 'other', title_en: 'Caste Certificate', title_hi: 'जाति प्रमाण पत्र', title_bn: 'জাতি সনদ', title_as: 'জাতি প্ৰমাণপত্ৰ', desc_en: 'Apply for SC/ST/OBC caste certificate.', icon: '📄', sort_order: 2 },
-  { id: uuidv4(), category: 'other', title_en: 'Domicile Certificate', title_hi: 'निवास प्रमाण पत्र', title_bn: 'বসবাসের সনদ', title_as: 'বাসস্থান প্ৰমাণপত্ৰ', desc_en: 'Certificate of residence in Assam.', icon: '🏡', sort_order: 3 },
-  { id: uuidv4(), category: 'other', title_en: 'Voter ID Application', title_hi: 'वोटर आईडी आवेदन', title_bn: 'ভোটার আইডি আবেদন', title_as: 'ভোটাৰ পৰিচয়পত্ৰ আবেদন', desc_en: 'Apply or update your voter identification card.', icon: '🗳️', sort_order: 4 },
-];
+if (!adminExists) {
+  const hash = bcrypt.hashSync(adminPass, 12);
+  db.prepare(`INSERT INTO users (id,name,email,phone,password,role) VALUES (?,?,?,?,?,?)`)
+    .run(uuidv4(), 'Portal Administrator', adminEmail, '+91-9999900001', hash, 'admin');
+  console.log(`  ✅ Admin created: ${adminEmail} / ${adminPass}`);
+}
 
-const insertSvc = db.prepare(`INSERT OR IGNORE INTO services (id, category, title_en, title_hi, title_bn, title_as, desc_en, icon, sort_order) VALUES (?,?,?,?,?,?,?,?,?)`);
-for (const s of services) insertSvc.run(s.id, s.category, s.title_en, s.title_hi, s.title_bn, s.title_as, s.desc_en, s.icon, s.sort_order);
-console.log(`  ✅ ${services.length} services seeded`);
+// Seed a test officer
+const officerEmail = 'officer@gmc.assam.gov.in';
+const officerExists = db.prepare('SELECT id FROM users WHERE email = ?').get(officerEmail);
+if (!officerExists) {
+  const hash = bcrypt.hashSync('Officer@123', 12);
+  db.prepare(`INSERT INTO users (id,name,email,phone,password,role,ward_number) VALUES (?,?,?,?,?,?,?)`)
+    .run(uuidv4(), 'Ward Officer - Central Zone', officerEmail, '+91-9999900002', hash, 'officer', 1);
+  console.log(`  ✅ Officer created: ${officerEmail} / Officer@123`);
+}
+
+// Seed a test citizen
+const citizenEmail = 'citizen@example.com';
+const citizenExists = db.prepare('SELECT id FROM users WHERE email = ?').get(citizenEmail);
+let citizenId = citizenExists?.id;
+if (!citizenExists) {
+  citizenId = uuidv4();
+  const hash = bcrypt.hashSync('Citizen@123', 12);
+  db.prepare(`INSERT INTO users (id,name,email,phone,password,role,ward_number,address) VALUES (?,?,?,?,?,?,?,?)`)
+    .run(citizenId, 'Rahul Sharma', citizenEmail, '+91-9876543210', hash, 'citizen', 5, 'House No. 12, Dispur, Guwahati - 781006');
+  console.log(`  ✅ Citizen created: ${citizenEmail} / Citizen@123`);
+}
+
+// ─── WARD SCHEDULES ───────────────────────────────────────────────────────────
+const schedCount = db.prepare('SELECT COUNT(*) AS c FROM ward_schedules').get();
+if (schedCount.c === 0) {
+  const schedules = [
+    { ward_range: '1–5',   locality: 'Dispur',         morning_start: '06:00', morning_end: '10:00', evening_start: '17:00', evening_end: '20:00', flow_rate_lph: 750,  status: 'active',      disruption_note: null,                                          alternate_supply: null    },
+    { ward_range: '6–10',  locality: 'Bharalumukh',    morning_start: '07:00', morning_end: '11:00', evening_start: '18:00', evening_end: '21:00', flow_rate_lph: 680,  status: 'active',      disruption_note: null,                                          alternate_supply: null    },
+    { ward_range: '11–13', locality: 'Paltan Bazaar',  morning_start: '05:30', morning_end: '09:30', evening_start: null,    evening_end: null,    flow_rate_lph: 720,  status: 'scheduled',   disruption_note: null,                                          alternate_supply: null    },
+    { ward_range: '14–18', locality: 'Chandmari',      morning_start: null,    morning_end: null,    evening_start: null,    evening_end: null,    flow_rate_lph: null, status: 'disrupted',   disruption_note: 'Pipe maintenance — 2 to 4 March 2026.',      alternate_supply: 'Tanker' },
+    { ward_range: '19–25', locality: 'Guwahati Club',  morning_start: '06:00', morning_end: '10:00', evening_start: '16:00', evening_end: '19:00', flow_rate_lph: 810,  status: 'active',      disruption_note: null,                                          alternate_supply: null    },
+    { ward_range: '26–30', locality: 'Narengi',        morning_start: '08:00', morning_end: '12:00', evening_start: null,    evening_end: null,    flow_rate_lph: 560,  status: 'scheduled',   disruption_note: null,                                          alternate_supply: null    },
+    { ward_range: '31–40', locality: 'Beltola',        morning_start: '06:00', morning_end: '09:00', evening_start: '17:00', evening_end: '19:30', flow_rate_lph: 700,  status: 'active',      disruption_note: null,                                          alternate_supply: null    },
+    { ward_range: '41–50', locality: 'Zoo Road',       morning_start: '06:30', morning_end: '10:30', evening_start: '17:30', evening_end: '20:30', flow_rate_lph: 660,  status: 'active',      disruption_note: null,                                          alternate_supply: null    },
+    { ward_range: '51–57', locality: 'Khanapara',      morning_start: '07:00', morning_end: '11:00', evening_start: '18:00', evening_end: '21:00', flow_rate_lph: 620,  status: 'active',      disruption_note: null,                                          alternate_supply: null    },
+  ];
+  const ins = db.prepare(`INSERT INTO ward_schedules (id,ward_range,locality,morning_start,morning_end,evening_start,evening_end,flow_rate_lph,status,disruption_note,alternate_supply) VALUES (?,?,?,?,?,?,?,?,?,?,?)`);
+  for (const s of schedules) ins.run(uuidv4(), s.ward_range, s.locality, s.morning_start, s.morning_end, s.evening_start, s.evening_end, s.flow_rate_lph, s.status, s.disruption_note, s.alternate_supply);
+  console.log(`  ✅ ${schedules.length} ward schedules seeded`);
+}
+
+// ─── WATER QUALITY ────────────────────────────────────────────────────────────
+const qCount = db.prepare('SELECT COUNT(*) AS c FROM quality_readings').get();
+if (qCount.c === 0) {
+  db.prepare(`INSERT INTO quality_readings (id,zone,ph_level,turbidity_ntu,chlorine_mgl,hardness_mgl,tds_mgl,coliform,overall_grade,test_date) VALUES (?,?,?,?,?,?,?,?,?,?)`)
+    .run(uuidv4(), 'City-Wide', 7.4, 0.8, 0.4, 145, 210, 'Absent', 'A+', '2026-02-28');
+  db.prepare(`INSERT INTO quality_readings (id,zone,ph_level,turbidity_ntu,chlorine_mgl,hardness_mgl,tds_mgl,coliform,overall_grade,test_date) VALUES (?,?,?,?,?,?,?,?,?,?)`)
+    .run(uuidv4(), 'Chandmari Zone', 7.2, 1.1, 0.35, 155, 225, 'Absent', 'A', '2026-02-28');
+  console.log('  ✅ Water quality readings seeded');
+}
 
 // ─── NOTICES ─────────────────────────────────────────────────────────────────
-const notices = [
-  { id: uuidv4(), title_en: 'Public Notice: Orunodoi 2.0 Scheme Beneficiary Verification', category: 'circular', department: 'Finance', content_en: 'All existing beneficiaries of the Orunodoi scheme are requested to complete biometric verification at their nearest CSC centre by March 15, 2026.', is_pinned: 1, published_at: '2026-02-20 10:00:00' },
-  { id: uuidv4(), title_en: 'Recruitment Notice: Assam Police Constable 2026', category: 'recruitment', department: 'Home & Political', content_en: 'Applications are invited from eligible candidates for 6,674 posts of Constable in Assam Police. Last date for application: March 31, 2026.', is_pinned: 1, published_at: '2026-02-18 09:00:00' },
-  { id: uuidv4(), title_en: 'Tender Notice: Construction of District Hospital Goalpara', category: 'tender', department: 'Health & Family Welfare', content_en: 'Sealed tenders are invited for the construction of a 100-bed district hospital at Goalpara. Estimated cost: ₹45 crore. Last date: March 25, 2026.', is_pinned: 0, published_at: '2026-02-15 11:00:00' },
-  { id: uuidv4(), title_en: 'Order: Mandatory Use of AarogyaSetu App for State Employees', category: 'order', department: 'Health & Family Welfare', content_en: 'All state government employees are directed to install and activate the AarogyaSetu application on their mobile phones with immediate effect.', is_pinned: 0, published_at: '2026-02-12 08:00:00' },
-  { id: uuidv4(), title_en: 'Circular: Academic Calendar 2026-27 for Secondary Schools', category: 'circular', department: 'Education', content_en: 'The academic calendar for the year 2026-27 for all secondary schools under the Board of Secondary Education, Assam (SEBA) is hereby published.', is_pinned: 0, published_at: '2026-02-10 14:00:00' },
-  { id: uuidv4(), title_en: 'Gazette Notification: Assam Land Revenue Regulation (Amendment) 2026', category: 'gazette', department: 'Revenue & Disaster Management', content_en: 'The Governor of Assam is pleased to notify the Assam Land Revenue Regulation (Second Amendment) Act, 2026, with effect from February 1, 2026.', is_pinned: 0, published_at: '2026-02-01 10:00:00' },
-  { id: uuidv4(), title_en: 'Recruitment: Junior Engineer (Civil) – PWD Assam 2026', category: 'recruitment', department: 'Public Works', content_en: 'PWD Assam invites applications for 312 posts of Junior Engineer (Civil). Qualification: Diploma/Degree in Civil Engineering. Apply online at pwdrecruitment.assam.gov.in.', is_pinned: 0, published_at: '2026-01-28 09:30:00' },
-  { id: uuidv4(), title_en: 'Tender: Supply of Mid-Day Meal Foodgrains to Schools', category: 'tender', department: 'Education', content_en: 'Rate tenders are invited from registered FCI empanelled agencies for supply of rice and pulses to schools under the PM-POSHAN scheme in Kamrup Metro district.', is_pinned: 0, published_at: '2026-01-25 12:00:00' },
-];
+const nCount = db.prepare('SELECT COUNT(*) AS c FROM notices').get();
+if (nCount.c === 0) {
+  const notices = [
+    { title: 'Water supply disruption in Wards 14–18 due to pipe maintenance — 2 to 4 March 2026. Tanker service deployed.', tag: 'Alert',  tag_color: 'red',   department: 'Water Supply Dept., GMC',        published_date: '2026-02-27', is_pinned: 1 },
+    { title: 'New online self-meter-reading portal launched — submit readings monthly to ensure accurate billing from April 2026.', tag: 'Notice', tag_color: 'green', department: 'Revenue Cell, Water Dept.',      published_date: '2026-02-26', is_pinned: 0 },
+    { title: 'Water bill arrears waiver scheme extended to 31 March 2026 — residential connections with dues up to ₹5,000 eligible.', tag: 'Order',  tag_color: 'amber', department: 'Finance Department, GMC',        published_date: '2026-02-24', is_pinned: 1 },
+    { title: 'e-NIT for water distribution pipeline expansion in Wards 41–57 — bid deadline: 20 March 2026.', tag: 'Tender', tag_color: 'blue',  department: 'Engineering Cell, GMC',          published_date: '2026-02-22', is_pinned: 0 },
+    { title: 'Ward 19–30 Borewell re-charging work completed. Supply pressure restored to normal levels.', tag: 'Update', tag_color: 'green', department: 'Water Supply Dept., GMC',        published_date: '2026-02-20', is_pinned: 0 },
+    { title: 'Annual water audit report 2025-26 published. Download from the Quality Reports section.', tag: 'Notice', tag_color: 'blue',  department: 'Quality Control Cell, GMC',      published_date: '2026-02-15', is_pinned: 0 },
+    { title: 'Jal Jeevan Mission: 12,000 new household connections sanctioned for FY 2026-27.', tag: 'Notice', tag_color: 'green', department: 'Water Supply Dept., GMC',        published_date: '2026-02-10', is_pinned: 0 },
+  ];
+  const ins = db.prepare(`INSERT INTO notices (id,title,tag,tag_color,department,published_date,is_pinned,is_active) VALUES (?,?,?,?,?,?,?,1)`);
+  for (const n of notices) ins.run(uuidv4(), n.title, n.tag, n.tag_color, n.department, n.published_date, n.is_pinned);
+  console.log(`  ✅ ${notices.length} notices seeded`);
+}
 
-const insertNotice = db.prepare(`INSERT OR IGNORE INTO notices (id, title_en, category, department, content_en, is_pinned, published_at) VALUES (?,?,?,?,?,?,?)`);
-for (const n of notices) insertNotice.run(n.id, n.title_en, n.category, n.department, n.content_en, n.is_pinned, n.published_at);
-console.log(`  ✅ ${notices.length} notices seeded`);
+// ─── SAMPLE CONNECTION (for test citizen) ────────────────────────────────────
+const connCount = db.prepare('SELECT COUNT(*) AS c FROM connections').get();
+if (connCount.c === 0 && citizenId) {
+  const connId = uuidv4();
+  db.prepare(`INSERT INTO connections (id,app_number,user_id,applicant_name,applicant_email,applicant_phone,connection_type,property_address,ward_number,status,meter_number,connection_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`)
+    .run(connId, 'WC-2026-00001', citizenId, 'Rahul Sharma', citizenEmail, '+91-9876543210', 'domestic', 'House No. 12, Dispur, Guwahati - 781006', 5, 'connected', 'MTR-2026-0001', '2024-06-15');
 
-// ─── QUICK LINKS ─────────────────────────────────────────────────────────────
-const quickLinks = [
-  { id: uuidv4(), title_en: 'RTI Online', title_hi: 'RTI ऑनलाइन', url: 'https://rti.assam.gov.in', icon: '📋', sort_order: 1 },
-  { id: uuidv4(), title_en: 'Assam e-District', title_hi: 'ई-जिला', url: 'https://edistrict.assam.gov.in', icon: '🏢', sort_order: 2 },
-  { id: uuidv4(), title_en: 'Voter Portal', title_hi: 'वोटर पोर्टल', url: 'https://voters.eci.gov.in', icon: '🗳️', sort_order: 3 },
-  { id: uuidv4(), title_en: 'Assam DirectBenefit', title_hi: 'प्रत्यक्ष लाभ', url: 'https://dbt.assam.gov.in', icon: '💰', sort_order: 4 },
-  { id: uuidv4(), title_en: 'APDCL Bill Pay', title_hi: 'बिजली बिल', url: 'https://apdcl.assam.gov.in', icon: '⚡', sort_order: 5 },
-  { id: uuidv4(), title_en: 'Transport Portal', title_hi: 'परिवहन', url: 'https://transport.assam.gov.in', icon: '🚌', sort_order: 6 },
-  { id: uuidv4(), title_en: 'Scholarship Portal', title_hi: 'छात्रवृत्ति', url: 'https://scholarships.gov.in', icon: '🎓', sort_order: 7 },
-  { id: uuidv4(), title_en: 'Assam Tender', title_hi: 'निविदा', url: 'https://tender.assam.gov.in', icon: '📃', sort_order: 8 },
-];
+  // Seed 3 bills for this connection
+  const bills = [
+    { num: 'WB-2026-02-00001', period: 'Feb 2026', prev: 1240, curr: 1318, due: '2026-03-15', status: 'unpaid'  },
+    { num: 'WB-2026-01-00001', period: 'Jan 2026', prev: 1165, curr: 1240, due: '2026-02-15', status: 'paid',   paid_date: '2026-02-10', method: 'UPI', ref: 'UPI2026021012345' },
+    { num: 'WB-2025-12-00001', period: 'Dec 2025', prev: 1090, curr: 1165, due: '2026-01-15', status: 'paid',   paid_date: '2026-01-08', method: 'Net Banking', ref: 'NB2026010800987' },
+  ];
+  const insB = db.prepare(`INSERT INTO bills (id,bill_number,connection_id,user_id,meter_number,billing_period,reading_prev,reading_curr,units_consumed,amount_basic,amount_tax,amount_total,due_date,status,payment_date,payment_method,payment_ref) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+  for (const b of bills) {
+    const units = b.curr - b.prev;
+    const basic = units * 8.5;
+    const tax   = basic * 0.05;
+    insB.run(uuidv4(), b.num, connId, citizenId, 'MTR-2026-0001', b.period, b.prev, b.curr, units, basic, tax, +(basic + tax).toFixed(2), b.due, b.status, b.paid_date||null, b.method||null, b.ref||null);
+  }
 
-const insertQL = db.prepare(`INSERT OR IGNORE INTO quick_links (id, title_en, title_hi, url, icon, sort_order) VALUES (?,?,?,?,?,?)`);
-for (const q of quickLinks) insertQL.run(q.id, q.title_en, q.title_hi, q.url, q.icon, q.sort_order);
-console.log(`  ✅ ${quickLinks.length} quick links seeded`);
+  // Seed 1 sample leakage complaint
+  db.prepare(`INSERT INTO leakage_complaints (id,ticket_id,reporter_name,reporter_phone,ward_number,location_address,severity,status,reported_at) VALUES (?,?,?,?,?,?,?,?,?)`)
+    .run(uuidv4(), 'LK-2026-00001', 'Rahul Sharma', '+91-9876543210', 5, 'Near Dispur Post Office, GS Road', 'medium', 'resolved', '2026-02-10T09:30:00');
+
+  console.log('  ✅ Sample connection, bills, and leakage complaint seeded');
+}
 
 // ─── SITE STATS ───────────────────────────────────────────────────────────────
-const stats = [
-  ['services_online', '200+'],
-  ['districts', '35'],
-  ['departments', '60+'],
-  ['citizens_served', '35M'],
+const statsData = [
+  { key: 'wards_served',        value: '57'  },
+  { key: 'coverage_percent',    value: '98'  },
+  { key: 'leak_response_hours', value: '24'  },
+  { key: 'water_quality_grade', value: 'A+'  },
+  { key: 'active_connections',  value: '1,24,500' },
+  { key: 'daily_supply_mld',    value: '180' },
 ];
-const insertStat = db.prepare(`INSERT OR REPLACE INTO site_stats (key, value) VALUES (?,?)`);
-for (const [k, v] of stats) insertStat.run(k, v);
-console.log(`  ✅ Site stats seeded`);
+const insStat = db.prepare(`INSERT OR IGNORE INTO site_stats (key, value) VALUES (?, ?)`);
+for (const s of statsData) insStat.run(s.key, s.value);
+console.log('  ✅ Site stats seeded');
 
-console.log('\n🎉 Database seeding complete!');
+console.log('\n🎉 Seed complete!');
+console.log('─────────────────────────────────');
+console.log(`  Admin   : ${adminEmail}`);
+console.log(`  Officer : officer@gmc.assam.gov.in / Officer@123`);
+console.log(`  Citizen : citizen@example.com / Citizen@123`);
+console.log('─────────────────────────────────\n');
 db.close();
