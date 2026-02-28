@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swachh Assam | Waste Management Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Serif+4:wght@300;400;500;600&family=Noto+Sans+Bengali:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --white:        #FFFFFF;
+      --charcoal:     #1C231F;
+      --forest:       #3B6939;
+      --leaf:         #5CBA60;
+      --amber:        #F5A623;
+      --soft-gray:    #E2E8F0;
+      --mid-gray:     #8A9BA8;
+      --light-green:  #EBF5EC;
+      --card-border:  rgba(59,105,57,0.15);
+      --shadow-card:  0 2px 16px rgba(28,35,31,0.08);
+      --shadow-hover: 0 8px 32px rgba(28,35,31,0.18);
+      --transition:   0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    * { margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      color: var(--charcoal);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+    a { color: var(--forest); text-decoration: none; }
+    a:hover { color: var(--leaf); }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 2px solid var(--soft-gray);
+      padding: 0.85rem 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 8px rgba(28,35,31,0.06);
+    }
+    .logo-emblem {
+      width: 40px;
+      height: 40px;
+      background: var(--forest);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.2rem;
+    }
+    .header-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--charcoal);
+      line-height: 1.2;
+      font-weight: 700;
+    }
+    .header-text h1 span { color: var(--forest); }
+    .header-text p {
+      font-size: 0.7rem;
+      color: var(--mid-gray);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 0.1rem;
+    }
+    nav {
+      margin-left: auto;
+      display: flex;
+      gap: 0.15rem;
+      align-items: center;
+    }
+    nav a {
+      font-size: 0.8rem;
+      font-family: 'Source Serif 4', serif;
+      color: var(--mid-gray);
+      padding: 0.45rem 0.85rem;
+      border-radius: 5px;
+      letter-spacing: 0.02em;
+      transition: background var(--transition), color var(--transition);
+    }
+    nav a:hover { background: var(--light-green); color: var(--forest); }
+    nav a.active {
+      background: var(--forest);
+      color: var(--white);
+      font-weight: 600;
+    }
+    .nav-report-btn {
+      margin-left: 0.5rem;
+      background: var(--leaf) !important;
+      color: var(--charcoal) !important;
+      font-weight: 700 !important;
+      border-radius: 6px !important;
+      padding: 0.45rem 1rem !important;
+    }
+    .nav-report-btn:hover {
+      background: #4daa51 !important;
+      color: var(--charcoal) !important;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--charcoal) 0%, #2a3d2d 60%, var(--forest) 100%);
+      color: var(--white);
+      padding: 5rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(92,186,96,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--leaf), var(--amber), var(--leaf));
+    }
+    .hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(92,186,96,0.15);
+      border: 1px solid rgba(92,186,96,0.4);
+      color: var(--leaf);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .hero h2 span { color: var(--leaf); }
+    .hero p {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.72);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.75;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.8rem;
+      border-radius: 6px;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+    }
+    .btn-primary { background: var(--leaf); color: var(--charcoal); }
+    .btn-primary:hover { background: #4daa51; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(92,186,96,0.35); }
+    .btn-outline { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.4); }
+    .btn-outline:hover { background: rgba(255,255,255,0.08); border-color: var(--leaf); }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      background: var(--light-green);
+      border-bottom: 1px solid var(--card-border);
+      padding: 1.5rem 2rem;
+    }
+    .stats-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+    .stat-item { padding: 0.75rem; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--forest);
+    }
+    .stat-num span { color: var(--amber); }
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--mid-gray);
+      margin-top: 0.25rem;
+    }
+
+    /* ── MAIN CONTENT ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .section-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      color: var(--charcoal);
+      margin-bottom: 0.5rem;
+    }
+    .section-header p {
+      color: var(--mid-gray);
+      font-size: 0.95rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .section-line {
+      width: 50px; height: 3px;
+      background: linear-gradient(90deg, var(--forest), var(--leaf));
+      margin: 0.75rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* ── WASTE CATEGORY CARDS ── */
+    .waste-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .waste-card {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      box-shadow: var(--shadow-card);
+      transition: all var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .waste-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--card-accent, var(--forest));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+    }
+    .waste-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-4px); }
+    .waste-card:hover::before { transform: scaleX(1); }
+    .waste-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .waste-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--charcoal);
+      margin-bottom: 0.5rem;
+    }
+    .waste-card p {
+      font-size: 0.84rem;
+      color: var(--mid-gray);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .waste-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .tag-green { background: var(--light-green); color: var(--forest); }
+    .tag-amber { background: #FEF3DA; color: #9A6800; }
+    .tag-blue { background: #EBF2FF; color: #2563EB; }
+    .tag-red { background: #FFEBEB; color: #CC2222; }
+
+    /* ── SCHEDULE SECTION ── */
+    .schedule-wrapper {
+      background: var(--charcoal);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 4rem;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    .schedule-wrapper::after {
+      content: '♻';
+      position: absolute;
+      right: 2rem; top: 50%;
+      transform: translateY(-50%);
+      font-size: 8rem;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    .schedule-wrapper h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+      color: var(--leaf);
+    }
+    .schedule-wrapper > p {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.88rem;
+      margin-bottom: 2rem;
+    }
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.6rem;
+    }
+    .day-card {
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 0.85rem 0.5rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all var(--transition);
+    }
+    .day-card:hover { background: rgba(92,186,96,0.12); border-color: var(--leaf); }
+    .day-card.active {
+      background: var(--forest);
+      border-color: var(--leaf);
+    }
+    .day-name {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--mid-gray);
+      margin-bottom: 0.4rem;
+    }
+    .day-card.active .day-name { color: var(--leaf); }
+    .day-collection {
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+    .day-type {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .day-card.active .day-type { color: rgba(255,255,255,0.8); }
+
+    /* ── SERVICES SECTION ── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.8rem;
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+      box-shadow: var(--shadow-card);
+      transition: all var(--transition);
+    }
+    .service-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+    .service-icon {
+      width: 52px; height: 52px;
+      background: var(--light-green);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      transition: background var(--transition);
+    }
+    .service-card:hover .service-icon { background: var(--forest); }
+    .service-body h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+      color: var(--charcoal);
+    }
+    .service-body p {
+      font-size: 0.83rem;
+      color: var(--mid-gray);
+      line-height: 1.65;
+      margin-bottom: 0.8rem;
+    }
+    .service-link {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--forest);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      letter-spacing: 0.03em;
+    }
+    .service-link:hover { color: var(--leaf); }
+
+    /* ── COMPLAINT FORM ── */
+    .complaint-section {
+      background: var(--light-green);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 3rem;
+      margin-bottom: 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .complaint-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      color: var(--forest);
+      margin-bottom: 0.75rem;
+    }
+    .complaint-info p {
+      font-size: 0.9rem;
+      color: var(--charcoal);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+    .complaint-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--charcoal);
+    }
+    .step-num {
+      width: 26px; height: 26px;
+      background: var(--forest);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .complaint-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--forest);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--white);
+      border: 1.5px solid var(--card-border);
+      border-radius: 6px;
+      padding: 0.65rem 0.9rem;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.88rem;
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--forest); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* ── TIPS SECTION ── */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem;
+      margin-bottom: 4rem;
+    }
+    .tip-card {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.5rem 1.2rem;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      transition: all var(--transition);
+    }
+    .tip-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .tip-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+    .tip-card h5 {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+      margin-bottom: 0.5rem;
+    }
+    .tip-card p { font-size: 0.78rem; color: var(--mid-gray); line-height: 1.6; }
+
+    /* ── ALERT BANNER ── */
+    .alert-banner {
+      background: linear-gradient(90deg, #FEF3DA, #FFF8EC);
+      border: 1px solid #F5A62340;
+      border-left: 4px solid var(--amber);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      font-size: 0.87rem;
+    }
+    .alert-banner span:first-child { font-size: 1.2rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--charcoal);
+      color: rgba(255,255,255,0.6);
+      padding: 3rem 2rem 1.5rem;
+    }
+    .footer-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2.5rem;
+    }
+    .footer-brand h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 0.6rem;
+    }
+    .footer-brand p { font-size: 0.8rem; line-height: 1.7; }
+    .footer-col h5 {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--leaf);
+      margin-bottom: 1rem;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.5rem; }
+    .footer-col ul li a {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      transition: color var(--transition);
+    }
+    .footer-col ul li a:hover { color: var(--leaf); }
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+    .footer-bottom .leaf-accent { color: var(--leaf); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-inner > * {
+      animation: fadeUp 0.6s ease forwards;
+      opacity: 0;
+    }
+    .hero-inner > *:nth-child(1) { animation-delay: 0.1s; }
+    .hero-inner > *:nth-child(2) { animation-delay: 0.2s; }
+    .hero-inner > *:nth-child(3) { animation-delay: 0.3s; }
+    .hero-inner > *:nth-child(4) { animation-delay: 0.45s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .waste-grid { grid-template-columns: repeat(2, 1fr); }
+      .services-grid { grid-template-columns: 1fr; }
+      .complaint-section { grid-template-columns: 1fr; gap: 2rem; }
+      .tips-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .schedule-grid { grid-template-columns: repeat(4, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      nav { display: none; }
+    }
+    @media (max-width: 600px) {
+      .waste-grid { grid-template-columns: 1fr; }
+      .tips-grid { grid-template-columns: 1fr; }
+      .schedule-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-emblem">♻️</div>
+    <div class="header-text">
+      <h1><span>Swachh</span> Assam</h1>
+      <p>Waste Management Portal</p>
+    </div>
+    <nav>
+      <a href="#" class="active">Home</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#services">Services</a>
+      <a href="#tips">Guidelines</a>
+      <a href="#contact">Contact</a>
+      <a href="#complaint" class="nav-report-btn">🗑️ Report</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">🌿 Swachh Bharat Mission · Assam Chapter</div>
+      <h2>A <span>Cleaner Assam</span> Begins<br>With Responsible Waste</h2>
+      <p>Empowering citizens to report, track, and manage garbage collection across all municipalities and urban local bodies of Assam.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('complaint').scrollIntoView({behavior:'smooth'})">🗑️ Report Garbage</button>
+        <button class="btn btn-outline" onclick="document.getElementById('schedule').scrollIntoView({behavior:'smooth'})">📅 View Collection Schedule</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <div class="stats-strip">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">92<span>%</span></div>
+        <div class="stat-label">Wards Covered Daily</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.2<span>K</span></div>
+        <div class="stat-label">Tonnes Collected / Day</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">18<span>K+</span></div>
+        <div class="stat-label">Complaints Resolved</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">68<span>%</span></div>
+        <div class="stat-label">Waste Recycled</div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ALERT -->
+    <div class="alert-banner">
+      <span>⚠️</span>
+      <div>
+        <strong>Notice:</strong> Due to the Republic Day parade on 26th January, garbage collection in Dispur and Panbazar wards will be rescheduled to 27th January (morning shift). Residents are advised to keep waste bags ready by 6 AM.
+      </div>
+    </div>
+
+    <!-- WASTE CATEGORIES -->
+    <div class="section-header">
+      <h3>Waste Segregation Guide</h3>
+      <p>Separate waste at source for better processing and recycling outcomes</p>
+      <div class="section-line"></div>
+    </div>
+    <div class="waste-grid">
+      <div class="waste-card" style="--card-accent: #5CBA60;">
+        <span class="icon">🟢</span>
+        <h4>Wet / Organic Waste</h4>
+        <p>Food scraps, vegetable peels, fruit waste, garden trimmings, tea leaves, and other biodegradable kitchen waste.</p>
+        <span class="waste-tag tag-green">Green Bin</span>
+      </div>
+      <div class="waste-card" style="--card-accent: #F5A623;">
+        <span class="icon">🔵</span>
+        <h4>Dry / Recyclable Waste</h4>
+        <p>Paper, cardboard, plastic bottles, glass jars, metal cans, and packaging materials that can be recycled.</p>
+        <span class="waste-tag tag-blue">Blue Bin</span>
+      </div>
+      <div class="waste-card" style="--card-accent: #CC2222;">
+        <span class="icon">🔴</span>
+        <h4>Hazardous Waste</h4>
+        <p>Batteries, medicines, pesticide containers, e-waste, fluorescent lamps, and other toxic materials.</p>
+        <span class="waste-tag tag-red">Red Bin · Special Collection</span>
+      </div>
+      <div class="waste-card" style="--card-accent: #8A9BA8;">
+        <span class="icon">🏗️</span>
+        <h4>Construction Debris</h4>
+        <p>Bricks, concrete, tiles, plaster, sand, and demolition waste requiring bulk pickup request.</p>
+        <span class="waste-tag tag-amber">Bulk Pickup Required</span>
+      </div>
+      <div class="waste-card" style="--card-accent: #3B6939;">
+        <span class="icon">🌿</span>
+        <h4>Garden / Horticulture Waste</h4>
+        <p>Dry leaves, branches, grass clippings, plant waste from gardens and parks eligible for composting.</p>
+        <span class="waste-tag tag-green">Composting Eligible</span>
+      </div>
+      <div class="waste-card" style="--card-accent: #2563EB;">
+        <span class="icon">💻</span>
+        <h4>Electronic Waste</h4>
+        <p>Old computers, phones, televisions, refrigerators, and electrical appliances for authorised e-waste recyclers.</p>
+        <span class="waste-tag tag-blue">E-Waste Drive Centres</span>
+      </div>
+    </div>
+
+    <!-- COLLECTION SCHEDULE -->
+    <div id="schedule"></div>
+    <div class="schedule-wrapper">
+      <h3>Weekly Collection Schedule</h3>
+      <p>Guwahati Municipal Corporation — Zone A · Updated for February 2026</p>
+      <div class="schedule-grid">
+        <div class="day-card">
+          <div class="day-name">Mon</div>
+          <div class="day-collection">🟢</div>
+          <div class="day-type">Wet Waste</div>
+        </div>
+        <div class="day-card">
+          <div class="day-name">Tue</div>
+          <div class="day-collection">🔵</div>
+          <div class="day-type">Dry Waste</div>
+        </div>
+        <div class="day-card active">
+          <div class="day-name">Wed</div>
+          <div class="day-collection">🟢</div>
+          <div class="day-type">Wet Waste</div>
+        </div>
+        <div class="day-card">
+          <div class="day-name">Thu</div>
+          <div class="day-collection">🔵</div>
+          <div class="day-type">Dry Waste</div>
+        </div>
+        <div class="day-card">
+          <div class="day-name">Fri</div>
+          <div class="day-collection">🟢🔵</div>
+          <div class="day-type">Mixed + Bulk</div>
+        </div>
+        <div class="day-card">
+          <div class="day-name">Sat</div>
+          <div class="day-collection">🔴</div>
+          <div class="day-type">Hazardous</div>
+        </div>
+        <div class="day-card">
+          <div class="day-name">Sun</div>
+          <div class="day-collection">🚫</div>
+          <div class="day-type">No Collection</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
+    <div id="services"></div>
+    <div class="section-header">
+      <h3>Our Services</h3>
+      <p>End-to-end solid waste management solutions for urban Assam</p>
+      <div class="section-line"></div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🚛</div>
+        <div class="service-body">
+          <h4>Door-to-Door Collection</h4>
+          <p>Daily collection from residential and commercial establishments. Track your collection vehicle live on the Swachh Assam app.</p>
+          <a href="#" class="service-link">Track Vehicle →</a>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🏭</div>
+        <div class="service-body">
+          <h4>Waste Processing Centres</h4>
+          <p>Find nearest composting and material recovery facilities. Drop off segregated recyclables at any of our 24 processing centres.</p>
+          <a href="#" class="service-link">Find Nearest Centre →</a>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📦</div>
+        <div class="service-body">
+          <h4>Bulk Waste Pickup</h4>
+          <p>Schedule special pickup for construction debris, furniture, or event waste. Available for households and commercial establishments.</p>
+          <a href="#" class="service-link">Book Bulk Pickup →</a>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🌱</div>
+        <div class="service-body">
+          <h4>Community Composting</h4>
+          <p>Join a neighbourhood composting initiative. Convert your organic waste into garden compost and reduce landfill burden.</p>
+          <a href="#" class="service-link">Join Programme →</a>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">♻️</div>
+        <div class="service-body">
+          <h4>Swachh Points — Rewards</h4>
+          <p>Earn reward points for regular segregation and recycling. Redeem for municipality tax discounts or utility vouchers.</p>
+          <a href="#" class="service-link">Check My Points →</a>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">📊</div>
+        <div class="service-body">
+          <h4>Waste Audit for Societies</h4>
+          <p>Request a free waste audit for your RWA or housing society. Get customised waste reduction and management plans.</p>
+          <a href="#" class="service-link">Request Audit →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLAINT SECTION -->
+    <div id="complaint"></div>
+    <div class="complaint-section">
+      <div class="complaint-info">
+        <h3>Report a Garbage Issue</h3>
+        <p>Spotted uncollected waste, overflowing bins, or illegal dumping? Report it instantly and track resolution in real time.</p>
+        <div class="complaint-steps">
+          <div class="step"><div class="step-num">1</div><span>Fill the form with location details</span></div>
+          <div class="step"><div class="step-num">2</div><span>Receive a complaint reference number</span></div>
+          <div class="step"><div class="step-num">3</div><span>Field team dispatched within 24 hours</span></div>
+          <div class="step"><div class="step-num">4</div><span>SMS alert on issue resolution</span></div>
+        </div>
+      </div>
+      <form class="complaint-form" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="Full Name" required>
+          </div>
+          <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="tel" placeholder="+91 XXXXX XXXXX" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Ward / Area</label>
+          <select required>
+            <option value="">— Select Ward —</option>
+            <option>Ward 1 – Panbazar</option>
+            <option>Ward 2 – Dispur</option>
+            <option>Ward 3 – Chandmari</option>
+            <option>Ward 4 – Sixmile</option>
+            <option>Ward 5 – Hatigaon</option>
+            <option>Ward 6 – Beltola</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Issue Type</label>
+          <select required>
+            <option value="">— Select Issue —</option>
+            <option>Missed Garbage Collection</option>
+            <option>Overflowing Public Bin</option>
+            <option>Illegal Dumping / Littering</option>
+            <option>Dead Animal on Road</option>
+            <option>Construction Debris on Road</option>
+            <option>Burning of Waste</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea placeholder="Describe the issue briefly... include any landmarks for faster response." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+          📤 Submit Complaint
+        </button>
+      </form>
+    </div>
+
+    <!-- TIPS -->
+    <div id="tips"></div>
+    <div class="section-header">
+      <h3>Citizen's Waste-Wise Guide</h3>
+      <p>Small habits that create big impact for our cities and environment</p>
+      <div class="section-line"></div>
+    </div>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">🪣</div>
+        <h5>Use Separate Bins</h5>
+        <p>Keep two bins at home — one green for wet waste, one blue for dry. Label them clearly.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🛍️</div>
+        <h5>Refuse Single-Use Plastic</h5>
+        <p>Carry cloth bags. Plastic under 75 microns is banned in Assam. Report violations at the helpline.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🌾</div>
+        <h5>Compost Kitchen Waste</h5>
+        <p>Convert organic waste into rich compost for your garden. Reduce 60% of household waste instantly.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">⏰</div>
+        <h5>Follow Collection Timing</h5>
+        <p>Keep waste bags ready by 6:30 AM. Do not leave bags outside after collection hours to avoid spillage.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>♻️ Swachh Assam Portal</h4>
+        <p>An initiative of the Urban Development & Municipal Affairs Department, Government of Assam. Together, we can build cleaner, greener cities for future generations.</p>
+        <br>
+        <p style="color: var(--leaf); font-size:0.8rem;">🌿 Target: Zero Waste to Landfill by 2030</p>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="#">Collection Schedule</a></li>
+          <li><a href="#">Report Issue</a></li>
+          <li><a href="#">Bulk Pickup</a></li>
+          <li><a href="#">Swachh Points</a></li>
+          <li><a href="#">Compost Programme</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Waste Segregation Guide</a></li>
+          <li><a href="#">E-Waste Centres Map</a></li>
+          <li><a href="#">Plastic Ban FAQs</a></li>
+          <li><a href="#">Right to Information</a></li>
+          <li><a href="#">Annual Reports</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="#">📞 1800-XXX-XXXX (Toll Free)</a></li>
+          <li><a href="#">✉ <span class="__cf_email__" data-cfemail="03707462606b6b43627070626e2d646c752d6a6d">[email&#160;protected]</span></a></li>
+          <li><a href="#">📍 GMC HQ, Panbazar, Guwahati</a></li>
+          <li><a href="#">📱 Download App</a></li>
+          <li><a href="#">Twitter / X</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Government of Assam · All rights reserved</span>
+      <span>Designed with <span class="leaf-accent">♻</span> for a greener tomorrow</span>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.textContent = '✅ Complaint Submitted! Ref: GUW-2026-' + Math.floor(10000 + Math.random() * 90000);
+      btn.style.background = 'var(--forest)';
+      btn.style.color = 'var(--white)';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = '📤 Submit Another Complaint';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.disabled = false;
+        e.target.reset();
+      }, 5000);
+    }
+
+    // Subtle scroll fade-in for cards
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    docu
