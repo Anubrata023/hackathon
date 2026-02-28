@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile OTP Cylinder Booking · Gas Services Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --white:       #FFFFFF;
+      --charcoal:    #1C231F;
+      --forest:      #3B6939;
+      --leaf:        #5CBA60;
+      --amber:       #F5A623;
+      --soft-gray:   #E2E8F0;
+      --mid-gray:    #8A9BA8;
+      --light-green: #EBF5EC;
+
+      --forest-dark: #2a5028;
+      --forest-deep: #1e3a1c;
+      --amber-light: #FEF3DC;
+      --card-border: rgba(59,105,57,0.13);
+      --red:         #dc2626;
+      --red-light:   #fee2e2;
+      --blue:        #1d4ed8;
+      --blue-light:  #dbeafe;
+
+      --shadow-sm: 0 1px 3px rgba(28,35,31,0.06), 0 3px 10px rgba(59,105,57,0.06);
+      --shadow-md: 0 2px 8px rgba(28,35,31,0.07), 0 10px 28px rgba(59,105,57,0.10);
+      --shadow-lg: 0 4px 14px rgba(28,35,31,0.09), 0 18px 44px rgba(59,105,57,0.14);
+
+      --radius: 11px;
+      --ease:   0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #f2f5f2;
+      color: var(--charcoal);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: var(--forest); text-decoration: none; }
+    a:hover { color: var(--leaf); }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: var(--white);
+      border-bottom: 2.5px solid var(--forest);
+      position: sticky; top: 0; z-index: 600;
+      box-shadow: 0 2px 10px rgba(28,35,31,0.09);
+    }
+    .navbar-top {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 1.25rem; height: 54px;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 0.55rem;
+      flex-shrink: 0; text-decoration: none;
+    }
+    .nav-brand-icon {
+      width: 30px; height: 30px;
+      background: linear-gradient(145deg, var(--forest), var(--forest-dark));
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 7px rgba(59,105,57,0.35); flex-shrink: 0;
+    }
+    .nav-brand-icon svg { width: 17px; height: 17px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-brand-text { font-size: 0.9rem; font-weight: 600; color: var(--charcoal); letter-spacing: -0.01em; line-height: 1.2; white-space: nowrap; }
+    .nav-brand-text small { display: block; font-size: 0.63rem; font-weight: 400; color: var(--mid-gray); letter-spacing: 0.02em; }
+
+    .nav-hamburger { display: none; flex-shrink: 0; background: none; border: 1.5px solid var(--soft-gray); border-radius: 7px; width: 36px; height: 34px; cursor: pointer; align-items: center; justify-content: center; transition: border-color var(--ease), background var(--ease); margin-left: 0.25rem; }
+    .nav-hamburger:hover { border-color: var(--forest); background: var(--light-green); }
+    .nav-hamburger svg { width: 18px; height: 18px; stroke: var(--charcoal); fill: none; stroke-width: 2; stroke-linecap: round; }
+
+    .navbar-links-wrap { background: var(--white); border-top: 1px solid var(--soft-gray); }
+    .navbar-links { max-width: 1280px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; gap: 0.1rem; height: 36px; list-style: none; }
+    .navbar-links li a { display: block; font-size: 0.77rem; font-weight: 500; color: var(--mid-gray); padding: 0.28rem 0.68rem; border-radius: 6px; white-space: nowrap; position: relative; transition: background var(--ease), color var(--ease); }
+    .navbar-links li a::after { content: ''; position: absolute; bottom: -1px; left: 50%; right: 50%; height: 2px; background: var(--forest); border-radius: 2px 2px 0 0; transition: left var(--ease), right var(--ease); }
+    .navbar-links li a:hover  { background: var(--light-green); color: var(--forest); }
+    .navbar-links li a:hover::after  { left: 10%; right: 10%; }
+    .navbar-links li a.active { background: var(--light-green); color: var(--forest); font-weight: 600; }
+    .navbar-links li a.active::after { left: 10%; right: 10%; }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb-bar { background: var(--white); border-bottom: 1px solid var(--soft-gray); }
+    .breadcrumb { max-width: 1280px; margin: 0 auto; padding: 0.55rem 1.5rem; display: flex; align-items: center; gap: 0.4rem; font-size: 0.74rem; color: var(--mid-gray); }
+    .breadcrumb a { color: var(--mid-gray); }
+    .breadcrumb a:hover { color: var(--forest); }
+    .breadcrumb-sep { color: var(--soft-gray); }
+    .breadcrumb-cur { color: var(--forest); font-weight: 600; }
+
+    /* ── HERO ── */
+    .hero-band {
+      background: linear-gradient(135deg, var(--charcoal) 0%, #253327 55%, var(--forest-deep) 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero-band::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 65% 70% at 88% 50%, rgba(59,105,57,0.38) 0%, transparent 70%),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 0, transparent 36px);
+    }
+    .hero-band::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--forest) 0%, var(--leaf) 45%, var(--amber) 100%); }
+    .hero-inner { max-width: 1280px; margin: 0 auto; padding: 2rem 1.5rem; position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .hero-eyebrow { font-size: 0.67rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--leaf); opacity: 0.9; display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.42rem; }
+    .hero-eyebrow::before { content: ''; width: 18px; height: 1.5px; background: var(--leaf); border-radius: 2px; }
+    .hero-title { font-family: 'DM Serif Display', serif; font-size: 1.85rem; line-height: 1.2; color: var(--white); letter-spacing: -0.02em; margin-bottom: 0.4rem; }
+    .hero-sub { font-size: 0.84rem; font-weight: 300; color: rgba(235,245,236,0.68); max-width: 440px; line-height: 1.6; margin-bottom: 1.1rem; }
+    .hero-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 20px; padding: 0.24rem 0.7rem;
+      font-size: 0.7rem; font-weight: 500; color: rgba(235,245,236,0.8);
+      backdrop-filter: blur(4px);
+    }
+    .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); flex-shrink: 0; }
+    .hero-badge-dot.amber { background: var(--amber); }
+    .hero-stats { display: flex; flex-shrink: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: var(--radius); backdrop-filter: blur(6px); overflow: hidden; }
+    .hero-stat { padding: 0.95rem 1.4rem; text-align: center; border-right: 1px solid rgba(255,255,255,0.09); }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-num { font-family: 'DM Serif Display', serif; font-size: 1.55rem; color: var(--amber); line-height: 1; }
+    .hero-stat-label { font-size: 0.63rem; font-weight: 500; color: rgba(235,245,236,0.58); letter-spacing: 0.07em; text-transform: uppercase; margin-top: 0.18rem; }
+
+    /* ── MAIN LAYOUT ── */
+    .main { max-width: 1280px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .two-col { display: grid; grid-template-columns: 1fr 320px; gap: 1.4rem; align-items: start; }
+    @media (max-width: 960px) { .two-col { grid-template-columns: 1fr; } }
+
+    .section-label { font-size: 0.64rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--forest); margin-bottom: 0.17rem; }
+    .section-title { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--charcoal); letter-spacing: -0.02em; }
+    .section-hdr { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1rem; }
+    .section-link { font-size: 0.77rem; font-weight: 600; color: var(--forest); white-space: nowrap; display: flex; align-items: center; gap: 0.3rem; transition: gap var(--ease), color var(--ease); }
+    .section-link:hover { gap: 0.55rem; color: var(--leaf); }
+    .section-link svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── BOOKING WIZARD CARD ── */
+    .wizard-card { background: var(--white); border: 1px solid var(--card-border); border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden; }
+    .wizard-header { padding: 1.3rem 1.5rem; border-bottom: 1px solid var(--soft-gray); display: flex; align-items: center; justify-content: space-between; }
+    .wizard-header-left { display: flex; align-items: center; gap: 0.7rem; }
+    .wizard-icon-wrap { width: 40px; height: 40px; background: var(--light-green); border: 1.5px solid rgba(92,186,96,0.25); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+    .wizard-icon-wrap svg { width: 20px; height: 20px; stroke: var(--forest); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .wizard-title { font-size: 1rem; font-weight: 600; color: var(--charcoal); }
+    .wizard-subtitle { font-size: 0.73rem; color: var(--mid-gray); margin-top: 0.08rem; }
+    .secure-badge { display: inline-flex; align-items: center; gap: 0.28rem; background: var(--light-green); border: 1px solid rgba(92,186,96,0.3); border-radius: 6px; padding: 0.24rem 0.6rem; font-size: 0.67rem; font-weight: 600; color: var(--forest); letter-spacing: 0.04em; }
+    .secure-badge svg { width: 11px; height: 11px; stroke: var(--forest); fill: none; stroke-width: 2; stroke-linecap: round; }
+
+    /* ── STEP PROGRESS BAR ── */
+    .step-progress { padding: 1.3rem 1.5rem; background: #fafcfa; border-bottom: 1px solid var(--soft-gray); }
+    .step-track { display: flex; align-items: flex-start; position: relative; }
+    .step-track::before { content: ''; position: absolute; top: 14px; left: calc(14.28% / 2 + 8px); right: calc(14.28% / 2 + 8px); height: 2px; background: var(--soft-gray); z-index: 0; }
+    .step-track-fill { position: absolute; top: 14px; left: calc(14.28% / 2 + 8px); height: 2px; background: linear-gradient(90deg, var(--forest), var(--leaf)); z-index: 1; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); border-radius: 2px; }
+    .step-item { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 2; }
+    .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--soft-gray); background: var(--white); color: var(--mid-gray); font-size: 0.74rem; font-weight: 600; display: flex; align-items: center; justify-content: center; margin-bottom: 0.38rem; transition: all var(--ease); }
+    .step-dot.done { background: var(--forest); border-color: var(--forest); color: var(--white); }
+    .step-dot.active { background: var(--white); border-color: var(--forest); color: var(--forest); box-shadow: 0 0 0 4px rgba(59,105,57,0.12); }
+    .step-name { font-size: 0.62rem; font-weight: 500; color: var(--mid-gray); white-space: nowrap; }
+    .step-name.active { color: var(--forest); font-weight: 600; }
+    .step-name.done { color: var(--forest); }
+
+    /* ── WIZARD BODY ── */
+    .wizard-body { padding: 1.5rem; }
+    .wizard-panel { display: none; animation: fadeSlideUp 0.3s ease-out; }
+    .wizard-panel.active { display: block; }
+
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── FORM ELEMENTS ── */
+    .form-group { margin-bottom: 1rem; }
+    .form-label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.38rem; }
+    .form-label span { font-weight: 400; color: var(--mid-gray); font-size: 0.72rem; }
+    .form-input {
+      width: 100%; height: 40px;
+      border: 1.5px solid var(--soft-gray); border-radius: 8px;
+      padding: 0 0.9rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.83rem; color: var(--charcoal); background: var(--white); outline: none;
+      transition: border-color var(--ease), box-shadow var(--ease);
+    }
+    .form-input:focus { border-color: var(--forest); box-shadow: 0 0 0 3px rgba(59,105,57,0.10); }
+    .form-input::placeholder { color: var(--mid-gray); }
+    .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A9BA8' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.8rem center; padding-right: 2.2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+    @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+    .form-hint { font-size: 0.69rem; color: var(--mid-gray); margin-top: 0.3rem; display: flex; align-items: center; gap: 0.28rem; }
+    .form-hint svg { width: 11px; height: 11px; stroke: var(--mid-gray); fill: none; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+
+    /* ── AADHAAR INPUT ── */
+    .aadhaar-input-wrap { position: relative; }
+    .aadhaar-input-wrap .form-input { padding-left: 3rem; letter-spacing: 0.1em; font-size: 0.92rem; font-weight: 500; }
+    .aadhaar-prefix { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; }
+
+    /* ── OTP BOX ── */
+    .otp-row { display: flex; gap: 0.5rem; }
+    .otp-digit { width: 44px; height: 48px; border: 1.5px solid var(--soft-gray); border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: 600; font-family: 'DM Serif Display', serif; color: var(--charcoal); outline: none; transition: border-color var(--ease), box-shadow var(--ease); }
+    .otp-digit:focus { border-color: var(--forest); box-shadow: 0 0 0 3px rgba(59,105,57,0.10); }
+    .otp-resend { font-size: 0.74rem; color: var(--mid-gray); margin-top: 0.6rem; }
+    .otp-resend a { color: var(--forest); font-weight: 600; }
+
+    /* ── BIOMETRIC PANEL ── */
+    .biometric-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1.2rem; }
+    .biometric-opt {
+      border: 2px solid var(--soft-gray); border-radius: var(--radius); padding: 1.1rem 1rem;
+      cursor: pointer; text-align: center; position: relative;
+      transition: all var(--ease); background: var(--white);
+    }
+    .biometric-opt:hover { border-color: var(--forest); background: var(--light-green); }
+    .biometric-opt.selected { border-color: var(--forest); background: var(--light-green); }
+    .biometric-opt.selected::after { content: '✓'; position: absolute; top: 0.5rem; right: 0.6rem; width: 18px; height: 18px; background: var(--forest); border-radius: 50%; color: var(--white); font-size: 0.65rem; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .biometric-opt-icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+    .biometric-opt-title { font-size: 0.82rem; font-weight: 600; color: var(--charcoal); }
+    .biometric-opt-sub { font-size: 0.68rem; color: var(--mid-gray); margin-top: 0.15rem; }
+    .biometric-opt-tag { display: inline-block; margin-top: 0.4rem; background: var(--amber-light); color: #92400e; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.1rem 0.38rem; border-radius: 4px; }
+
+    /* ── SCAN ANIMATION ── */
+    .scan-area {
+      border: 2px dashed var(--soft-gray); border-radius: var(--radius);
+      padding: 2.2rem 1.5rem; text-align: center; margin-bottom: 1rem;
+      background: #fafcfa; position: relative; overflow: hidden;
+      cursor: pointer; transition: border-color var(--ease), background var(--ease);
+    }
+    .scan-area:hover { border-color: var(--leaf); background: var(--light-green); }
+    .scan-area.scanning { border-color: var(--forest); border-style: solid; }
+    .scan-pulse { width: 80px; height: 80px; margin: 0 auto 0.8rem; position: relative; }
+    .scan-pulse svg { width: 80px; height: 80px; stroke: var(--forest); fill: none; stroke-width: 1.5; stroke-linecap: round; }
+    .scan-ring {
+      position: absolute; inset: -10px; border-radius: 50%;
+      border: 2px solid rgba(92,186,96,0.3);
+      animation: scanPulse 1.8s ease-in-out infinite;
+    }
+    .scan-ring:nth-child(2) { inset: -20px; animation-delay: 0.5s; }
+    @keyframes scanPulse { 0%,100% { opacity: 0; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1); } }
+    .scan-label { font-size: 0.9rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.22rem; }
+    .scan-sub { font-size: 0.74rem; color: var(--mid-gray); }
+    .scan-line {
+      position: absolute; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--leaf), transparent);
+      animation: scanLine 2s linear infinite;
+      display: none;
+    }
+    .scan-area.scanning .scan-line { display: block; }
+    @keyframes scanLine { 0% { top: 10%; } 100% { top: 90%; } }
+
+    /* ── DISTRIBUTOR SELECT ── */
+    .dist-cards { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1rem; }
+    .dist-card {
+      display: flex; align-items: center; gap: 0.9rem;
+      border: 1.5px solid var(--soft-gray); border-radius: 9px; padding: 0.85rem 1rem;
+      cursor: pointer; transition: all var(--ease); background: var(--white);
+    }
+    .dist-card:hover { border-color: var(--forest); background: var(--light-green); }
+    .dist-card.selected { border-color: var(--forest); background: var(--light-green); }
+    .dist-radio { width: 18px; height: 18px; border: 2px solid var(--soft-gray); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: border-color var(--ease); }
+    .dist-card.selected .dist-radio { border-color: var(--forest); }
+    .dist-radio-inner { width: 8px; height: 8px; border-radius: 50%; background: var(--forest); opacity: 0; transition: opacity var(--ease); }
+    .dist-card.selected .dist-radio-inner { opacity: 1; }
+    .dist-info { flex: 1; }
+    .dist-name { font-size: 0.84rem; font-weight: 600; color: var(--charcoal); }
+    .dist-addr { font-size: 0.71rem; color: var(--mid-gray); margin-top: 0.12rem; }
+    .dist-meta { display: flex; gap: 0.5rem; margin-top: 0.28rem; }
+    .dist-chip { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.04em; padding: 0.1rem 0.38rem; border-radius: 4px; text-transform: uppercase; }
+    .dist-chip.green { background: var(--light-green); color: var(--forest); }
+    .dist-chip.amber { background: var(--amber-light); color: #92400e; }
+    .dist-km { font-size: 0.71rem; color: var(--mid-gray); margin-left: auto; flex-shrink: 0; align-self: flex-start; margin-top: 0.1rem; }
+
+    /* ── SLOT PICKER ── */
+    .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+    .slot-btn {
+      border: 1.5px solid var(--soft-gray); border-radius: 7px;
+      padding: 0.52rem 0.4rem; font-family: 'DM Sans', sans-serif;
+      font-size: 0.73rem; font-weight: 500; text-align: center;
+      cursor: pointer; background: var(--white); color: var(--charcoal);
+      transition: all var(--ease);
+    }
+    .slot-btn:hover { border-color: var(--forest); color: var(--forest); background: var(--light-green); }
+    .slot-btn.selected { background: var(--forest); border-color: var(--forest); color: var(--white); }
+    .slot-btn.unavailable { background: #f7f7f7; color: var(--soft-gray); border-color: var(--soft-gray); cursor: not-allowed; text-decoration: line-through; }
+
+    /* ── CONFIRM SUMMARY ── */
+    .confirm-table { width: 100%; border-collapse: collapse; margin-bottom: 1.1rem; }
+    .confirm-table tr td { padding: 0.62rem 0; font-size: 0.81rem; border-bottom: 1px solid var(--soft-gray); }
+    .confirm-table tr:last-child td { border-bottom: none; }
+    .confirm-table td:first-child { color: var(--mid-gray); width: 40%; }
+    .confirm-table td:last-child { color: var(--charcoal); font-weight: 500; text-align: right; }
+    .confirm-highlight { background: var(--light-green); border: 1px solid rgba(92,186,96,0.25); border-radius: 9px; padding: 0.9rem 1.1rem; margin-bottom: 1.1rem; display: flex; align-items: center; gap: 0.75rem; }
+    .confirm-icon { width: 36px; height: 36px; background: var(--forest); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .confirm-icon svg { width: 18px; height: 18px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; }
+    .confirm-hl-title { font-size: 0.83rem; font-weight: 600; color: var(--charcoal); }
+    .confirm-hl-sub { font-size: 0.72rem; color: var(--forest); margin-top: 0.1rem; }
+
+    .terms-row { display: flex; align-items: flex-start; gap: 0.55rem; margin-bottom: 1.1rem; }
+    .terms-cb { width: 16px; height: 16px; border: 1.5px solid var(--soft-gray); border-radius: 4px; cursor: pointer; flex-shrink: 0; margin-top: 1px; accent-color: var(--forest); }
+    .terms-text { font-size: 0.73rem; color: var(--mid-gray); line-height: 1.5; }
+    .terms-text a { color: var(--forest); font-weight: 600; }
+
+    /* ── SUCCESS PANEL ── */
+    .success-panel { text-align: center; padding: 1.5rem 1rem; }
+    .success-anim { width: 72px; height: 72px; border-radius: 50%; background: var(--forest); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.1rem; box-shadow: 0 0 0 10px rgba(92,186,96,0.15), 0 0 0 20px rgba(92,186,96,0.06); animation: successPop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes successPop { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .success-anim svg { width: 34px; height: 34px; stroke: var(--white); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .success-title { font-family: 'DM Serif Display', serif; font-size: 1.45rem; color: var(--charcoal); margin-bottom: 0.35rem; }
+    .success-sub { font-size: 0.81rem; color: var(--mid-gray); max-width: 320px; margin: 0 auto 1.3rem; line-height: 1.55; }
+    .booking-ref { background: var(--light-green); border: 1px solid rgba(92,186,96,0.3); border-radius: 9px; padding: 0.85rem 1.3rem; display: inline-flex; flex-direction: column; align-items: center; margin-bottom: 1.3rem; }
+    .booking-ref-label { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--forest); margin-bottom: 0.2rem; }
+    .booking-ref-num { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--charcoal); letter-spacing: 0.04em; }
+    .success-actions { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── WIZARD FOOTER ── */
+    .wizard-footer { padding: 1.1rem 1.5rem; background: #fafcfa; border-top: 1px solid var(--soft-gray); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .btn { display: inline-flex; align-items: center; gap: 0.4rem; height: 38px; padding: 0 1.1rem; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.81rem; font-weight: 600; cursor: pointer; transition: all var(--ease); border: none; text-decoration: none; }
+    .btn-primary { background: var(--forest); color: var(--white); }
+    .btn-primary:hover { background: var(--forest-dark); color: var(--white); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,105,57,0.3); }
+    .btn-outline { background: var(--white); color: var(--forest); border: 1.5px solid var(--soft-gray); }
+    .btn-outline:hover { border-color: var(--forest); background: var(--light-green); }
+    .btn-ghost { background: none; color: var(--mid-gray); border: 1.5px solid var(--soft-gray); }
+    .btn-ghost:hover { color: var(--charcoal); border-color: var(--charcoal); }
+    .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn-lg { height: 44px; padding: 0 1.4rem; font-size: 0.87rem; border-radius: 9px; }
+    .btn-full { width: 100%; justify-content: center; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display: flex; flex-direction: column; gap: 1rem; }
+    .side-card { background: var(--white); border: 1px solid var(--card-border); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
+    .side-head { padding: 0.82rem 1.1rem; border-bottom: 1px solid var(--soft-gray); display: flex; align-items: center; justify-content: space-between; }
+    .side-head-title { font-size: 0.84rem; font-weight: 600; color: var(--charcoal); display: flex; align-items: center; gap: 0.45rem; }
+    .side-head-title svg { width: 14px; height: 14px; stroke: var(--forest); fill: none; stroke-width: 2; stroke-linecap: round; }
+    .side-head a { font-size: 0.72rem; color: var(--forest); font-weight: 500; }
+    .side-head a:hover { color: var(--leaf); }
+
+    /* ── BOOKING HISTORY ── */
+    .booking-row { padding: 0.82rem 1.1rem; border-bottom: 1px solid var(--soft-gray); cursor: pointer; transition: background var(--ease); }
+    .booking-row:last-child { border-bottom: none; }
+    .booking-row:hover { background: var(--light-green); }
+    .booking-row-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.22rem; }
+    .booking-ref-small { font-size: 0.77rem; font-weight: 600; color: var(--charcoal); }
+    .status-pill { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.12rem 0.42rem; border-radius: 20px; }
+    .sp-delivered { background: var(--light-green); color: var(--forest); }
+    .sp-pending   { background: var(--amber-light); color: #92400e; }
+    .sp-scheduled { background: var(--blue-light); color: var(--blue); }
+    .booking-row-date { font-size: 0.7rem; color: var(--mid-gray); }
+    .booking-row-info { font-size: 0.71rem; color: var(--mid-gray); margin-top: 0.1rem; }
+
+    /* ── INFO CARD ── */
+    .info-list { padding: 0.5rem 0; }
+    .info-item { display: flex; align-items: flex-start; gap: 0.72rem; padding: 0.72rem 1.1rem; border-bottom: 1px solid var(--soft-gray); }
+    .info-item:last-child { border-bottom: none; }
+    .info-bullet { width: 28px; height: 28px; border-radius: 7px; background: var(--light-green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .info-bullet svg { width: 14px; height: 14px; stroke: var(--forest); fill: none; stroke-width: 2; stroke-linecap: round; }
+    .info-title { font-size: 0.78rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.1rem; }
+    .info-desc { font-size: 0.7rem; color: var(--mid-gray); line-height: 1.45; }
+
+    /* ── ELIGIBILITY CHECKER ── */
+    .check-pill {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.1rem; border-bottom: 1px solid var(--soft-gray);
+      font-size: 0.78rem; color: var(--charcoal);
+    }
+    .check-pill:last-child { border-bottom: none; }
+    .check-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .check-icon.ok { background: var(--light-green); }
+    .check-icon.ok svg { stroke: var(--forest); }
+    .check-icon.warn { background: var(--amber-light); }
+    .check-icon.warn svg { stroke: #92400e; }
+    .check-icon svg { width: 11px; height: 11px; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .check-label { flex: 1; }
+    .check-status { font-size: 0.68rem; font-weight: 600; }
+    .check-status.ok   { color: var(--forest); }
+    .check-status.warn { color: #92400e; }
+
+    /* ── ALERT BAND ── */
+    .alert-band {
+      display: flex; align-items: center; gap: 0.75rem;
+      background: var(--amber-light); border: 1px solid rgba(245,166,35,0.3);
+      border-radius: 9px; padding: 0.8rem 1rem; margin-bottom: 1.2rem;
+    }
+    .alert-band svg { width: 16px; height: 16px; stroke: #92400e; fill: none; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+    .alert-band-text { font-size: 0.77rem; color: #92400e; }
+    .alert-band-text strong { font-weight: 600; }
+
+    /* ── SECURITY NOTICE ── */
+    .security-notice { background: var(--charcoal); border-radius: var(--radius); padding: 1.1rem 1.3rem; margin-top: 1rem; display: flex; align-items: flex-start; gap: 0.85rem; }
+    .security-notice svg { width: 20px; height: 20px; stroke: var(--leaf); fill: none; stroke-width: 1.7; stroke-linecap: round; flex-shrink: 0; margin-top: 1px; }
+    .security-notice-title { font-size: 0.81rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; }
+    .security-notice-text { font-size: 0.7rem; color: rgba(235,245,236,0.55); line-height: 1.5; }
+
+    /* ── FOOTER ── */
+    .page-footer { background: var(--charcoal); color: rgba(255,255,255,0.38); padding: 0.88rem 1.5rem; font-size: 0.71rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; }
+    .page-footer a { color: rgba(255,255,255,0.38); }
+    .page-footer a:hover { color: var(--leaf); }
+    .footer-links { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+    .footer-status { display: flex; align-items: center; gap: 0.38rem; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--leaf); box-shadow: 0 0 5px var(--leaf); }
+
+    @media (max-width: 900px) {
+      .navbar-links-wrap { display: none; }
+      .nav-hamburger { display: flex; }
+      .navbar-links-wrap.open { display: block; border-top: 1px solid var(--soft-gray); border-bottom: 2px solid var(--forest); box-shadow: 0 8px 24px rgba(28,35,31,0.12); animation: dropDown 0.2s ease-out; }
+      .navbar-links.open { height: auto; flex-direction: column; align-items: stretch; padding: 0.5rem 1rem 0.7rem; gap: 2px; }
+      .navbar-links.open li a { padding: 0.6rem 0.85rem; font-size: 0.86rem; border-radius: 8px; }
+      .navbar-links.open li a::after { display: none; }
+    }
+    @keyframes dropDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 720px) { .hero-stats { width: 100%; } .hero-stat { flex: 1; padding: 0.7rem 0.5rem; } .slot-grid { grid-template-columns: repeat(2,1fr); } }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar" id="mainNav">
+  <div class="navbar-top">
+    <a href="#" class="nav-brand">
+      <div class="nav-brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8 7 6 10.5 6 13.5a6 6 0 0012 0C18 10.5 16 7 12 2z"/><path d="M12 22v-3M9 19h6"/></svg>
+      </div>
+      <div class="nav-brand-text">
+        Gas Services Portal
+        <small>Ministry of Petroleum &amp; Natural Gas</small>
+      </div>
+    </a>
+
+    <button class="nav-hamburger" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+      <svg id="hamburgerSvg" viewBox="0 0 24 24">
+        <line x1="3" y1="6"  x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="navbar-links-wrap" id="navLinksWrap">
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="#">Services</a></li>
+      <li><a href="#" class="active">My Bookings</a></li>
+      <li><a href="#">Subsidy Status</a></li>
+      <li><a href="#">Safety &amp; SOS</a></li>
+      <li><a href="#">Notices</a></li>
+      <li><a href="#">New Connection</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ══ BREADCRUMB ══ -->
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="#">Home</a>
+    <span class="breadcrumb-sep">›</span>
+    <a href="#">Services</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-cur">Mobile OTP Cylinder Booking</span>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<div class="hero-band">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Mobile OTP · Secure · Instant</div>
+      <div class="hero-title">Mobile OTP-Based<br>Cylinder Booking</div>
+      <div class="hero-sub">Book your LPG cylinder with a simple OTP sent to your registered mobile number — fast, paperless, and secure. No Aadhaar or biometric device required.</div>
+      <div class="hero-badges">
+        <span class="hero-badge"><span class="hero-badge-dot"></span> SMS OTP Verification</span>
+        <span class="hero-badge"><span class="hero-badge-dot"></span> 60-Second OTP</span>
+        <span class="hero-badge"><span class="hero-badge-dot amber"></span> Subsidy Auto-Applied</span>
+        <span class="hero-badge"><span class="hero-badge-dot"></span> 256-bit Encrypted</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">8.5M</div>
+        <div class="hero-stat-label">OTP Bookings</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">99.8%</div>
+        <div class="hero-stat-label">OTP Success</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">&lt;60s</div>
+        <div class="hero-stat-label">Avg. Time</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <div class="two-col">
+
+    <!-- LEFT — BOOKING WIZARD -->
+    <div>
+
+      <!-- Alert -->
+      <div class="alert-band">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div class="alert-band-text"><strong>Quota Update:</strong> 1 cylinder booking available for your connection this month (next quota resets on 01 Apr 2026).</div>
+      </div>
+
+      <!-- Wizard Card -->
+      <div class="wizard-card">
+
+        <!-- Header -->
+        <div class="wizard-header">
+          <div class="wizard-header-left">
+            <div class="wizard-icon-wrap">
+              <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <div>
+              <div class="wizard-title">Mobile OTP Booking Wizard</div>
+              <div class="wizard-subtitle">Complete 4 steps to confirm your LPG cylinder booking</div>
+            </div>
+          </div>
+          <div class="secure-badge">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            OTP Secured
+          </div>
+        </div>
+
+        <!-- Step Progress -->
+        <div class="step-progress">
+          <div class="step-track" id="stepTrack">
+            <div class="step-track-fill" id="trackFill" style="width:0%"></div>
+            <div class="step-item">
+              <div class="step-dot done" id="dot1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="step-name done" id="name1">Mobile</div>
+            </div>
+            <div class="step-item">
+              <div class="step-dot active" id="dot2">2</div>
+              <div class="step-name active" id="name2">Verify OTP</div>
+            </div>
+            <div class="step-item">
+              <div class="step-dot" id="dot3">3</div>
+              <div class="step-name" id="name3">Distributor</div>
+            </div>
+            <div class="step-item">
+              <div class="step-dot" id="dot4">4</div>
+              <div class="step-name" id="name4">Confirm</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PANEL 1: MOBILE NUMBER ── -->
+        <div class="wizard-body">
+          <div class="wizard-panel" id="panel1">
+            <div class="section-label" style="margin-bottom:0.7rem">Step 1 of 4</div>
+            <div class="section-title" style="margin-bottom:1.2rem">Mobile Number Verification</div>
+
+            <div class="form-group">
+              <label class="form-label">Registered Mobile Number <span>(linked to LPG connection)</span></label>
+              <div class="aadhaar-input-wrap">
+                <svg class="aadhaar-prefix" viewBox="0 0 40 40">
+                  <circle cx="20" cy="20" r="18" fill="#EBF5EC" stroke="#3B6939" stroke-width="1.5"/>
+                  <rect x="13" y="10" width="14" height="20" rx="3" fill="none" stroke="#3B6939" stroke-width="1.5"/>
+                  <line x1="20" y1="26" x2="20" y2="26.1" stroke="#3B6939" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <input class="form-input" type="tel" id="mobileInput" maxlength="10" placeholder="10-digit mobile number" style="padding-left:3rem;letter-spacing:0.05em;font-size:0.92rem;font-weight:500;" />
+              </div>
+              <div class="form-hint">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                Use the mobile number registered with your LPG distributor
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Consumer ID / LPG ID</label>
+              <input class="form-input" type="text" placeholder="e.g. 12345678" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Oil Marketing Company</label>
+              <select class="form-input form-select">
+                <option value="">— Select your gas company —</option>
+                <option>IndanGas (IOCL)</option>
+                <option>HP Gas (HPCL)</option>
+                <option>Bharat Gas (BPCL)</option>
+              </select>
+              <div class="form-hint">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                Find this on your passbook or last invoice
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Purpose of Booking</label>
+              <select class="form-input form-select">
+                <option>Domestic Refill (14.2 kg)</option>
+                <option>Domestic Refill (5 kg)</option>
+                <option>PMUY Beneficiary Refill</option>
+                <option>Double Bottle Scheme</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:0.5rem;height:42px;font-size:0.85rem;" onclick="void(0)">
+              <svg viewBox="0 0 24 24" width="16" height="16" style="stroke:white;fill:none;stroke-width:2;stroke-linecap:round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              Send OTP to Mobile
+            </button>
+          </div>
+
+          <!-- ── PANEL 2: OTP VERIFICATION ── -->
+          <div class="wizard-panel" id="panel2">
+            <div class="section-label" style="margin-bottom:0.7rem">Step 2 of 4</div>
+            <div class="section-title" style="margin-bottom:1.2rem">OTP Verification</div>
+
+            <div class="confirm-highlight" style="margin-bottom:1.3rem">
+              <div class="confirm-icon">
+                <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              </div>
+              <div>
+                <div class="confirm-hl-title">OTP Sent Successfully</div>
+                <div class="confirm-hl-sub">6-digit OTP sent to +91 98XX-XXXX-XX · Valid for 10 minutes</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Enter 6-Digit OTP <span>(sent via SMS)</span></label>
+              <div class="otp-row" id="otpRow">
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+                <input class="otp-digit" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" />
+              </div>
+              <div class="otp-resend">Didn't receive OTP? <a href="#" id="resendLink" onclick="startResendTimer();return false;">Resend OTP</a> <span id="timerDisplay"></span></div>
+            </div>
+
+            <div class="form-hint" style="background:var(--blue-light);border-radius:7px;padding:0.6rem 0.8rem;color:#1d4ed8;font-size:0.74rem;margin-top:0.5rem">
+              <svg viewBox="0 0 24 24" style="stroke:#1d4ed8;width:14px;height:14px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              OTP is valid for 10 minutes only. Do not share your OTP with anyone. Gas portal officials will never ask for your OTP.
+            </div>
+
+            <div class="form-hint" style="margin-top:0.8rem">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Alternatively, you can receive OTP via <strong>WhatsApp</strong> if your number is registered on WhatsApp.
+            </div>
+          </div>
+
+          <!-- ── PANEL 3: DISTRIBUTOR + SLOT ── -->
+          <div class="wizard-panel" id="panel3">
+            <div class="section-label" style="margin-bottom:0.7rem">Step 3 of 4</div>
+            <div class="section-title" style="margin-bottom:1.2rem">Select Distributor &amp; Slot</div>
+
+            <div class="form-group">
+              <label class="form-label">Your Pincode <span>(auto-detected from your LPG account)</span></label>
+              <input class="form-input" type="text" value="781001" readonly style="background:#f6f8f6;color:var(--mid-gray);" />
+            </div>
+
+            <label class="form-label" style="margin-bottom:0.6rem">Nearby Authorised Distributors</label>
+            <div class="dist-cards">
+              <div class="dist-card selected" onclick="selectDist(this)">
+                <div class="dist-radio"><div class="dist-radio-inner"></div></div>
+                <div class="dist-info">
+                  <div class="dist-name">Guwahati Gas Agency</div>
+                  <div class="dist-addr">Paltan Bazar, Guwahati, Assam – 781008</div>
+                  <div class="dist-meta">
+                    <span class="dist-chip green">OTP Verified</span>
+                    <span class="dist-chip amber">Open Today</span>
+                  </div>
+                </div>
+                <span class="dist-km">1.2 km</span>
+              </div>
+              <div class="dist-card" onclick="selectDist(this)">
+                <div class="dist-radio"><div class="dist-radio-inner"></div></div>
+                <div class="dist-info">
+                  <div class="dist-name">Dispur LPG Centre</div>
+                  <div class="dist-addr">GS Road, Dispur, Guwahati – 781005</div>
+                  <div class="dist-meta">
+                    <span class="dist-chip green">OTP Verified</span>
+                    <span class="dist-chip green">Stock Available</span>
+                  </div>
+                </div>
+                <span class="dist-km">2.7 km</span>
+              </div>
+              <div class="dist-card" onclick="selectDist(this)">
+                <div class="dist-radio"><div class="dist-radio-inner"></div></div>
+                <div class="dist-info">
+                  <div class="dist-name">Beltola Gas Services</div>
+                  <div class="dist-addr">Beltola Chariali, Guwahati – 781028</div>
+                  <div class="dist-meta">
+                    <span class="dist-chip green">OTP Verified</span>
+                    <span class="dist-chip amber">Limited Stock</span>
+                  </div>
+                </div>
+                <span class="dist-km">4.1 km</span>
+              </div>
+            </div>
+
+            <label class="form-label" style="margin-bottom:0.6rem">Preferred Delivery Slot <span>(Tomorrow, 18 Mar 2026)</span></label>
+            <div class="slot-grid">
+              <div class="slot-btn unavailable">8:00 – 10:00 AM</div>
+              <div class="slot-btn selected" onclick="selectSlot(this)">10:00 – 12:00 PM</div>
+              <div class="slot-btn" onclick="selectSlot(this)">12:00 – 2:00 PM</div>
+              <div class="slot-btn" onclick="selectSlot(this)">2:00 – 4:00 PM</div>
+              <div class="slot-btn unavailable">4:00 – 6:00 PM</div>
+              <div class="slot-btn" onclick="selectSlot(this)">6:00 – 8:00 PM</div>
+            </div>
+
+            <div class="form-group" style="margin-top:0.5rem">
+              <label class="form-label">Delivery Address <span>(must match registered LPG account address)</span></label>
+              <input class="form-input" type="text" value="H. No. 42, Paltan Bazar, Guwahati – 781008" />
+              <div class="form-hint">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                Address mismatch may require in-person verification at distributor
+              </div>
+            </div>
+          </div>
+
+          <!-- ── PANEL 4: CONFIRM ── -->
+          <div class="wizard-panel" id="panel4">
+            <div class="section-label" style="margin-bottom:0.7rem">Step 4 of 4</div>
+            <div class="section-title" style="margin-bottom:1.2rem">Review &amp; Confirm Booking</div>
+
+            <div class="confirm-highlight">
+              <div class="confirm-icon">
+                <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              </div>
+              <div>
+                <div class="confirm-hl-title">Mobile OTP Verified ✓</div>
+                <div class="confirm-hl-sub">OTP authentication successful · Mobile: +91 98XX-XXXX-XX</div>
+              </div>
+            </div>
+
+            <table class="confirm-table">
+              <tr><td>Consumer Name</td><td>Rajesh Kumar Das</td></tr>
+              <tr><td>Consumer ID</td><td>LPG-856-44-821</td></tr>
+              <tr><td>Mobile Number</td><td>+91 98XX-XXXX-XX (Verified)</td></tr>
+              <tr><td>Oil Company</td><td>IndanGas (IOCL)</td></tr>
+              <tr><td>Cylinder Type</td><td>Domestic Refill (14.2 kg)</td></tr>
+              <tr><td>Distributor</td><td>Guwahati Gas Agency</td></tr>
+              <tr><td>Delivery Date</td><td>18 Mar 2026</td></tr>
+              <tr><td>Time Slot</td><td>10:00 AM – 12:00 PM</td></tr>
+              <tr><td>Cylinder Price</td><td>₹902.00</td></tr>
+              <tr><td>PAHAL Subsidy</td><td style="color:var(--forest)">– ₹300.00 (auto-applied)</td></tr>
+              <tr><td><strong>Net Payable</strong></td><td><strong>₹602.00</strong></td></tr>
+            </table>
+
+            <div class="form-group">
+              <label class="form-label">Payment Method</label>
+              <select class="form-input form-select">
+                <option>Cash on Delivery</option>
+                <option>UPI (GPay / PhonePe / BHIM)</option>
+                <option>Debit / Credit Card (at distributor POS)</option>
+                <option>Net Banking</option>
+              </select>
+            </div>
+
+            <div class="terms-row">
+              <input type="checkbox" class="terms-cb" id="terms" checked />
+              <label class="terms-text" for="terms">
+                I confirm that the details above are correct and I consent to mobile OTP-based authentication for this booking. I have read the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+              </label>
+            </div>
+          </div>
+
+          <!-- ── PANEL 5: SUCCESS ── -->
+          <div class="wizard-panel" id="panel5">
+            <div class="success-panel">
+              <div class="success-anim">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="success-title">Booking Confirmed!</div>
+              <div class="success-sub">Your LPG cylinder has been booked successfully. You will receive an SMS and WhatsApp confirmation on your registered mobile.</div>
+              <div class="booking-ref">
+                <div class="booking-ref-label">Booking Reference</div>
+                <div class="booking-ref-num">OTP-26-GHY-78431</div>
+              </div>
+              <div class="success-actions">
+                <a href="#" class="btn btn-primary btn-lg">
+                  <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Download Receipt (PDF)
+                </a>
+                <a href="#" class="btn btn-outline btn-lg">
+                  <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  Track Delivery
+                </a>
+                <a href="#" class="btn btn-ghost btn-lg" onclick="resetWizard();return false;">Book Another</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wizard Footer -->
+        <div class="wizard-footer" id="wizardFooter">
+          <button class="btn btn-ghost" id="prevBtn" onclick="prevStep()" style="display:none">
+            <svg viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> Back
+          </button>
+          <div style="flex:1"></div>
+          <button class="btn btn-primary btn-lg" id="nextBtn" onclick="nextStep()">
+            Continue <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+      </div><!-- /wizard-card -->
+
+      <div class="security-notice">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <div>
+          <div class="security-notice-title">End-to-End OTP Security</div>
+          <div class="security-notice-text">All OTPs are generated using a one-time cryptographic token and expire within 10 minutes. Your mobile number is never shared or stored beyond verification. Each session uses a unique, time-expiring token compliant with MeitY data protection standards.</div>
+        </div>
+      </div>
+
+    </div><!-- /left col -->
+
+    <!-- ══ SIDEBAR ══ -->
+    <aside class="sidebar">
+
+      <!-- Eligibility Checker -->
+      <div class="side-card">
+        <div class="side-head">
+          <div class="side-head-title">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Eligibility Status
+          </div>
+        </div>
+        <div class="check-pill">
+          <div class="check-icon ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="check-label">Mobile Linked to LPG</span>
+          <span class="check-status ok">Verified</span>
+        </div>
+        <div class="check-pill">
+          <div class="check-icon ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="check-label">Monthly Quota Available</span>
+          <span class="check-status ok">1 Left</span>
+        </div>
+        <div class="check-pill">
+          <div class="check-icon ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="check-label">PAHAL Subsidy Active</span>
+          <span class="check-status ok">₹300</span>
+        </div>
+        <div class="check-pill">
+          <div class="check-icon ok"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <span class="check-label">OTP Service Available</span>
+          <span class="check-status ok">Active</span>
+        </div>
+        <div class="check-pill">
+          <div class="check-icon warn"><svg viewBox="0 0 24 24"><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <span class="check-label">Bank A/c Mobile Seeding</span>
+          <span class="check-status warn">Pending</span>
+        </div>
+      </div>
+
+      <!-- Booking History -->
+      <div class="side-card">
+        <div class="side-head">
+          <div class="side-head-title">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Booking History
+          </div>
+          <a href="#">View All →</a>
+        </div>
+        <div class="booking-row">
+          <div class="booking-row-top">
+            <div class="booking-ref-small">OTP-26-GHY-67821</div>
+            <span class="status-pill sp-delivered">Delivered</span>
+          </div>
+          <div class="booking-row-date">18 Feb 2026</div>
+          <div class="booking-row-info">14.2 kg · Guwahati Gas Agency · OTP Verified</div>
+        </div>
+        <div class="booking-row">
+          <div class="booking-row-top">
+            <div class="booking-ref-small">OTP-26-GHY-53490</div>
+            <span class="status-pill sp-delivered">Delivered</span>
+          </div>
+          <div class="booking-row-date">21 Jan 2026</div>
+          <div class="booking-row-info">14.2 kg · Dispur LPG Centre · OTP Verified</div>
+        </div>
+        <div class="booking-row">
+          <div class="booking-row-top">
+            <div class="booking-ref-small">OTP-25-GHY-44107</div>
+            <span class="status-pill sp-delivered">Delivered</span>
+          </div>
+          <div class="booking-row-date">15 Dec 2025</div>
+          <div class="booking-row-info">14.2 kg · Guwahati Gas Agency · OTP Verified</div>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="side-card">
+        <div class="side-head">
+          <div class="side-head-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            How OTP Booking Works
+          </div>
+        </div>
+        <div class="info-list">
+          <div class="info-item">
+            <div class="info-bullet"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+            <div>
+              <div class="info-title">Enter Mobile & Details</div>
+              <div class="info-desc">Enter your registered mobile number and LPG Consumer ID. An OTP is sent to your phone instantly.</div>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-bullet"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div>
+              <div class="info-title">Verify OTP</div>
+              <div class="info-desc">Enter the 6-digit OTP sent to your mobile. The OTP is valid for 10 minutes and cannot be reused.</div>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-bullet"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div>
+              <div class="info-title">Select Distributor & Slot</div>
+              <div class="info-desc">Choose your nearest authorised distributor and a convenient home delivery time slot.</div>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-bullet"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div>
+              <div class="info-title">Confirm &amp; Collect</div>
+              <div class="info-desc">Confirm your booking. Cylinder is delivered to your door. Subsidy is auto-credited to your bank account within 3 days.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="side-card">
+        <div class="side-head">
+          <div class="side-head-title">
+            <svg viewBox="0 0 24 24"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+            Quick Access
+          </div>
+        </div>
+        <div class="info-list" style="padding:0">
+          <div class="info-item" style="cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='var(--light-green)'" onmouseout="this.style.background=''">
+            <div class="info-bullet"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+            <div><div class="info-title">Check Subsidy Balance</div><div class="info-desc">View your PAHAL DBT credit history</div></div>
+          </div>
+          <div class="info-item" style="cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='var(--light-green)'" onmouseout="this.style.background=''">
+            <div class="info-bullet"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div><div class="info-title">Update Mobile Number</div><div class="info-desc">Change your registered mobile via OTP</div></div>
+          </div>
+          <div class="info-item" style="cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='var(--light-green)'" onmouseout="this.style.background=''">
+            <div class="info-bullet"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div><div class="info-title">Report Gas Leakage SOS</div><div class="info-desc">Emergency helpline: 1906</div></div>
+          </div>
+          <div class="info-item" style="cursor:pointer;transition:background 0.2s;border-bottom:none" onmouseover="this.style.background='var(--light-green)'" onmouseout="this.style.background=''">
+            <div class="info-bullet"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div><div class="info-title">Track Delivery Status</div><div class="info-desc">Real-time updates on booked cylinders</div></div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div><!-- /two-col -->
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <span>© 2026 Gas Services Portal · Ministry of Petroleum &amp; Natural Gas, Government of India</span>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Disclaimer</a>
+    <a href="#">Sitemap</a>
+    <a href="#">Accessibility</a>
+    <a href="#">Grievance</a>
+  </div>
+  <div class="footer-status">
+    <span class="status-dot"></span>
+    OTP Service Operational
+  </div>
+</footer>
+
+<script>
+  /* ── NAVBAR TOGGLE ── */
+  const toggle    = document.getElementById('navToggle');
+  const linksWrap = document.getElementById('navLinksWrap');
+  const navLinks  = document.getElementById('navLinks');
+  const hamSvg    = document.getElementById('hamburgerSvg');
+  const OPEN  = `<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>`;
+  const CLOSE = `<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>`;
+  function setOpen(o) {
+    linksWrap.classList.toggle('open', o);
+    navLinks.classList.toggle('open', o);
+    hamSvg.innerHTML = o ? CLOSE : OPEN;
+    toggle.setAttribute('aria-expanded', o);
+  }
+  toggle.addEventListener('click', () => setOpen(!linksWrap.classList.contains('open')));
+  window.addEventListener('resize', () => { if (window.innerWidth > 900) setOpen(false); });
+
+  /* ── WIZARD STATE ── */
+  let currentStep = 1;
+  const totalSteps = 4;
+
+  const panels   = [null, 'panel1','panel2','panel3','panel4','panel5'];
+  const dots     = ['dot1','dot2','dot3','dot4'];
+  const names    = ['name1','name2','name3','name4'];
+  const fills    = [0, 0, 33.3, 66.6, 100];
+
+  function showStep(step) {
+    for (let i = 1; i <= 5; i++) {
+      const p = document.getElementById('panel'+i);
+      if (p) { p.classList.remove('active'); }
+    }
+    document.getElementById('panel'+step).classList.add('active');
+
+    dots.forEach((id, idx) => {
+      const dot  = document.getElementById(id);
+      const name = document.getElementById(names[idx]);
+      const s = idx + 1;
+      dot.className = 'step-dot';
+      name.className = 'step-name';
+      if (s < step)      { dot.classList.add('done'); name.classList.add('done'); dot.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'; }
+      else if (s === step && step <= totalSteps) { dot.classList.add('active'); name.classList.add('active'); dot.innerHTML = s; }
+      else { dot.innerHTML = s; }
+    });
+
+    document.getElementById('trackFill').style.width = fills[step-1] + '%';
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const footer  = document.getElementById('wizardFooter');
+
+    if (step === 5) {
+      footer.style.display = 'none';
+    } else {
+      footer.style.display = 'flex';
+      prevBtn.style.display = step > 1 ? 'inline-flex' : 'none';
+      if (step === totalSteps) {
+        nextBtn.innerHTML = 'Confirm Booking <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>';
+      } else {
+        nextBtn.innerHTML = 'Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+      }
+    }
+  }
+
+  function nextStep() {
+    if (currentStep <= totalSteps) {
+      currentStep++;
+      showStep(currentStep);
+      document.querySelector('.wizard-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 1) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  }
+
+  function resetWizard() {
+    currentStep = 1;
+    showStep(1);
+    document.getElementById('wizardFooter').style.display = 'flex';
+    document.querySelector('.wizard-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── OTP DIGIT NAVIGATION ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    const digits = document.querySelectorAll('.otp-digit');
+    digits.forEach((input, i) => {
+      input.addEventListener('input', function(e) {
+        const val = e.target.value.replace(/\D/g, '');
+        e.target.value = val.slice(-1);
+        if (val && i < digits.length - 1) digits[i + 1].focus();
+      });
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !e.target.value && i > 0) digits[i - 1].focus();
+      });
+      input.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+        pasted.split('').forEach((ch, j) => { if (digits[j]) digits[j].value = ch; });
+        if (digits[pasted.length - 1]) digits[Math.min(pasted.length, 5)].focus();
+      });
+    });
+  });
+
+  /* ── RESEND OTP TIMER ── */
+  let resendTimer = null;
+  function startResendTimer() {
+    const link = document.getElementById('resendLink');
+    const display = document.getElementById('timerDisplay');
+    if (!link || !display) return;
+    link.style.pointerEvents = 'none';
+    link.style.opacity = '0.5';
+    let seconds = 30;
+    display.textContent = '(' + seconds + 's)';
+    resendTimer = setInterval(() => {
+      seconds--;
+      display.textContent = '(' + seconds + 's)';
+      if (seconds <= 0) {
+        clearInterval(resendTimer);
+        display.textContent = '';
+        link.style.pointerEvents = '';
+        link.style.opacity = '';
+      }
+    }, 1000);
+  }
+
+  /* ── DISTRIBUTOR SELECT ── */
+  function selectDist(el) {
+    document.querySelectorAll('.dist-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  /* ── SLOT SELECT ── */
+  function selectSlot(el) {
+    document.querySelectorAll('.slot-btn:not(.unavailable)').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  /* ── MOBILE INPUT FORMAT ── */
+  const mobileInput = document.getElementById('mobileInput');
+  if (mobileInput) {
+    mobileInput.addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+    });
+  }
+
+  /* ── INIT ── */
+  showStep(1);
+</script>
+</body>
+</html>
