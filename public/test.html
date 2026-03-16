@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suvidha API Tester</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 500px 500px;
+            gap: 20px;
+            justify-content: center;
+        }
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 500px;
+            overflow: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .response {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .success { border-color: #4caf50; background: #e8f5e9; }
+        .error { border-color: #f44336; background: #ffebee; }
+        .token-display {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+        .token-display strong { color: #856404; }
+        .token-preview {
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            margin: 5px 0;
+        }
+        .copy-btn {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        .copy-btn:hover {
+            background: #ffca2c;
+        }
+        .copy-btn.copied {
+            background: #4caf50;
+            color: white;
+        }
+        .module-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .module-content {
+            display: none;
+        }
+        .module-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇮🇳 Suvidha API Tester</h1>
+            <p class="subtitle">Government of Assam Digital Services - Test all API endpoints</p>
+        </div>
+
+        <div class="grid">
+            <!-- Authentication Panel -->
+            <div class="panel">
+                <h2>🔐 Authentication</h2>
+                
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phone" placeholder="9876543210" value="9876543210">
+                </div>
+
+                <button onclick="sendOTP()">📱 Send OTP</button>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Enter OTP</label>
+                    <input type="text" id="otp" placeholder="123456">
+                </div>
+
+                <div class="form-group">
+                    <label>Name (optional for signup)</label>
+                    <input type="text" id="name" placeholder="Your Name">
+                </div>
+
+                <button onclick="verifyOTP()">✅ Verify OTP & Login</button>
+
+                <div id="authResponse" class="response" style="display:none;"></div>
+                
+                <div id="tokenDisplay" class="token-display" style="display:none;">
+                    <strong>🔑 Token:</strong>
+                    <div>
+                        <span class="token-preview" id="tokenValue"></span>
+                        <button class="copy-btn" onclick="copyToken()">📋 Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules Panel -->
+            <div class="panel">
+                <h2>📦 Test Modules</h2>
+                
+                <div class="module-tabs">
+                    <button class="tab active" data-module="municipal" onclick="switchModule('municipal')">Municipal</button>
+                    <button class="tab" data-module="electricity" onclick="switchModule('electricity')">Electricity</button>
+                    <button class="tab" data-module="gas" onclick="switchModule('gas')">Gas</button>
+                    <button class="tab" data-module="scholarship" onclick="switchModule('scholarship')">Scholarship</button>
+                </div>
+
+                <!-- Municipal Module -->
+                <div id="municipal" class="module-content active">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">Municipal Services</h3>
+                    
+                    <button onclick="testWasteReport()">Report Waste Issue</button>
+                    <button onclick="testFileGrievance()">File Grievance</button>
+                    <button onclick="testWaterConnection()">Apply Water Connection</button>
+                    <button onclick="getWasteReports()">Get My Waste Reports</button>
+                    <button onclick="getGrievances()">Get My Grievances</button>
+                </div>
+
+                <!-- Electricity Module -->
+                <div id="electricity" class="module-content">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">Electricity Services</h3>
+                    
+                    <button onclick="testElectricityConnection()">Apply New Connection</button>
+                    <button onclick="getElectricityConnections()">Get My Connections</button>
+                    <button onclick="getElectricityBills()">Get My Bills</button>
+                    <button onclick="getElectricityDashboard()">Get Dashboard Stats</button>
+                </div>
+
+                <!-- Gas Module -->
+                <div id="gas" class="module-content">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">Gas Services</h3>
+                    
+                    <button onclick="testGasConnection()">Apply Gas Connection</button>
+                    <button onclick="testBookCylinder()">Book LPG Cylinder</button>
+                    <button onclick="getGasConnections()">Get My Connections</button>
+                    <button onclick="getGasBookings()">Get My Bookings</button>
+                </div>
+
+                <!-- Scholarship Module -->
+                <div id="scholarship" class="module-content">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">Scholarship Services</h3>
+                    
+                    <button onclick="getScholarships()">Get Available Scholarships</button>
+                    <button onclick="testApplyScholarship()">Apply for Scholarship</button>
+                    <button onclick="getMyApplications()">Get My Applications</button>
+                    <button onclick="checkEligibility()">Check Eligibility</button>
+                </div>
+
+                <div id="moduleResponse" class="response" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        let authToken = '';
+
+        function switchModule(module) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                if (tab.getAttribute('data-module') === module) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // Update content
+            document.querySelectorAll('.module-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(module).classList.add('active');
+        }
+
+        async function sendOTP() {
+            try {
+                const phone = document.getElementById('phone').value;
+                const response = await fetch(`${API_URL}/auth/send-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+
+                const data = await response.json();
+                displayResponse('authResponse', data, response.ok);
+
+                if (data.data?.otp) {
+                    document.getElementById('otp').value = data.data.otp;
+                }
+            } catch (error) {
+                displayResponse('authResponse', { error: error.message }, false);
+                console.error('Error:', error);
+            }
+        }
+
+        async function verifyOTP() {
+            try {
+                const phone = document.getElementById('phone').value;
+                const otp = document.getElementById('otp').value;
+                const name = document.getElementById('name').value;
+
+                const response = await fetch(`${API_URL}/auth/verify-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, otp, name })
+                });
+
+                const data = await response.json();
+                displayResponse('authResponse', data, response.ok);
+
+                if (data.success && data.data?.token) {
+                    authToken = data.data.token;
+                    document.getElementById('tokenDisplay').style.display = 'block';
+                    // Show truncated token
+                    const truncated = authToken.substring(0, 20) + '...' + authToken.substring(authToken.length - 20);
+                    document.getElementById('tokenValue').textContent = truncated;
+                }
+            } catch (error) {
+                displayResponse('authResponse', { error: error.message }, false);
+                console.error('Error:', error);
+            }
+        }
+
+        async function testWasteReport() {
+            const data = {
+                location: 'Uzanbazar, Guwahati',
+                ward_number: 'Ward 12',
+                waste_type: 'mixed',
+                description: 'Overflowing garbage bin near bus stop',
+                priority: 'normal'
+            };
+
+            const response = await apiCall('/municipal/waste/report', 'POST', data);
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function getWasteReports() {
+            const response = await apiCall('/municipal/waste/reports', 'GET');
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function testFileGrievance() {
+            const data = {
+                category: 'Infrastructure',
+                subject: 'Street Light Not Working',
+                description: 'Street light near my house has not been working for the past week',
+                department: 'Public Works Department',
+                priority: 'normal'
+            };
+
+            const response = await apiCall('/municipal/grievance/file', 'POST', data);
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function getGrievances() {
+            const response = await apiCall('/municipal/grievance/my', 'GET');
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function testWaterConnection() {
+            const data = {
+                connection_type: 'domestic',
+                property_type: 'residential',
+                address: '123 Main Street, Guwahati',
+                ward_number: 'Ward 15'
+            };
+
+            const response = await apiCall('/municipal/water/apply', 'POST', data);
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function testElectricityConnection() {
+            const data = {
+                connection_type: 'domestic',
+                sanctioned_load: 3.5,
+                address: '456 Park Road, Guwahati',
+                district: 'Kamrup Metro'
+            };
+
+            const response = await apiCall('/electricity/apply', 'POST', data);
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function getElectricityConnections() {
+            const response = await apiCall('/electricity/connections', 'GET');
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function getElectricityBills() {
+            const response = await apiCall('/electricity/bills', 'GET');
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function getElectricityDashboard() {
+            const response = await apiCall('/electricity/dashboard', 'GET');
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function testGasConnection() {
+            const data = {
+                connection_type: 'lpg',
+                distributor: 'Indane Gas',
+                address: '789 Lake View, Guwahati'
+            };
+
+            const response = await apiCall('/gas/apply', 'POST', data);
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function testBookCylinder() {
+            // You'll need to have a connection first
+            const data = {
+                connection_id: 1,
+                cylinder_type: '14.2kg',
+                quantity: 1,
+                delivery_address: '789 Lake View, Guwahati'
+            };
+
+            const response = await apiCall('/gas/book', 'POST', data);
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function getGasConnections() {
+            const response = await apiCall('/gas/connections', 'GET');
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function getGasBookings() {
+            const response = await apiCall('/gas/bookings', 'GET');
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function getScholarships() {
+            const response = await apiCall('/scholarships', 'GET');
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function testApplyScholarship() {
+            const data = {
+                scholarship_id: 1,
+                student_name: 'Rahul Sharma',
+                father_name: 'Mohan Sharma',
+                mother_name: 'Priya Sharma',
+                dob: '2005-06-15',
+                gender: 'Male',
+                category: 'General',
+                annual_income: 200000,
+                class_level: '10',
+                school_college: 'Don Bosco School, Guwahati',
+                marks_percentage: 85.5,
+                bank_account: '1234567890',
+                ifsc_code: 'SBIN0001234'
+            };
+
+            const response = await apiCall('/scholarships/apply', 'POST', data);
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function getMyApplications() {
+            const response = await apiCall('/scholarships/my-applications', 'GET');
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function checkEligibility() {
+            const data = {
+                annual_income: 200000,
+                class_level: '10',
+                marks_percentage: 85,
+                category: 'General'
+            };
+
+            const response = await apiCall('/scholarships/check-eligibility', 'POST', data);
+            displayResponse('moduleResponse', response.data, response.ok);
+        }
+
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(authToken && { 'Authorization': `Bearer ${authToken}` })
+                    }
+                };
+
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(`${API_URL}${endpoint}`, options);
+                const data = await response.json();
+
+                return { data, ok: response.ok };
+            } catch (error) {
+                console.error('API Call Error:', error);
+                return { 
+                    data: { 
+                        success: false, 
+                        error: error.message,
+                        message: 'Network error or server not responding' 
+                    }, 
+                    ok: false 
+                };
+            }
+        }
+
+        function copyToken() {
+            navigator.clipboard.writeText(authToken).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy token');
+            });
+        }
+
+        function displayResponse(elementId, data, success) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = success ? 'response success' : 'response error';
+            element.textContent = JSON.stringify(data, null, 2);
+            // Scroll to the response
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+</body>
+</html>

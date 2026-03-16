@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Citizen Service Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS — Assam Palette
+    ═══════════════════════════════════════════════ */
+    :root {
+      --white:        #FFFFFF;
+      --charcoal:     #1C231F;
+      --forest:       #3B6939;
+      --leaf:         #5CBA60;
+      --amber:        #F5A623;
+      --soft-gray:    #E2E8F0;
+      --mid-gray:     #8A9BA8;
+      --light-green:  #EBF5EC;
+
+      /* derived */
+      --forest-dark:  #2a5028;
+      --forest-deep:  #1e3a1c;
+      --amber-light:  #FEF3DC;
+      --card-border:  rgba(59,105,57,0.13);
+      --red:          #dc2626;
+      --red-light:    #fee2e2;
+      --blue:         #1d4ed8;
+      --blue-light:   #dbeafe;
+
+      --shadow-sm:    0 1px 3px rgba(28,35,31,0.06), 0 3px 10px rgba(59,105,57,0.06);
+      --shadow-md:    0 2px 8px rgba(28,35,31,0.07), 0 10px 28px rgba(59,105,57,0.10);
+      --shadow-lg:    0 4px 14px rgba(28,35,31,0.09), 0 18px 44px rgba(59,105,57,0.14);
+
+      --radius:       11px;
+      --ease:         0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f2f5f2;
+      color: var(--charcoal);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: var(--forest); text-decoration: none; }
+    a:hover { color: var(--leaf); }
+
+    /* ═══════════════════════════════════════════════
+       NAVBAR
+       Two rows:
+         Row 1  (navbar-top)   — always visible: brand + search + hamburger
+         Row 2  (navbar-links) — horizontal on ≥900 | collapses to vertical list on <900
+    ═══════════════════════════════════════════════ */
+    .navbar {
+      background: var(--white);
+      border-bottom: 2.5px solid var(--forest);
+      position: sticky;
+      top: 0;
+      z-index: 600;
+      box-shadow: 0 2px 10px rgba(28,35,31,0.09);
+    }
+
+    /* ── Row 1 ── */
+    .navbar-top {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Brand */
+    .nav-brand {
+      display: flex; align-items: center; gap: 0.55rem;
+      flex-shrink: 0; text-decoration: none;
+    }
+    .nav-brand-icon {
+      width: 30px; height: 30px;
+      background: linear-gradient(145deg, var(--forest), var(--forest-dark));
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 7px rgba(59,105,57,0.35);
+      flex-shrink: 0;
+    }
+    .nav-brand-icon svg {
+      width: 17px; height: 17px;
+      stroke: var(--white); fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .nav-brand-text {
+      font-size: 0.9rem; font-weight: 600;
+      color: var(--charcoal); letter-spacing: -0.01em;
+      line-height: 1.2; white-space: nowrap;
+    }
+    .nav-brand-text small {
+      display: block;
+      font-size: 0.63rem; font-weight: 400;
+      color: var(--mid-gray); letter-spacing: 0.02em;
+    }
+
+    /* Search */
+    .nav-search {
+      flex: 1; max-width: 340px;
+      margin-left: auto;
+      position: relative;
+    }
+    .nav-search input {
+      width: 100%; height: 34px;
+      border: 1.5px solid var(--soft-gray);
+      border-radius: 8px;
+      padding: 0 0.85rem 0 2.2rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.8rem; color: var(--charcoal);
+      background: #f6f8f6; outline: none;
+      transition: border-color var(--ease), box-shadow var(--ease), background var(--ease);
+    }
+    .nav-search input:focus {
+      border-color: var(--forest);
+      box-shadow: 0 0 0 3px rgba(59,105,57,0.10);
+      background: var(--white);
+    }
+    .nav-search input::placeholder { color: var(--mid-gray); }
+    .nav-search-icon {
+      position: absolute; left: 0.6rem; top: 50%;
+      transform: translateY(-50%);
+      width: 14px; height: 14px;
+      stroke: var(--mid-gray); fill: none;
+      stroke-width: 2; stroke-linecap: round; pointer-events: none;
+      transition: stroke var(--ease);
+    }
+    .nav-search:focus-within .nav-search-icon { stroke: var(--forest); }
+
+    /* Hamburger — hidden on desktop, shown on mobile */
+    .nav-hamburger {
+      display: none;
+      flex-shrink: 0;
+      background: none;
+      border: 1.5px solid var(--soft-gray);
+      border-radius: 7px;
+      width: 36px; height: 34px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: border-color var(--ease), background var(--ease);
+      margin-left: 0.25rem;
+    }
+    .nav-hamburger:hover { border-color: var(--forest); background: var(--light-green); }
+    .nav-hamburger svg {
+      width: 18px; height: 18px;
+      stroke: var(--charcoal); fill: none;
+      stroke-width: 2; stroke-linecap: round;
+      transition: stroke var(--ease);
+    }
+    .nav-hamburger:hover svg { stroke: var(--forest); }
+
+    /* ── Row 2: links ── */
+    .navbar-links-wrap {
+      background: var(--white);
+      border-top: 1px solid var(--soft-gray);
+    }
+    .navbar-links {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 1.25rem;
+      display: flex; align-items: center;
+      gap: 0.1rem;
+      height: 36px;
+      list-style: none;
+    }
+    .navbar-links li a {
+      display: block;
+      font-size: 0.77rem; font-weight: 500;
+      color: var(--mid-gray);
+      padding: 0.28rem 0.68rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      position: relative;
+      transition: background var(--ease), color var(--ease);
+    }
+    /* Underline indicator */
+    .navbar-links li a::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 50%; right: 50%;
+      height: 2px;
+      background: var(--forest);
+      border-radius: 2px 2px 0 0;
+      transition: left var(--ease), right var(--ease);
+    }
+    .navbar-links li a:hover  { background: var(--light-green); color: var(--forest); }
+    .navbar-links li a:hover::after  { left: 10%; right: 10%; }
+    .navbar-links li a.active { background: var(--light-green); color: var(--forest); font-weight: 600; }
+    .navbar-links li a.active::after { left: 10%; right: 10%; }
+
+    /* ── RESPONSIVE BREAKPOINTS ── */
+
+    /* ≤ 900px → hide horizontal links bar, show hamburger */
+    @media (max-width: 900px) {
+      .navbar-links-wrap { display: none; }
+      .nav-hamburger     { display: flex;  }
+
+      /* When .open is toggled by JS */
+      .navbar-links-wrap.open {
+        display: block;
+        border-top: 1px solid var(--soft-gray);
+        border-bottom: 2px solid var(--forest);
+        box-shadow: 0 8px 24px rgba(28,35,31,0.12);
+        animation: dropDown 0.2s ease-out;
+      }
+      .navbar-links.open {
+        height: auto;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.5rem 1rem 0.7rem;
+        gap: 2px;
+      }
+      .navbar-links.open li a {
+        padding: 0.6rem 0.85rem;
+        font-size: 0.86rem;
+        border-radius: 8px;
+      }
+      .navbar-links.open li a::after { display: none; }
+      .navbar-links.open li a:hover { padding-left: 1.2rem; }
+    }
+
+    /* ≤ 560px → shrink search */
+    @media (max-width: 560px) {
+      .nav-search { max-width: 170px; }
+      .nav-brand-text { font-size: 0.83rem; }
+    }
+
+    /* ≤ 380px → hide brand subtitle */
+    @media (max-width: 380px) {
+      .nav-brand-text small { display: none; }
+      .nav-search { max-width: 120px; }
+    }
+
+    @keyframes dropDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* ═══════════════════════════════════════════════
+       HERO BAND
+    ═══════════════════════════════════════════════ */
+    .hero-band {
+      background: linear-gradient(135deg, var(--charcoal) 0%, #253327 55%, var(--forest-deep) 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero-band::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 65% 70% at 88% 50%, rgba(59,105,57,0.38) 0%, transparent 70%),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 0, transparent 36px);
+    }
+    .hero-band::after {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--forest) 0%, var(--leaf) 45%, var(--amber) 100%);
+    }
+    .hero-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 2.2rem 1.5rem;
+      position: relative; z-index: 1;
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+    }
+    .hero-eyebrow {
+      font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--leaf); opacity: 0.9;
+      display: flex; align-items: center; gap: 0.45rem;
+      margin-bottom: 0.42rem;
+    }
+    .hero-eyebrow::before { content: ''; width: 18px; height: 1.5px; background: var(--leaf); border-radius: 2px; }
+    .hero-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.85rem; line-height: 1.2;
+      color: var(--white); letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .hero-sub {
+      font-size: 0.84rem; font-weight: 300;
+      color: rgba(235,245,236,0.68);
+      max-width: 420px; line-height: 1.6;
+    }
+    .hero-stats {
+      display: flex; flex-shrink: 0;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius);
+      backdrop-filter: blur(6px); overflow: hidden;
+    }
+    .hero-stat {
+      padding: 0.95rem 1.4rem; text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.09);
+    }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-num {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.55rem; color: var(--amber); line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 0.63rem; font-weight: 500;
+      color: rgba(235,245,236,0.58);
+      letter-spacing: 0.07em; text-transform: uppercase; margin-top: 0.18rem;
+    }
+    @media (max-width: 720px) {
+      .hero-stats { width: 100%; }
+      .hero-stat  { flex: 1; padding: 0.7rem 0.5rem; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       MAIN
+    ═══════════════════════════════════════════════ */
+    .main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2.25rem 1.5rem 4rem;
+    }
+
+    /* Section header */
+    .section-hdr {
+      display: flex; align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .section-label {
+      font-size: 0.64rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--forest); margin-bottom: 0.17rem;
+    }
+    .section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.35rem; color: var(--charcoal);
+      letter-spacing: -0.02em;
+    }
+    .section-link {
+      font-size: 0.77rem; font-weight: 600;
+      color: var(--forest); white-space: nowrap;
+      display: flex; align-items: center; gap: 0.3rem;
+      transition: gap var(--ease), color var(--ease);
+    }
+    .section-link:hover { gap: 0.55rem; color: var(--leaf); }
+    .section-link svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Filter tabs */
+    .filter-bar {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1.5px solid var(--soft-gray);
+    }
+    .filter-tab {
+      height: 29px; padding: 0 0.82rem;
+      border-radius: 20px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.74rem; font-weight: 500;
+      cursor: pointer;
+      border: 1.5px solid var(--soft-gray);
+      background: var(--white); color: var(--mid-gray);
+      transition: all var(--ease);
+    }
+    .filter-tab:hover { border-color: var(--forest); color: var(--forest); background: var(--light-green); }
+    .filter-tab.active { background: var(--forest); border-color: var(--forest); color: var(--white); }
+
+    /* ═══════════════════════════════════════════════
+       SERVICE CARDS
+    ═══════════════════════════════════════════════ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2.75rem;
+    }
+    @media (max-width: 900px) { .services-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 520px) { .services-grid { grid-template-columns: 1fr; } }
+
+    .svc-card {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.3rem;
+      display: flex; flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      position: relative; overflow: hidden;
+      min-height: 210px;
+      transition: box-shadow var(--ease), transform var(--ease), border-color var(--ease);
+      animation: fadeSlideUp 0.42s ease-out both;
+    }
+    /* stagger */
+    .svc-card:nth-child(1){animation-delay:.04s} .svc-card:nth-child(2){animation-delay:.09s}
+    .svc-card:nth-child(3){animation-delay:.14s} .svc-card:nth-child(4){animation-delay:.19s}
+    .svc-card:nth-child(5){animation-delay:.24s} .svc-card:nth-child(6){animation-delay:.29s}
+    .svc-card:nth-child(7){animation-delay:.34s} .svc-card:nth-child(8){animation-delay:.39s}
+    .svc-card:nth-child(9){animation-delay:.44s}
+
+    /* Left accent bar */
+    .svc-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; bottom: 0; width: 3px;
+      background: linear-gradient(180deg, var(--forest), var(--leaf));
+      transform: scaleY(0); transform-origin: bottom;
+      transition: transform var(--ease);
+    }
+    .svc-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: rgba(59,105,57,0.22); }
+    .svc-card:hover::before { transform: scaleY(1); }
+
+    .svc-icon {
+      width: 42px; height: 42px; border-radius: 9px;
+      background: var(--light-green);
+      border: 1.5px solid rgba(92,186,96,0.2);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 0.9rem;
+      transition: background var(--ease), border-color var(--ease);
+    }
+    .svc-card:hover .svc-icon { background: linear-gradient(135deg, var(--forest), var(--leaf)); border-color: transparent; }
+    .svc-icon svg {
+      width: 20px; height: 20px;
+      stroke: var(--forest); fill: none;
+      stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round;
+      transition: stroke var(--ease);
+    }
+    .svc-card:hover .svc-icon svg { stroke: var(--white); }
+
+    .svc-title {
+      font-size: 0.91rem; font-weight: 600;
+      color: var(--charcoal); line-height: 1.3;
+      margin-bottom: 0.4rem; letter-spacing: -0.01em;
+    }
+    .svc-desc {
+      font-size: 0.78rem; color: var(--mid-gray);
+      line-height: 1.55; flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .svc-footer {
+      margin-top: 1rem; padding-top: 0.78rem;
+      border-top: 1px solid var(--soft-gray);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .svc-action {
+      font-size: 0.77rem; font-weight: 600; color: var(--forest);
+      display: flex; align-items: center; gap: 0.27rem;
+      transition: gap var(--ease), color var(--ease);
+    }
+    .svc-card:hover .svc-action { gap: 0.5rem; color: var(--leaf); }
+    .svc-action svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+    .svc-badge {
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.15rem 0.4rem; border-radius: 4px;
+    }
+    .badge-new  { background: var(--light-green);  color: var(--forest); }
+    .badge-ai   { background: #ede9fe; color: #5b21b6; }
+    .badge-live { background: var(--amber-light);  color: #92400e; }
+    .badge-req  { background: var(--blue-light);   color: var(--blue); }
+
+    /* ═══════════════════════════════════════════════
+       LOWER 2-COL
+    ═══════════════════════════════════════════════ */
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 1fr 312px;
+      gap: 1.2rem;
+      margin-bottom: 2.75rem;
+    }
+    @media (max-width: 900px) { .lower-grid { grid-template-columns: 1fr; } }
+
+    /* Updates */
+    .updates-box, .quick-box {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .box-head {
+      padding: 0.82rem 1.15rem;
+      border-bottom: 1px solid var(--soft-gray);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .box-head-title { font-size: 0.84rem; font-weight: 600; color: var(--charcoal); }
+    .box-head a { font-size: 0.72rem; font-weight: 500; color: var(--forest); }
+    .box-head a:hover { color: var(--leaf); }
+
+    .update-row {
+      display: flex; gap: 0.82rem; align-items: flex-start;
+      padding: 0.8rem 1.15rem;
+      border-bottom: 1px solid var(--soft-gray);
+      cursor: pointer;
+      transition: background var(--ease);
+    }
+    .update-row:last-child { border-bottom: none; }
+    .update-row:hover { background: var(--light-green); }
+    .update-tag {
+      font-size: 0.57rem; font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      padding: 0.16rem 0.4rem; border-radius: 4px;
+      white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+    }
+    .utag-green { background: var(--light-green); color: var(--forest); }
+    .utag-amber { background: var(--amber-light); color: #92400e; }
+    .utag-blue  { background: var(--blue-light);  color: var(--blue); }
+    .utag-red   { background: var(--red-light);   color: var(--red); }
+    .update-text { font-size: 0.81rem; color: var(--charcoal); line-height: 1.45; }
+    .update-meta { font-size: 0.68rem; color: var(--mid-gray); margin-top: 0.17rem; }
+
+    /* Quick links */
+    .quick-head {
+      padding: 0.82rem 1.15rem;
+      background: var(--forest);
+    }
+    .quick-head-title { font-size: 0.84rem; font-weight: 600; color: var(--white); }
+
+    .quick-row {
+      display: flex; align-items: center; gap: 0.62rem;
+      padding: 0.7rem 1.15rem;
+      border-bottom: 1px solid var(--soft-gray);
+      font-size: 0.81rem; color: var(--charcoal);
+      cursor: pointer;
+      transition: background var(--ease), color var(--ease), padding-left var(--ease);
+    }
+    .quick-row:last-child { border-bottom: none; }
+    .quick-row:hover { background: var(--light-green); color: var(--forest); padding-left: 1.5rem; }
+    .qr-emoji { font-size: 0.9rem; flex-shrink: 0; }
+    .qr-arrow { margin-left: auto; width: 12px; height: 12px; stroke: var(--soft-gray); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke var(--ease); flex-shrink: 0; }
+    .quick-row:hover .qr-arrow { stroke: var(--forest); }
+
+    /* ═══════════════════════════════════════════════
+       STEPPER
+    ═══════════════════════════════════════════════ */
+    .stepper-wrap {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 1.7rem 2rem;
+    }
+    .stepper-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; margin-top: 1.4rem; position: relative;
+    }
+    .stepper-grid::before {
+      content: ''; position: absolute;
+      top: 16px;
+      left: calc(12.5% + 2px); right: calc(12.5% + 2px);
+      height: 1.5px;
+      background: linear-gradient(90deg, var(--leaf), var(--forest), var(--leaf));
+      z-index: 0;
+    }
+    .step { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 1; padding: 0 0.5rem; }
+    .step-circle {
+      width: 33px; height: 33px; border-radius: 50%;
+      background: var(--white); border: 2px solid var(--forest);
+      color: var(--forest);
+      font-family: 'Poppins', sans-serif; font-size: 0.92rem;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 0.82rem;
+      box-shadow: 0 0 0 4px var(--white);
+      transition: all var(--ease);
+    }
+    .step.done .step-circle { background: var(--forest); color: var(--white); }
+    .step:hover .step-circle { background: var(--leaf); border-color: var(--leaf); color: var(--white); transform: scale(1.1); }
+    .step-check { width: 13px; height: 13px; stroke: var(--white); fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+    .step-label { font-size: 0.79rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.28rem; }
+    .step-desc  { font-size: 0.7rem; color: var(--mid-gray); line-height: 1.5; max-width: 118px; }
+    @media (max-width: 640px) {
+      .stepper-grid { grid-template-columns: repeat(2,1fr); gap: 1.4rem; }
+      .stepper-grid::before { display: none; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    .page-footer {
+      background: var(--charcoal);
+      color: rgba(255,255,255,0.38);
+      padding: 0.88rem 1.5rem;
+      font-size: 0.71rem;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .page-footer a { color: rgba(255,255,255,0.38); }
+    .page-footer a:hover { color: var(--leaf); }
+    .footer-links { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+    .footer-status { display: flex; align-items: center; gap: 0.38rem; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--leaf); box-shadow: 0 0 5px var(--leaf); }
+
+    /* ═══════════════════════════════════════════════
+       KEYFRAMES
+    ═══════════════════════════════════════════════ */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes dropDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- UTILITY BAR & I18N SCRIPT -->
+  <div class="utility-bar" style="background:#1C231F; color:rgba(255,255,255,0.7); font-size:0.7rem; padding:0.4rem 1.5rem; display:flex; justify-content:space-between; align-items:center; z-index:9999; position:relative;">
+    <span data-i18n="top_copy">© 2026 Government of Assam</span>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <select onchange="changeLanguage(this.value)" style="background:#1C231F; color:white; border:1px solid rgba(255,255,255,0.3); padding:2px 5px; border-radius:4px; font-size:0.75rem; outline:none; cursor:pointer;">
+            <option value="en">English</option>
+            <option value="as">অসমীয়া (Assamese)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="hi">हिंदी (Hindi)</option>
+        </select>
+        <a href="index.html" style="color: rgba(255,255,255,0.7);" data-i18n="back_home">← Back to Home</a>
+    </div>
+  </div>
+  <script src="/js/i18n.js"></script>
+
+<!-- ══════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════ -->
+<nav class="navbar" id="mainNav">
+
+  <!-- Row 1: brand + search + hamburger (always visible) -->
+  <div class="navbar-top">
+    <a href="#" class="nav-brand">
+      <div class="nav-brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/></svg>
+      </div>
+      <div class="nav-brand-text">
+        Citizen Service Portal
+        <small>Guwahati Municipal Corporation</small>
+      </div>
+    </a>
+
+    <div class="nav-search">
+      <svg class="nav-search-icon" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input type="search" placeholder="Search services, wards, complaints…" />
+    </div>
+
+    <!-- Hamburger: only visible ≤ 900px -->
+    <button class="nav-hamburger" id="navToggle"
+      aria-label="Toggle navigation menu"
+      aria-expanded="false"
+      aria-controls="navLinksWrap">
+      <svg id="hamburgerSvg" viewBox="0 0 24 24">
+        <line x1="3" y1="6"  x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Row 2: nav links
+       Desktop (>900px):  horizontal strip under top row
+       Mobile  (≤900px):  hidden by default; toggled to vertical list via JS
+  -->
+  <div class="navbar-links-wrap" id="navLinksWrap">
+    <ul class="navbar-links" id="navLinks">
+      <li><a href="#"        class="active">Services</a></li>
+      <li><a href="#">My Applications</a></li>
+      <li><a href="#">Payments</a></li>
+      <li><a href="#">Complaints</a></li>
+      <li><a href="#notices">Notices</a></li>
+      <li><a href="#">Departments</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+  </div>
+
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<div class="hero-band">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">Digital India · Urban Governance</div>
+      <div class="hero-title">One Portal. All City Services.</div>
+      <div class="hero-sub">Access water, sanitation, tax, grievance redressal, and AI document verification — from anywhere, anytime.</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">57</div>
+        <div class="hero-stat-label">Wards</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">1.2M</div>
+        <div class="hero-stat-label">Citizens</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">21d</div>
+        <div class="hero-stat-label">Resolution</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════ -->
+<main class="main">
+
+  <div class="section-hdr">
+    <div>
+      <div class="section-label">All Services</div>
+      <div class="section-title">Citizen Services</div>
+    </div>
+    <a href="#" class="section-link">Browse Directory <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-tab active">All</button>
+    <button class="filter-tab">Water &amp; Sanitation</button>
+    <button class="filter-tab">Taxation</button>
+    <button class="filter-tab">Grievances</button>
+    <button class="filter-tab">Documents</button>
+    <button class="filter-tab">Licensing</button>
+    <button class="filter-tab">Infrastructure</button>
+  </div>
+
+  <!-- SERVICE CARDS 3×3 -->
+  <div class="services-grid">
+
+    <div class="svc-card" onclick="window.location.href='grievance-portal.html'">
+      <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 013 3v5a3 3 0 01-6 0V4a3 3 0 013-3z"/><path d="M19 10a7 7 0 01-14 0M12 19v4M8 23h8"/></svg></div>
+      <div class="svc-title">Digital Jan Sunwai</div>
+      <div class="svc-desc">File grievances through live digital hearings with your ward officer. Auto-escalated if unresolved in 7 days.</div>
+      <div class="svc-footer">
+        <div class="svc-action">Register Complaint <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <span class="svc-badge badge-live">Live</span>
+      </div>
+    </div>
+
+    <div class="svc-card" onclick="window.location.href='water-supply.html'">
+      <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.5 8 4 12.5 4 15.5a8 8 0 0016 0C20 12.5 17.5 8 12 2z"/></svg></div>
+      <div class="svc-title">Water Supply</div>
+      <div class="svc-desc">Apply for new connections, report leakages, track pipe repairs, and download ward water quality certificates.</div>
+      <div class="svc-footer">
+        <div class="svc-action">Apply / Report <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <span class="svc-badge badge-req">Online</span>
+      </div>
+    </div>
+
+    <div class="svc-card" onclick="window.location.href='waste-management.html'">
+      <div class="svc-icon"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg></div>
+      <div class="svc-title">Garbage &amp; Sanitation</div>
+      <div class="svc-desc">Report missed pickups, schedule bulk waste, and track ward cleanliness scores and garbage truck routes.</div>
+      <div class="svc-footer">
+        <div class="svc-action">Report / Schedule <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <span class="svc-badge badge-req">Online</span>
+      </div>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="14" height="18" rx="2"/><path d="M7 8h7M7 12h7M7 16h4"/><circle cx="19" cy="19" r="4"/><path d="M17.5 19l1 1 2-2"/></svg></div>
+      <div class="svc-title">AI Document Verification</div>
+      <div class="svc-desc">Upload property papers or certificates — AI cross-checks authenticity and issues a tamper-proof digital stamp instantly.</div>
+      <div class="svc-footer">
+        <div class="svc-action">Verify Document <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <span class="svc-badge badge-ai">AI</span>
+      </div>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/></svg></div>
+      <div class="svc-title">Property Tax Payment</div>
+      <div class="svc-desc">Calculate dues, pay via UPI or net banking, download receipts. Avail 10% early-payment rebate before March 31.</div>
+      <div class="svc-footer">
+        <div class="svc-action">Pay Now <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <span class="svc-badge badge-new">Rebate</span>
+      </div>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2M8 7V5a2 2 0 00-4 0v2M12 12v4M10 14h4"/></svg></div>
+      <div class="svc-title">Trade Licence</div>
+      <div class="svc-desc">Apply for new trade licences, renew existing ones, and track approval status for your business premises.</div>
+      <div class="svc-footer">
+        <div class="svc-action">Apply / Renew <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <span class="svc-badge badge-req">Online</span>
+      </div>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <div class="svc-title">Birth &amp; Death Certificate</div>
+      <div class="svc-desc">Download digitally-signed birth and death certificates. Apply for corrections and re-issuance online.</div>
+      <div class="svc-footer">
+        <div class="svc-action">Download / Apply <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <span class="svc-badge badge-new">Instant</span>
+      </div>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg></div>
+      <div class="svc-title">Building Plan Approval</div>
+      <div class="svc-desc">Submit building plans digitally for municipal approval. Track review stages and receive digital sanctions.</div>
+      <div class="svc-footer">
+        <div class="svc-action">Submit Plan <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <span class="svc-badge badge-req">Online</span>
+      </div>
+    </div>
+
+    <div class="svc-card">
+      <div class="svc-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="svc-title">RTI Portal</div>
+      <div class="svc-desc">File Right to Information requests online. Track responses, pay fees electronically, and access public records.</div>
+      <div class="svc-footer">
+        <div class="svc-action">File RTI <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <span class="svc-badge badge-live">30 Days</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LOWER 2-COL -->
+  <div class="lower-grid" id="notices">
+
+    <div>
+      <div class="section-hdr" style="margin-bottom:0.82rem">
+        <div>
+          <div class="section-label">What's New</div>
+          <div class="section-title">Latest Updates</div>
+        </div>
+        <a href="#" class="section-link">View All <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="updates-box">
+        <div class="box-head">
+          <span class="box-head-title">Notices &amp; Circulars</span>
+          <a href="#">Subscribe →</a>
+        </div>
+        <div class="update-row">
+          <span class="update-tag utag-red">Alert</span>
+          <div>
+            <div class="update-text">Water supply disruption in Wards 14–18 — maintenance work 2–3 March 2026</div>
+            <div class="update-meta">27 Feb 2026 · Water Supply Dept.</div>
+          </div>
+        </div>
+        <div class="update-row">
+          <span class="update-tag utag-green">Notice</span>
+          <div>
+            <div class="update-text">Digital Jan Sunwai — March 2026 ward-wise hearing calendar published</div>
+            <div class="update-meta">26 Feb 2026 · Public Grievance Cell</div>
+          </div>
+        </div>
+        <div class="update-row">
+          <span class="update-tag utag-amber">Order</span>
+          <div>
+            <div class="update-text">Property Tax FY 2025–26: 10% early-bird rebate deadline extended to 31 March 2026</div>
+            <div class="update-meta">25 Feb 2026 · Revenue Department</div>
+          </div>
+        </div>
+        <div class="update-row">
+          <span class="update-tag utag-blue">Tender</span>
+          <div>
+            <div class="update-text">e-NIT for Solid Waste Management Vehicles — bid deadline: 15 March 2026</div>
+            <div class="update-meta">24 Feb 2026 · Engineering Cell, GMC</div>
+          </div>
+        </div>
+        <div class="update-row">
+          <span class="update-tag utag-green">Update</span>
+          <div>
+            <div class="update-text">AI Document Verification now supports Trade Licence and Building Plan certificates</div>
+            <div class="update-meta">22 Feb 2026 · IT Department, GMC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-hdr" style="margin-bottom:0.82rem">
+        <div>
+          <div class="section-label">Shortcuts</div>
+          <div class="section-title">Quick Access</div>
+        </div>
+      </div>
+      <div class="quick-box">
+        <div class="quick-head"><div class="quick-head-title">Frequently Used</div></div>
+        <div class="quick-row"><span class="qr-emoji">🎙️</span> File Jan Sunwai<svg class="qr-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <div class="quick-row"><span class="qr-emoji">💧</span> Water Connection<svg class="qr-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <div class="quick-row"><span class="qr-emoji">🗑️</span> Bulk Waste Pickup<svg class="qr-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <div class="quick-row"><span class="qr-emoji">🤖</span> AI Doc Verification<svg class="qr-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <div class="quick-row"><span class="qr-emoji">🏠</span> Pay Property Tax<svg class="qr-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <div class="quick-row"><span class="qr-emoji">📋</span> Download Certificate<svg class="qr-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <div class="quick-row"><span class="qr-emoji">📞</span> Helpline: 1800-345-3611<svg class="qr-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEPPER -->
+  <div class="section-hdr" style="margin-bottom:0.82rem">
+    <div>
+      <div class="section-label">Getting Started</div>
+      <div class="section-title">How to Use This Portal</div>
+    </div>
+  </div>
+  <div class="stepper-wrap">
+    <div class="stepper-grid">
+      <div class="step done">
+        <div class="step-circle"><svg class="step-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="step-label">Create Account</div>
+        <div class="step-desc">Register using Aadhaar or mobile OTP to access all services</div>
+      </div>
+      <div class="step done">
+        <div class="step-circle"><svg class="step-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="step-label">Select a Service</div>
+        <div class="step-desc">Browse from water, tax, sanitation, AI verification and more</div>
+      </div>
+      <div class="step">
+        <div class="step-circle">3</div>
+        <div class="step-label">Submit Request</div>
+        <div class="step-desc">Fill the digital form and upload documents — no office visit needed</div>
+      </div>
+      <div class="step">
+        <div class="step-circle">4</div>
+        <div class="step-label">Track &amp; Receive</div>
+        <div class="step-desc">Monitor live on your dashboard and get SMS or WhatsApp alerts</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <span>© 2026 Guwahati Municipal Corporation · Government of Assam</span>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Disclaimer</a>
+    <a href="#">Sitemap</a>
+    <a href="#">Accessibility</a>
+  </div>
+  <div class="footer-status">
+    <span class="status-dot"></span>
+    All systems operational
+  </div>
+</footer>
+
+<script>
+  /* ── Filter tabs ── */
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  /* ── Nav-link active ── */
+  document.querySelectorAll('.navbar-links a').forEach(link => {
+    link.addEventListener('click', function () {
+      document.querySelectorAll('.navbar-links a').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  /* ── Hamburger logic ── */
+  const toggle     = document.getElementById('navToggle');
+  const linksWrap  = document.getElementById('navLinksWrap');
+  const navLinks   = document.getElementById('navLinks');
+  const hamSvg     = document.getElementById('hamburgerSvg');
+
+  const OPEN_ICON  = `<line x1="3" y1="6"  x2="21" y2="6" />
+                      <line x1="3" y1="12" x2="21" y2="12"/>
+                      <line x1="3" y1="18" x2="21" y2="18"/>`;
+  const CLOSE_ICON = `<line x1="18" y1="6"  x2="6"  y2="18"/>
+                      <line x1="6"  y1="6"  x2="18" y2="18"/>`;
+
+  function setOpen(open) {
+    if (open) {
+      linksWrap.classList.add('open');
+      navLinks.classList.add('open');
+      hamSvg.innerHTML = CLOSE_ICON;
+      toggle.setAttribute('aria-expanded', 'true');
+    } else {
+      linksWrap.classList.remove('open');
+      navLinks.classList.remove('open');
+      hamSvg.innerHTML = OPEN_ICON;
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  toggle.addEventListener('click', () => setOpen(!linksWrap.classList.contains('open')));
+
+  /* Close menu when a link is tapped on mobile */
+  document.querySelectorAll('.navbar-links a').forEach(a => {
+    a.addEventListener('click', () => { if (window.innerWidth <= 900) setOpen(false); });
+  });
+
+  /* On resize to desktop: always show links, reset hamburger state */
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) setOpen(false);
+  });
+</script>
+
+<!-- Error suppression for browser extensions -->
+<script>
+  window.addEventListener('error', function(e) {
+    if (e.message && e.message.includes('Could not establish connection')) {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      return true;
+    }
+  }, true);
+</script>
+
+<script src="/js/auth.js"></script>
+<script src="/js/municipal-integration.js"></script>
+<style>
+  /* 1-Minute Warning Modal */
+  #inactivity-warning {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); z-index: 100000; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+  }
+  .warning-box {
+    background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 400px;
+    border: 3px solid #F5A623; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-family: 'Poppins', sans-serif;
+  }
+  .warning-box h2 { color: #c53030; margin-bottom: 10px; }
+  .warning-box p { color: #333; font-size: 14px; }
+
+  /* 2-Minute Public Awareness Screensaver */
+  #inactivity-screensaver {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1C231F 0%, #3B6939 100%); z-index: 100001;
+    align-items: center; justify-content: center; flex-direction: column; color: white;
+    font-family: 'Playfair Display', serif; text-align: center; cursor: pointer;
+  }
+  .screensaver-content h1 { font-size: 4rem; color: #F5A623; margin-bottom: 20px; }
+  .screensaver-content h3 { font-family: 'Poppins', sans-serif; font-weight: 300; letter-spacing: 2px; }
+  .screensaver-footer {
+    position: absolute; bottom: 30px; font-family: 'Poppins', sans-serif; font-size: 14px; opacity: 0.7;
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+</style>
+
+<div id="inactivity-warning">
+  <div class="warning-box">
+    <h2>⚠️ Are you still there?</h2>
+    <p>For your security, this session will close soon due to inactivity. Please move your mouse or tap the screen to continue.</p>
+  </div>
+</div>
+
+<div id="inactivity-screensaver">
+  <div class="screensaver-content">
+    <h1>Awesome Assam</h1>
+    <h3>Explore the wildlife, culture, and heritage of the Northeast.</h3>
+  </div>
+  <div class="screensaver-footer">Tap anywhere on the screen to start a new session</div>
+</div>
+
+<style>
+  /* 1-Minute Warning Modal */
+  #inactivity-warning {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); z-index: 100000; align-items: center; justify-content: center; backdrop-filter: blur(8px);
+  }
+  .warning-box {
+    background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 450px;
+    border: 4px solid #F4991A; box-shadow: 0 20px 50px rgba(0,0,0,0.4); font-family: 'Poppins', sans-serif;
+  }
+  .warning-box h2 { color: #344F1F; margin-bottom: 15px; font-size: 24px; }
+  .warning-box p { color: #4a4a4a; font-size: 16px; line-height: 1.5; }
+
+  /* 2-Minute Public Awareness Screensaver (The Ad) */
+  #inactivity-screensaver {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1a2910 0%, #344F1F 100%); z-index: 100001;
+    align-items: center; justify-content: center; flex-direction: column; color: white;
+    font-family: 'Poppins', sans-serif; text-align: center; cursor: pointer;
+  }
+  .screensaver-content h1 { font-size: 5rem; color: #F4991A; margin-bottom: 10px; font-weight: 800; }
+  .screensaver-content h3 { font-size: 1.5rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; }
+  .screensaver-footer {
+    position: absolute; bottom: 40px; font-size: 18px; font-weight: 500;
+    animation: pulseText 2s infinite; color: #F2EAD3;
+  }
+  @keyframes pulseText { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+</style>
+
+<div id="inactivity-warning">
+  <div class="warning-box">
+    <h2>⚠️ Session Timeout Warning</h2>
+    <p>Your session will expire in 60 seconds due to inactivity. Move your mouse or touch the screen to remain logged in.</p>
+  </div>
+</div>
+
+<div id="inactivity-screensaver">
+  <div class="screensaver-content">
+    <h1>AWESOME ASSAM</h1>
+    <h3>The Land of the Red River and Blue Hills</h3>
+  </div>
+  <div class="screensaver-footer">TAP ANYWHERE TO LOGIN</div>
+</div>
+
+<script>
+  let warningTimer;
+  let logoutTimer;
+  let sayakHasSpoken = false;
+
+  // Timings: 1 min for warning, 2 mins for full logout + ad
+  const TIME_TO_WARNING = 60 * 1000;    
+  const TIME_TO_LOGOUT  = 120 * 1000;   
+
+  function resetTimers() {
+    // 1. If the screensaver is already up, don't reset (they are already logged out)
+    if (document.getElementById('inactivity-screensaver').style.display === 'flex') return;
+
+    // 2. Hide warning and cancel voice
+    document.getElementById('inactivity-warning').style.display = 'none';
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    sayakHasSpoken = false;
+
+    // 3. Clear existing clocks
+    clearTimeout(warningTimer);
+    clearTimeout(logoutTimer);
+
+    // 4. Start new clocks
+    warningTimer = setTimeout(triggerWarning, TIME_TO_WARNING);
+    logoutTimer = setTimeout(triggerLogout, TIME_TO_LOGOUT);
+  }
+
+  function triggerWarning() {
+    document.getElementById('inactivity-warning').style.display = 'flex';
+    
+    // Use your Sahayak female voice to alert the user
+    if (window.Sahayak && !sayakHasSpoken) {
+      Sahayak.speak("Attention. Your session is about to expire due to inactivity. Please interact with the screen to stay logged in.");
+      sayakHasSpoken = true;
+    }
+  }
+
+  function triggerLogout() {
+    // 🛡️ SECURITY STEP: Clear all login data
+    sessionStorage.clear();
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('suvidha_user');
+
+    // Show the Ad
+    document.getElementById('inactivity-warning').style.display = 'none';
+    document.getElementById('inactivity-screensaver').style.display = 'flex';
+    
+    // When the next person clicks the Ad, take them to Login
+    document.getElementById('inactivity-screensaver').onclick = function() {
+        window.location.href = 'login.html';
+    };
+  }
+
+  // Monitor all possible user movements
+  window.onload = resetTimers;
+  document.onmousemove = resetTimers;
+  document.onkeypress = resetTimers;
+  document.onclick = resetTimers;
+  document.onscroll = resetTimers;
+  document.ontouchstart = resetTimers;
+
+  console.log("🔒 Inactivity Monitor Active: Warning at 1m, Logout at 2m.");
+</script>
+</body>
+</html>

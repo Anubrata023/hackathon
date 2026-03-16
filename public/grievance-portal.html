@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    // Suppress browser extension errors
+    window.addEventListener('error', function(e) {
+      if (e.message && e.message.includes('Could not establish connection')) {
+        e.preventDefault();
+        return true;
+      }
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      if (e.reason && e.reason.message && e.reason.message.includes('Could not establish connection')) {
+        e.preventDefault();
+        return true;
+      }
+    });
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Jan Sunwai — Government of Assam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --white:       #FFFFFF;
+      --charcoal:    #1C231F;
+      --forest:      #3B6939;
+      --leaf:        #5CBA60;
+      --amber:       #F5A623;
+      --soft-gray:   #E2E8F0;
+      --mid-gray:    #8A9BA8;
+      --light-green: #EBF5EC;
+
+      --card-border: rgba(59,105,57,0.14);
+      --shadow-sm:   0 1px 4px rgba(28,35,31,0.06), 0 3px 10px rgba(59,105,57,0.06);
+      --shadow-md:   0 2px 12px rgba(28,35,31,0.08), 0 8px 28px rgba(59,105,57,0.10);
+      --shadow-lg:   0 4px 20px rgba(28,35,31,0.11), 0 16px 44px rgba(59,105,57,0.14);
+      --shadow-hover:0 8px 32px rgba(28,35,31,0.16);
+      --ease:        0.24s cubic-bezier(0.4,0,0.2,1);
+      --radius:      12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4f0;
+      color: var(--charcoal);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--forest); text-decoration: none; }
+    a:hover { color: var(--leaf); }
+
+    /* ═══ HEADER ═══ */
+    header {
+      background: var(--white);
+      border-bottom: 2px solid var(--forest);
+      position: sticky; top: 0; z-index: 200;
+      box-shadow: 0 1px 8px rgba(28,35,31,0.08);
+    }
+    .header-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0.5rem 2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-emblem {
+      width: 38px; height: 38px;
+      background: linear-gradient(145deg, var(--forest), #1e3a1c);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(245,166,35,0.3);
+      box-shadow: 0 2px 8px rgba(59,105,57,0.3);
+      font-size: 1rem;
+    }
+    .brand-text h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.98rem; font-weight: 700;
+      color: var(--charcoal); line-height: 1.2;
+    }
+    .brand-text p {
+      font-size: 0.62rem; color: var(--mid-gray);
+      letter-spacing: 0.06em; text-transform: uppercase; margin-top: 0.08rem;
+    }
+    nav {
+      margin-left: auto;
+      display: flex; gap: 0.1rem; align-items: center;
+    }
+    nav a {
+      font-size: 0.76rem;
+      color: var(--mid-gray);
+      padding: 0.35rem 0.7rem;
+      border-radius: 5px;
+      font-family: 'Poppins', sans-serif;
+      transition: all var(--ease);
+      white-space: nowrap;
+    }
+    nav a:hover { background: var(--light-green); color: var(--forest); }
+    nav a.active { background: var(--forest); color: var(--white); font-weight: 600; }
+    .nav-cta {
+      margin-left: 0.35rem;
+      background: var(--amber) !important;
+      color: var(--charcoal) !important;
+      font-weight: 700 !important;
+      border-radius: 6px !important;
+      padding: 0.35rem 0.9rem !important;
+      box-shadow: 0 2px 6px rgba(245,166,35,0.25);
+    }
+    .nav-cta:hover { background: #e09510 !important; transform: translateY(-1px); }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      background: linear-gradient(135deg, var(--charcoal) 0%, #243326 55%, var(--forest) 100%);
+      color: var(--white);
+      padding: 1.5rem 2rem 1.2rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -60px; right: -60px;
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(92,186,96,0.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--leaf), var(--amber), var(--leaf));
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 300px;
+      gap: 2rem; align-items: center;
+      position: relative; z-index: 1;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(92,186,96,0.14);
+      border: 1px solid rgba(92,186,96,0.35);
+      color: var(--leaf);
+      font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.18rem 0.6rem; border-radius: 20px;
+      margin-bottom: 0.55rem;
+    }
+    .hero-eyebrow::before { content: '●'; font-size: 0.4rem; animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+      font-weight: 800; line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .hero-title span { color: var(--leaf); }
+    .hero-subtitle {
+      font-size: 0.8rem; color: rgba(255,255,255,0.7);
+      line-height: 1.7; max-width: 480px; margin-bottom: 1rem;
+    }
+    .hero-btns { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.48rem 1rem; border-radius: 6px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.76rem; font-weight: 600;
+      cursor: pointer; border: none;
+      transition: all var(--ease);
+    }
+    .btn-primary { background: var(--leaf); color: var(--charcoal); box-shadow: 0 2px 10px rgba(92,186,96,0.3); }
+    .btn-primary:hover { background: #4daa51; transform: translateY(-2px); box-shadow: 0 5px 14px rgba(92,186,96,0.38); color: var(--charcoal); }
+    .btn-ghost { background: rgba(255,255,255,0.08); color: var(--white); border: 1.5px solid rgba(255,255,255,0.25); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.14); border-color: var(--leaf); color: var(--white); }
+
+    /* Hero stats */
+    .hero-stats {
+      display: flex; gap: 1.4rem; margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .h-stat-num {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem; font-weight: 700; color: var(--white); line-height: 1;
+    }
+    .h-stat-num span { color: var(--amber); }
+    .h-stat-label { font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 0.15rem; }
+
+    /* Hero card */
+    .hero-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 11px;
+      padding: 1rem;
+      backdrop-filter: blur(10px);
+    }
+    .hero-card-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.82rem; color: var(--leaf);
+      margin-bottom: 0.7rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .next-session {
+      background: rgba(92,186,96,0.1);
+      border: 1px solid rgba(92,186,96,0.25);
+      border-radius: 10px;
+      padding: 1.2rem; margin-bottom: 1rem;
+    }
+    .session-date {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem; color: var(--white); font-weight: 700;
+    }
+    .session-meta { font-size: 0.75rem; color: rgba(255,255,255,0.55); margin-top: 0.2rem; }
+    .session-detail { font-size: 0.82rem; color: rgba(255,255,255,0.75); margin-top: 0.6rem; line-height: 1.6; }
+    .session-badge {
+      display: inline-block;
+      background: var(--leaf); color: var(--charcoal);
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 0.15rem 0.6rem; border-radius: 4px;
+      margin-top: 0.6rem;
+    }
+    .register-btn {
+      width: 100%;
+      background: var(--amber); color: var(--charcoal);
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88rem; font-weight: 700;
+      padding: 0.75rem; border: none; border-radius: 8px;
+      cursor: pointer; transition: all var(--ease);
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      box-shadow: 0 3px 12px rgba(245,166,35,0.35);
+    }
+    .register-btn:hover { background: #e09510; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(245,166,35,0.4); }
+
+    /* ═══ MAIN ═══ */
+    main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+    /* ═══ SECTION HEADER ═══ */
+    .section-hdr {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 1.8rem;
+    }
+    .section-label {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--forest); font-weight: 700; margin-bottom: 0.3rem;
+    }
+    .section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.7rem; font-weight: 700; color: var(--charcoal);
+    }
+    .section-line {
+      width: 40px; height: 3px;
+      background: linear-gradient(90deg, var(--forest), var(--leaf));
+      border-radius: 2px; margin-top: 0.6rem;
+    }
+    .section-link {
+      font-size: 0.8rem; font-weight: 600; color: var(--forest);
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.4rem 0.9rem; border: 1.5px solid var(--card-border);
+      border-radius: 6px; transition: all var(--ease);
+      white-space: nowrap;
+    }
+    .section-link:hover { background: var(--light-green); border-color: var(--forest); color: var(--forest); }
+
+    /* ═══ STEPS / HOW IT WORKS ═══ */
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 0; margin-bottom: 3.5rem;
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .step-item {
+      padding: 1.8rem 1.4rem;
+      position: relative;
+      border-right: 1px solid var(--card-border);
+      transition: background var(--ease);
+    }
+    .step-item:last-child { border-right: none; }
+    .step-item:hover { background: var(--light-green); }
+    .step-num {
+      width: 36px; height: 36px;
+      background: var(--forest);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .step-icon { font-size: 1.6rem; margin-bottom: 0.6rem; }
+    .step-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      color: var(--charcoal); margin-bottom: 0.4rem;
+    }
+    .step-desc { font-size: 0.78rem; color: var(--mid-gray); line-height: 1.6; }
+    .step-arrow {
+      position: absolute; right: -10px; top: 50%;
+      transform: translateY(-50%);
+      width: 20px; height: 20px;
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; color: var(--forest);
+      z-index: 1;
+    }
+    .step-item:last-child .step-arrow { display: none; }
+
+    /* ═══ GRIEVANCE FORM ═══ */
+    .grievance-layout {
+      display: grid; grid-template-columns: 1fr 340px;
+      gap: 2rem; margin-bottom: 3.5rem;
+    }
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .form-card-head {
+      background: var(--forest);
+      padding: 1.4rem 1.8rem;
+      display: flex; align-items: center; gap: 0.9rem;
+    }
+    .form-card-head-icon {
+      width: 42px; height: 42px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .form-card-head h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem; color: var(--white);
+    }
+    .form-card-head p { font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 0.1rem; }
+    .form-body { padding: 1.8rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.38rem; margin-bottom: 1rem; }
+    .form-group label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--forest);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--white);
+      border: 1.5px solid var(--soft-gray);
+      border-radius: 7px;
+      padding: 0.65rem 0.9rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88rem; color: var(--charcoal);
+      outline: none;
+      transition: border-color var(--ease), box-shadow var(--ease);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--forest);
+      box-shadow: 0 0 0 3px rgba(59,105,57,0.1);
+    }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .char-count { font-size: 0.68rem; color: var(--mid-gray); text-align: right; }
+    .upload-area {
+      border: 2px dashed var(--soft-gray);
+      border-radius: 8px; padding: 1.5rem;
+      text-align: center; cursor: pointer;
+      transition: all var(--ease);
+      background: #fafcfa;
+    }
+    .upload-area:hover { border-color: var(--leaf); background: var(--light-green); }
+    .upload-area .upload-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .upload-area p { font-size: 0.78rem; color: var(--mid-gray); }
+    .upload-area span { color: var(--forest); font-weight: 600; }
+    .form-submit {
+      width: 100%; padding: 0.85rem;
+      background: var(--forest); color: var(--white);
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: all var(--ease);
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      box-shadow: 0 3px 14px rgba(59,105,57,0.3);
+    }
+    .form-submit:hover { background: #2e5228; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59,105,57,0.35); }
+
+    /* Sidebar */
+    .sidebar { display: flex; flex-direction: column; gap: 1.2rem; }
+    .info-card {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .info-card-head {
+      padding: 1rem 1.2rem;
+      background: var(--light-green);
+      border-bottom: 1px solid var(--card-border);
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem; font-weight: 700; color: var(--forest);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .info-item {
+      padding: 0.85rem 1.2rem;
+      border-bottom: 1px solid var(--soft-gray);
+      display: flex; align-items: flex-start; gap: 0.7rem;
+      font-size: 0.8rem;
+    }
+    .info-item:last-child { border-bottom: none; }
+    .info-item-icon {
+      width: 28px; height: 28px;
+      background: var(--light-green);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+    .info-item-title { font-weight: 600; color: var(--charcoal); margin-bottom: 0.15rem; }
+    .info-item-val { color: var(--mid-gray); font-size: 0.75rem; line-height: 1.5; }
+
+    /* Helpline card */
+    .helpline-card {
+      background: var(--charcoal);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.2rem;
+      color: var(--white);
+    }
+    .helpline-card h4 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem; color: var(--leaf); margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .helpline-num {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem; font-weight: 700; color: var(--white);
+      letter-spacing: 0.02em;
+    }
+    .helpline-sub { font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; }
+    .helpline-times {
+      margin-top: 1rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .helpline-time-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.74rem; color: rgba(255,255,255,0.6);
+      padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .ht-val { color: var(--amber); font-weight: 600; }
+
+    /* ═══ CATEGORY CARDS ═══ */
+    .category-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem; margin-bottom: 3.5rem;
+    }
+    .cat-card {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.2rem;
+      text-align: center; cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--ease);
+      position: relative; overflow: hidden;
+    }
+    .cat-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: var(--cat-color, var(--forest));
+      transform: scaleX(0);
+      transition: transform var(--ease);
+    }
+    .cat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+    .cat-card:hover::after { transform: scaleX(1); }
+    .cat-icon {
+      width: 54px; height: 54px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin: 0 auto 0.9rem;
+      background: var(--cat-bg, var(--light-green));
+    }
+    .cat-title { font-family: 'Poppins', sans-serif; font-size: 0.92rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.35rem; }
+    .cat-count { font-size: 0.72rem; color: var(--mid-gray); }
+    .cat-badge {
+      display: inline-block;
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 0.15rem 0.55rem; border-radius: 4px;
+      margin-top: 0.6rem;
+    }
+
+    /* ═══ STATUS TRACKER ═══ */
+    .tracker-section {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      overflow: hidden; margin-bottom: 3.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .tracker-head {
+      background: linear-gradient(90deg, var(--charcoal), #2d3e2f);
+      padding: 1.4rem 1.8rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .tracker-head h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem; color: var(--white);
+    }
+    .tracker-head p { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.15rem; }
+    .tracker-search {
+      display: flex; gap: 0.6rem; align-items: center;
+    }
+    .tracker-search input {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 7px; padding: 0.55rem 1rem;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.82rem; color: var(--white); outline: none;
+      width: 220px;
+      transition: all var(--ease);
+    }
+    .tracker-search input::placeholder { color: rgba(255,255,255,0.4); }
+    .tracker-search input:focus { border-color: var(--leaf); background: rgba(255,255,255,0.15); }
+    .tracker-search button {
+      background: var(--leaf); color: var(--charcoal);
+      font-size: 0.8rem; font-weight: 700;
+      padding: 0.55rem 1.1rem; border: none; border-radius: 7px;
+      cursor: pointer; transition: all var(--ease);
+    }
+    .tracker-search button:hover { background: #4daa51; }
+    .tracker-body { padding: 1.6rem 1.8rem; }
+    .grievance-table { width: 100%; border-collapse: collapse; }
+    .grievance-table th {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--mid-gray); font-weight: 700;
+      text-align: left; padding: 0 0.8rem 0.8rem; border-bottom: 2px solid var(--soft-gray);
+    }
+    .grievance-table td {
+      padding: 0.9rem 0.8rem;
+      font-size: 0.82rem; color: var(--charcoal);
+      border-bottom: 1px solid var(--soft-gray);
+      vertical-align: middle;
+    }
+    .grievance-table tr:last-child td { border-bottom: none; }
+    .grievance-table tr:hover td { background: var(--light-green); }
+    .gid { font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--forest); font-size: 0.78rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.2rem 0.65rem; border-radius: 20px;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+    }
+    .pill::before { content: '●'; font-size: 0.45rem; }
+    .pill-pending  { background: #FEF3DA; color: #92400e; }
+    .pill-progress { background: #DBEAFE; color: #1e40af; }
+    .pill-resolved { background: #DCFCE7; color: #166534; }
+    .pill-escalated{ background: #FFE4E4; color: #991b1b; }
+
+    /* ═══ UPCOMING SESSIONS ═══ */
+    .sessions-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.3rem; margin-bottom: 3.5rem;
+    }
+    .session-card {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--ease);
+    }
+    .session-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .session-card-top {
+      background: var(--forest);
+      padding: 1.2rem 1.4rem;
+      position: relative;
+    }
+    .session-card:nth-child(2) .session-card-top { background: #2a4f5a; }
+    .session-card:nth-child(3) .session-card-top { background: #4a3a1e; }
+    .sc-date {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.6rem; font-weight: 700; color: var(--white);
+    }
+    .sc-month { font-size: 0.75rem; color: rgba(255,255,255,0.55); letter-spacing: 0.07em; text-transform: uppercase; }
+    .sc-badge {
+      position: absolute; top: 1rem; right: 1.2rem;
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 0.2rem 0.6rem;
+      border-radius: 5px; background: var(--leaf); color: var(--charcoal);
+    }
+    .session-card-body { padding: 1.3rem 1.4rem; }
+    .sc-title { font-family: 'Poppins', sans-serif; font-size: 0.98rem; font-weight: 700; color: var(--charcoal); margin-bottom: 0.5rem; }
+    .sc-meta { font-size: 0.76rem; color: var(--mid-gray); line-height: 1.65; margin-bottom: 1rem; }
+    .sc-detail { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1.1rem; }
+    .sc-detail-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.76rem; color: var(--charcoal); }
+    .sc-detail-row span:first-child { font-size: 0.85rem; }
+    .sc-reg-btn {
+      width: 100%; padding: 0.6rem;
+      background: var(--light-green); color: var(--forest);
+      border: 1.5px solid var(--card-border);
+      border-radius: 7px; font-family: 'Poppins', sans-serif;
+      font-size: 0.8rem; font-weight: 700; cursor: pointer;
+      transition: all var(--ease);
+    }
+    .sc-reg-btn:hover { background: var(--forest); color: var(--white); border-color: var(--forest); }
+    .sc-reg-btn.full { background: #FEF3DA; color: #92400e; border-color: rgba(245,166,35,0.3); cursor: not-allowed; }
+
+    /* ═══ STATISTICS ═══ */
+    .stats-band {
+      background: var(--charcoal);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      margin-bottom: 3.5rem;
+      position: relative; overflow: hidden;
+    }
+    .stats-band::before {
+      content: '';
+      position: absolute; top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(92,186,96,0.08) 0%, transparent 70%);
+    }
+    .stats-band-inner {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 1rem; position: relative; z-index: 1;
+    }
+    .stat-item { text-align: center; padding: 1rem; }
+    .stat-item + .stat-item { border-left: 1px solid rgba(255,255,255,0.07); }
+    .stat-num {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.1rem; font-weight: 700; color: var(--white);
+      line-height: 1;
+    }
+    .stat-num span { color: var(--amber); }
+    .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: rgba(255,255,255,0.45); margin-top: 0.35rem; }
+    .stat-sub { font-size: 0.68rem; color: var(--leaf); margin-top: 0.15rem; }
+
+    /* ═══ TESTIMONIALS ═══ */
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.3rem; margin-bottom: 3.5rem;
+    }
+    .testimonial-card {
+      background: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .testimonial-card::before {
+      content: '"';
+      font-family: 'Poppins', sans-serif;
+      font-size: 4rem; color: var(--light-green);
+      position: absolute; top: 0.5rem; right: 1.2rem;
+      line-height: 1;
+    }
+    .testimonial-text { font-size: 0.85rem; color: var(--charcoal); line-height: 1.75; margin-bottom: 1.2rem; font-style: italic; }
+    .testimonial-author { display: flex; align-items: center; gap: 0.7rem; }
+    .author-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--forest); color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem; font-weight: 700; flex-shrink: 0;
+    }
+    .author-name { font-size: 0.82rem; font-weight: 700; color: var(--charcoal); }
+    .author-meta { font-size: 0.7rem; color: var(--mid-gray); }
+    .stars { color: var(--amber); font-size: 0.75rem; letter-spacing: 0.1em; margin-bottom: 0.8rem; }
+
+    /* ═══ ALERT STRIP ═══ */
+    .alert-strip {
+      background: #FEF9EC;
+      border: 1px solid rgba(245,166,35,0.3);
+      border-left: 4px solid var(--amber);
+      border-radius: var(--radius);
+      padding: 1rem 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .alert-strip-icon {
+      width: 38px; height: 38px;
+      background: var(--amber); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .alert-strip-text { font-size: 0.84rem; color: var(--charcoal); flex: 1; line-height: 1.6; }
+    .alert-strip-text strong { color: #92400e; }
+    .alert-strip-btn {
+      background: var(--amber); color: var(--charcoal);
+      font-size: 0.76rem; font-weight: 700;
+      padding: 0.45rem 1rem; border-radius: 6px;
+      border: none; cursor: pointer; flex-shrink: 0;
+      transition: all var(--ease);
+    }
+    .alert-strip-btn:hover { background: #e09510; }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      background: var(--charcoal);
+      color: rgba(255,255,255,0.55);
+      padding: 3rem 2rem 1.5rem;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 2.5rem;
+    }
+    .footer-brand h4 { font-family: 'Poppins', sans-serif; font-size: 1.1rem; color: var(--white); margin-bottom: 0.6rem; }
+    .footer-brand p { font-size: 0.8rem; line-height: 1.75; }
+    .footer-col h5 { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--leaf); margin-bottom: 1rem; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.5rem; }
+    .footer-col ul li a { font-size: 0.8rem; color: rgba(255,255,255,0.5); transition: color var(--ease); }
+    .footer-col ul li a:hover { color: var(--leaf); }
+    .footer-bottom {
+      max-width: 1200px; margin: 0 auto;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.72rem;
+    }
+    .footer-bottom .leaf { color: var(--leaf); }
+
+    /* ═══ ANIMATIONS ═══ */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .hero-inner > * { animation: fadeUp 0.6s ease forwards; opacity: 0; }
+    .hero-inner > *:nth-child(1){animation-delay:0.1s}
+    .hero-inner > *:nth-child(2){animation-delay:0.25s}
+
+    /* ═══ RESPONSIVE ═══ */
+    @media(max-width:1024px){
+      .hero-inner{grid-template-columns:1fr}
+      .hero-card{display:none}
+      .grievance-layout{grid-template-columns:1fr}
+      .steps-grid{grid-template-columns:repeat(3,1fr)}
+      .category-grid{grid-template-columns:repeat(2,1fr)}
+      .stats-band-inner{grid-template-columns:repeat(3,1fr)}
+      nav a:not(.nav-cta):not(.active){display:none}
+    }
+    @media(max-width:768px){
+      .sessions-grid{grid-template-columns:1fr}
+      .testimonials-grid{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .steps-grid{grid-template-columns:1fr 1fr}
+      .tracker-head{flex-direction:column;gap:1rem;align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <!-- UTILITY BAR & I18N SCRIPT -->
+  <div class="utility-bar" style="background:#1C231F; color:rgba(255,255,255,0.7); font-size:0.7rem; padding:0.4rem 1.5rem; display:flex; justify-content:space-between; align-items:center; z-index:9999; position:relative;">
+    <span data-i18n="top_copy">© 2026 Government of Assam</span>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <select onchange="changeLanguage(this.value)" style="background:#1C231F; color:white; border:1px solid rgba(255,255,255,0.3); padding:2px 5px; border-radius:4px; font-size:0.75rem; outline:none; cursor:pointer;">
+            <option value="en">English</option>
+            <option value="as">অসমীয়া (Assamese)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="hi">हिंदी (Hindi)</option>
+        </select>
+        <a href="index.html" style="color: rgba(255,255,255,0.7);" data-i18n="back_home">← Back to Home</a>
+    </div>
+  </div>
+  <script src="/js/i18n.js"></script>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-emblem">🏛️</div>
+      <div class="brand-text">
+        <h1>Digital Jan Sunwai</h1>
+        <p>Public Grievance Hearing Portal · Government of Assam</p>
+      </div>
+    </div>
+    <nav>
+      <a href="#" class="active">Home</a>
+      <a href="#grievance">File Grievance</a>
+      <a href="#track">Track Status</a>
+      <a href="#sessions">Sessions</a>
+      <a href="#about">About</a>
+      <a href="#grievance" class="nav-cta">📝 Submit Now</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Digital Governance Initiative · 2026</div>
+      <h2 class="hero-title">Your Voice,<br><span>Heard & Resolved.</span></h2>
+      <p class="hero-subtitle">Digital Jan Sunwai is Assam's transparent public grievance platform — file complaints, attend live hearings, and track real-time resolution against government departments.</p>
+      <div class="hero-btns">
+        <a href="#grievance" class="btn btn-primary">📝 File a Grievance</a>
+        <a href="#track" class="btn btn-ghost">🔍 Track My Complaint</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="h-stat-num">1.4<span>L+</span></div>
+          <div class="h-stat-label">Grievances Filed</div>
+        </div>
+        <div>
+          <div class="h-stat-num">89<span>%</span></div>
+          <div class="h-stat-label">Resolution Rate</div>
+        </div>
+        <div>
+          <div class="h-stat-num">14<span>d</span></div>
+          <div class="h-stat-label">Avg. Resolution Time</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-title">📅 Next Scheduled Session</div>
+      <div class="next-session">
+        <div class="session-date">15 March 2026</div>
+        <div class="session-meta">Saturday · 10:00 AM – 4:00 PM</div>
+        <div class="session-detail">Venue: Srimanta Sankardev Kalakshetra, Guwahati<br>Presiding Officer: Commissioner, Kamrup Metro</div>
+        <span class="session-badge">Registration Open</span>
+      </div>
+      <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:1rem;">Online slots available: <strong style="color:var(--leaf)">43 remaining</strong></div>
+      <button class="register-btn" onclick="document.getElementById('sessions').scrollIntoView({behavior:'smooth'})">
+        🎟️ Register for Session
+      </button>
+    </div>
+  </div>
+</section>
+
+<main>
+
+  <!-- ALERT STRIP -->
+  <div class="alert-strip">
+    <div class="alert-strip-icon">📢</div>
+    <div class="alert-strip-text">
+      <strong>New:</strong> Jan Sunwai mobile app now available on Android & iOS — file grievances with photo evidence, receive SMS updates, and attend virtual hearings from anywhere in Assam.
+    </div>
+    <button class="alert-strip-btn">Download App</button>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-hdr">
+    <div>
+      <div class="section-label">Process</div>
+      <div class="section-title">How Jan Sunwai Works</div>
+      <div class="section-line"></div>
+    </div>
+  </div>
+  <div class="steps-grid">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-icon">📝</div>
+      <div class="step-title">Submit Grievance</div>
+      <div class="step-desc">Fill the online form with your complaint details, department, and supporting documents or photos.</div>
+      <div class="step-arrow">›</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-icon">✅</div>
+      <div class="step-title">Acknowledgement</div>
+      <div class="step-desc">Receive a unique grievance ID via SMS and email within 24 hours for tracking your complaint.</div>
+      <div class="step-arrow">›</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-icon">🏛️</div>
+      <div class="step-title">Department Review</div>
+      <div class="step-desc">The concerned department reviews your grievance, assigns an officer, and prepares a response.</div>
+      <div class="step-arrow">›</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-icon">🎙️</div>
+      <div class="step-title">Hearing Scheduled</div>
+      <div class="step-desc">Attend a virtual or in-person Jan Sunwai session. Present your case directly before the presiding officer.</div>
+      <div class="step-arrow">›</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">5</div>
+      <div class="step-icon">🎯</div>
+      <div class="step-title">Resolution & Closure</div>
+      <div class="step-desc">Receive official resolution. Rate your satisfaction. Escalate if dissatisfied within 30 days.</div>
+    </div>
+  </div>
+
+  <!-- GRIEVANCE CATEGORIES -->
+  <div class="section-hdr">
+    <div>
+      <div class="section-label">Categories</div>
+      <div class="section-title">File Grievance By Department</div>
+      <div class="section-line"></div>
+    </div>
+    <a href="#grievance" class="section-link">View All Departments →</a>
+  </div>
+  <div class="category-grid">
+    <div class="cat-card" style="--cat-color:#3B6939;--cat-bg:var(--light-green)">
+      <div class="cat-icon">💧</div>
+      <div class="cat-title">Water Supply</div>
+      <div class="cat-count">2,341 grievances · 91% resolved</div>
+      <span class="cat-badge" style="background:var(--light-green);color:var(--forest)">Active</span>
+    </div>
+    <div class="cat-card" style="--cat-color:#1a6fb5;--cat-bg:#DBEAFE">
+      <div class="cat-icon">🏥</div>
+      <div class="cat-title">Health Services</div>
+      <div class="cat-count">1,892 grievances · 87% resolved</div>
+      <span class="cat-badge" style="background:#DBEAFE;color:#1e40af">Active</span>
+    </div>
+    <div class="cat-card" style="--cat-color:#F5A623;--cat-bg:#FEF3DA">
+      <div class="cat-icon">🛣️</div>
+      <div class="cat-title">Roads & Infrastructure</div>
+      <div class="cat-count">3,118 grievances · 79% resolved</div>
+      <span class="cat-badge" style="background:#FEF3DA;color:#92400e">High Load</span>
+    </div>
+    <div class="cat-card" style="--cat-color:#5CBA60;--cat-bg:#DCFCE7">
+      <div class="cat-icon">💡</div>
+      <div class="cat-title">Electricity / APDCL</div>
+      <div class="cat-count">2,675 grievances · 88% resolved</div>
+      <span class="cat-badge" style="background:#DCFCE7;color:#166534">Active</span>
+    </div>
+    <div class="cat-card" style="--cat-color:#6d28d9;--cat-bg:#EDE9FE">
+      <div class="cat-icon">📚</div>
+      <div class="cat-title">Education</div>
+      <div class="cat-count">1,234 grievances · 92% resolved</div>
+      <span class="cat-badge" style="background:#EDE9FE;color:#5b21b6">Active</span>
+    </div>
+    <div class="cat-card" style="--cat-color:#dc2626;--cat-bg:#FFE4E4">
+      <div class="cat-icon">👮</div>
+      <div class="cat-title">Police / Law & Order</div>
+      <div class="cat-count">987 grievances · 85% resolved</div>
+      <span class="cat-badge" style="background:#FFE4E4;color:#991b1b">Sensitive</span>
+    </div>
+    <div class="cat-card" style="--cat-color:#0891b2;--cat-bg:#E0F2FE">
+      <div class="cat-icon">🌾</div>
+      <div class="cat-title">Agriculture & Land</div>
+      <div class="cat-count">1,765 grievances · 83% resolved</div>
+      <span class="cat-badge" style="background:#E0F2FE;color:#0c4a6e">Active</span>
+    </div>
+    <div class="cat-card" style="--cat-color:#8A9BA8;--cat-bg:var(--soft-gray)">
+      <div class="cat-icon">🏢</div>
+      <div class="cat-title">Other Departments</div>
+      <div class="cat-count">4,502 grievances · 86% resolved</div>
+      <span class="cat-badge" style="background:var(--soft-gray);color:var(--mid-gray)">All Depts</span>
+    </div>
+  </div>
+
+  <!-- FILE GRIEVANCE + SIDEBAR -->
+  <div id="grievance"></div>
+  <div class="section-hdr" style="margin-top:0.5rem">
+    <div>
+      <div class="section-label">File Complaint</div>
+      <div class="section-title">Submit Your Grievance</div>
+      <div class="section-line"></div>
+    </div>
+  </div>
+  <div class="grievance-layout">
+    <div class="form-card">
+      <div class="form-card-head">
+        <div class="form-card-head-icon">📝</div>
+        <div>
+          <h3>Grievance Registration Form</h3>
+          <p>All fields marked * are mandatory · Your data is secure & confidential</p>
+        </div>
+      </div>
+      <div class="form-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" name="name" placeholder="As per Aadhaar" required>
+          </div>
+          <div class="form-group">
+            <label>Mobile Number *</label>
+            <input type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="Optional — for email updates">
+          </div>
+          <div class="form-group">
+            <label>Aadhaar / Voter ID *</label>
+            <input type="text" name="id_number" placeholder="For verification" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>District *</label>
+            <select name="district" required>
+              <option value="">— Select District —</option>
+              <option>Kamrup Metro</option>
+              <option>Jorhat</option>
+              <option>Dibrugarh</option>
+              <option>Nagaon</option>
+              <option>Tezpur (Sonitpur)</option>
+              <option>Silchar (Cachar)</option>
+              <option>Dhubri</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Department *</label>
+            <select name="department" required>
+              <option value="">— Select Department —</option>
+              <option>Water Supply</option>
+              <option>Health Services</option>
+              <option>Roads & Infrastructure</option>
+              <option>Electricity / APDCL</option>
+              <option>Education</option>
+              <option>Police / Law & Order</option>
+              <option>Agriculture & Land Revenue</option>
+              <option>Social Welfare</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Grievance Subject *</label>
+          <input type="text" name="subject" placeholder="Brief subject of your grievance (max 100 characters)" required maxlength="100">
+        </div>
+        <div class="form-group">
+          <label>Detailed Description *</label>
+          <textarea name="description" placeholder="Describe your grievance in detail — include dates, locations, officials involved, and what resolution you are seeking..." required maxlength="1000"></textarea>
+          <div class="char-count">0 / 1000 characters</div>
+        </div>
+        <div class="form-group">
+          <label>Previous Complaint Reference (if any)</label>
+          <input type="text" name="previous_reference" placeholder="e.g. JSA-2025-XXXXXX — if re-filing or escalating">
+        </div>
+        <div class="form-group">
+          <label>Supporting Documents / Photos</label>
+          <div class="upload-area">
+            <div class="upload-icon">📎</div>
+            <p><span>Click to upload</span> or drag & drop</p>
+            <p>PDF, JPG, PNG — max 5MB each · up to 3 files</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Hearing Preference</label>
+          <select>
+            <option>Online / Virtual (Google Meet / Video Call)</option>
+            <option>In-Person · Guwahati Headquarters</option>
+            <option>In-Person · District Collector Office</option>
+            <option>No Hearing Required — Written Resolution</option>
+          </select>
+        </div>
+        <option>No Hearing Required — Written Resolution</option>
+      </select>
+    </div>
+
+    <div style="display:none; position:absolute; left:-9999px;">
+      <label for="bot_check_website">Leave this empty if you are human</label>
+      <input type="text" id="bot_check_website" name="bot_check_website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <button class="form-submit" type="button" onclick="handleGrievanceSubmit()">
+      📤 Submit Grievance
+    </button>
+  </div>
+        <button class="form-submit" type="button" onclick="handleGrievanceSubmit()">
+          📤 Submit Grievance
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="info-card">
+        <div class="info-card-head">📋 What Happens Next?</div>
+        <div class="info-item">
+          <div class="info-item-icon">📨</div>
+          <div>
+            <div class="info-item-title">Within 24 Hours</div>
+            <div class="info-item-val">Acknowledgement SMS with unique grievance ID sent to your mobile.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">🏛️</div>
+          <div>
+            <div class="info-item-title">Within 7 Days</div>
+            <div class="info-item-val">Assigned to department officer. Initial response provided.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">🎙️</div>
+          <div>
+            <div class="info-item-title">Within 14 Days</div>
+            <div class="info-item-val">Hearing scheduled (if required). You'll receive session details.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">✅</div>
+          <div>
+            <div class="info-item-title">Within 30 Days</div>
+            <div class="info-item-val">Final resolution communicated. Escalation option available if unsatisfied.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-head">⚠️ Before You File</div>
+        <div class="info-item">
+          <div class="info-item-icon">✔️</div>
+          <div>
+            <div class="info-item-title">Check Eligibility</div>
+            <div class="info-item-val">Grievances must relate to Assam state government departments or PSUs.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">📄</div>
+          <div>
+            <div class="info-item-title">Keep Documents Ready</div>
+            <div class="info-item-val">ID proof, complaint details, and evidence strengthen your case.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon">🔄</div>
+          <div>
+            <div class="info-item-title">Duplicate Check</div>
+            <div class="info-item-val">Do not file multiple complaints for the same issue. Use tracking to follow up.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="helpline-card">
+        <h4>📞 Helpline</h4>
+        <div class="helpline-num">1800-345-3699</div>
+        <div class="helpline-sub">Toll Free · Available in Assamese & English</div>
+        <div class="helpline-times">
+          <div class="helpline-time-row"><span>Weekdays</span><span class="ht-val">9 AM – 6 PM</span></div>
+          <div class="helpline-time-row"><span>Saturday</span><span class="ht-val">9 AM – 1 PM</span></div>
+          <div class="helpline-time-row"><span>Emergency</span><span class="ht-val">24×7 WhatsApp</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACK STATUS -->
+  <div id="track"></div>
+  <div class="section-hdr" style="margin-top:0.5rem">
+    <div>
+      <div class="section-label">Grievance Tracker</div>
+      <div class="section-title">Track Your Complaint</div>
+      <div class="section-line"></div>
+    </div>
+  </div>
+  <div class="tracker-section">
+    <div class="tracker-head">
+      <div>
+        <h3>Live Grievance Status</h3>
+        <p>Enter your Grievance ID or registered mobile number to check status</p>
+      </div>
+      <div class="tracker-search">
+        <input type="text" placeholder="e.g. JSA-2026-048271">
+        <button>🔍 Track</button>
+      </div>
+    </div>
+    <div class="tracker-body">
+      <table class="grievance-table">
+        <thead>
+          <tr>
+            <th>Grievance ID</th>
+            <th>Subject</th>
+            <th>Department</th>
+            <th>Filed On</th>
+            <th>Assigned Officer</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="gid">JSA-2026-048271</span></td>
+            <td>Water supply disruption — Ward 12, Panbazar</td>
+            <td>Water Supply Dept.</td>
+            <td>20 Feb 2026</td>
+            <td>Sh. Pranab Kalita</td>
+            <td><span class="pill pill-progress">In Progress</span></td>
+          </tr>
+          <tr>
+            <td><span class="gid">JSA-2026-041892</span></td>
+            <td>Electricity bill overcharge — Beltola area</td>
+            <td>APDCL</td>
+            <td>14 Feb 2026</td>
+            <td>Smt. Rima Das</td>
+            <td><span class="pill pill-resolved">Resolved</span></td>
+          </tr>
+          <tr>
+            <td><span class="gid">JSA-2026-039114</span></td>
+            <td>Pothole on NH-27 near Khanapara flyover</td>
+            <td>PWD (Roads)</td>
+            <td>08 Feb 2026</td>
+            <td>Er. Sunil Bora</td>
+            <td><span class="pill pill-pending">Pending</span></td>
+          </tr>
+          <tr>
+            <td><span class="gid">JSA-2026-035607</span></td>
+            <td>Mid-day meal quality complaint — Jorhat school</td>
+            <td>Education Dept.</td>
+            <td>02 Feb 2026</td>
+            <td>Sh. Hemanta Gogoi</td>
+            <td><span class="pill pill-resolved">Resolved</span></td>
+          </tr>
+          <tr>
+            <td><span class="gid">JSA-2026-031445</span></td>
+            <td>Land encroachment complaint — Dibrugarh</td>
+            <td>Revenue Dept.</td>
+            <td>25 Jan 2026</td>
+            <td>Sh. Bipul Nath</td>
+            <td><span class="pill pill-escalated">Escalated</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- UPCOMING SESSIONS -->
+  <div id="sessions"></div>
+  <div class="section-hdr" style="margin-top:0.5rem">
+    <div>
+      <div class="section-label">Public Hearings</div>
+      <div class="section-title">Upcoming Jan Sunwai Sessions</div>
+      <div class="section-line"></div>
+    </div>
+    <a href="#" class="section-link">All Sessions →</a>
+  </div>
+  <div class="sessions-grid">
+    <div class="session-card">
+      <div class="session-card-top">
+        <div class="sc-date">15</div>
+        <div class="sc-month">March 2026</div>
+        <span class="sc-badge">Open</span>
+      </div>
+      <div class="session-card-body">
+        <div class="sc-title">Kamrup Metro District Jan Sunwai</div>
+        <div class="sc-meta">Monthly public grievance hearing — all departments</div>
+        <div class="sc-detail">
+          <div class="sc-detail-row"><span>🕙</span><span>10:00 AM – 4:00 PM</span></div>
+          <div class="sc-detail-row"><span>📍</span><span>Srimanta Sankardev Kalakshetra, Guwahati</span></div>
+          <div class="sc-detail-row"><span>👤</span><span>Commissioner, Kamrup Metro</span></div>
+          <div class="sc-detail-row"><span>🎟️</span><span style="color:var(--leaf);font-weight:600">43 slots remaining</span></div>
+        </div>
+        <button class="sc-reg-btn">Register for Session</button>
+      </div>
+    </div>
+    <div class="session-card">
+      <div class="session-card-top">
+        <div class="sc-date">22</div>
+        <div class="sc-month">March 2026</div>
+        <span class="sc-badge" style="background:var(--amber)">Virtual</span>
+      </div>
+      <div class="session-card-body">
+        <div class="sc-title">Online Water & Electricity Grievance Day</div>
+        <div class="sc-meta">Special thematic session — APDCL & Water Supply</div>
+        <div class="sc-detail">
+          <div class="sc-detail-row"><span>🕙</span><span>11:00 AM – 2:00 PM</span></div>
+          <div class="sc-detail-row"><span>🖥️</span><span>Google Meet (link sent on registration)</span></div>
+          <div class="sc-detail-row"><span>👤</span><span>MD, APDCL & Chief Engineer, PWS</span></div>
+          <div class="sc-detail-row"><span>🎟️</span><span style="color:var(--leaf);font-weight:600">120 slots remaining</span></div>
+        </div>
+        <button class="sc-reg-btn">Register for Session</button>
+      </div>
+    </div>
+    <div class="session-card">
+      <div class="session-card-top">
+        <div class="sc-date">05</div>
+        <div class="sc-month">April 2026</div>
+        <span class="sc-badge" style="background:#888">Full</span>
+      </div>
+      <div class="session-card-body">
+        <div class="sc-title">Jorhat District Jan Sunwai</div>
+        <div class="sc-meta">Quarterly district-level public hearing</div>
+        <div class="sc-detail">
+          <div class="sc-detail-row"><span>🕙</span><span>9:30 AM – 3:30 PM</span></div>
+          <div class="sc-detail-row"><span>📍</span><span>District Commissioner's Office, Jorhat</span></div>
+          <div class="sc-detail-row"><span>👤</span><span>Deputy Commissioner, Jorhat</span></div>
+          <div class="sc-detail-row"><span>🎟️</span><span style="color:#dc2626;font-weight:600">Fully Booked</span></div>
+        </div>
+        <button class="sc-reg-btn full" disabled>Join Waitlist</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATISTICS -->
+  <div class="section-hdr">
+    <div>
+      <div class="section-label">Impact</div>
+      <div class="section-title">Jan Sunwai in Numbers</div>
+      <div class="section-line"></div>
+    </div>
+  </div>
+  <div class="stats-band">
+    <div class="stats-band-inner">
+      <div class="stat-item">
+        <div class="stat-num">1.4<span>L+</span></div>
+        <div class="stat-label">Total Grievances</div>
+        <div class="stat-sub">↑ 23% vs 2025</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">89<span>%</span></div>
+        <div class="stat-label">Resolution Rate</div>
+        <div class="stat-sub">↑ 6% vs 2025</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">14<span>d</span></div>
+        <div class="stat-label">Avg. Resolution Time</div>
+        <div class="stat-sub">↓ 4 days faster</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">48<span></span></div>
+        <div class="stat-label">Sessions Held</div>
+        <div class="stat-sub">Across 27 districts</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.2<span>★</span></div>
+        <div class="stat-label">Citizen Satisfaction</div>
+        <div class="stat-sub">Avg. out of 5.0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section-hdr">
+    <div>
+      <div class="section-label">Citizen Stories</div>
+      <div class="section-title">Voices of Resolution</div>
+      <div class="section-line"></div>
+    </div>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">My water supply complaint was resolved within 10 days. The officer personally called to confirm. Jan Sunwai gave me hope that the government actually listens.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">PB</div>
+        <div>
+          <div class="author-name">Priya Baruah</div>
+          <div class="author-meta">Panbazar, Guwahati · Water Supply</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★☆</div>
+      <div class="testimonial-text">The online hearing was very convenient. I could present my land dispute case from my village in Jorhat without travelling to Guwahati. A truly digital initiative.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">RB</div>
+        <div>
+          <div class="author-name">Ranjit Bora</div>
+          <div class="author-meta">Jorhat · Land Revenue Dept.</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">The electricity overcharge of ₹4,200 was corrected and refunded after Jan Sunwai. The tracking system kept me informed at every step. Excellent initiative by the Government.</div>
+      <div class="testimonial-author">
+        <div class="author-avatar">SM</div>
+        <div>
+          <div class="author-name">Sujata Mahanta</div>
+          <div class="author-meta">Beltola, Guwahati · APDCL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>🏛️ Digital Jan Sunwai Portal</h4>
+        <p>An initiative of the Public Administration Department, Government of Assam — ensuring transparent, time-bound, and accessible grievance redressal for every citizen of Assam.</p>
+        <br>
+        <p style="color:var(--leaf);font-size:0.78rem">🌿 Transforming Governance, One Grievance at a Time</p>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="#">File a Grievance</a></li>
+          <li><a href="#">Track Complaint</a></li>
+          <li><a href="#">Register for Session</a></li>
+          <li><a href="#">Escalate Complaint</a></li>
+          <li><a href="#">Rate Resolution</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">User Manual (PDF)</a></li>
+          <li><a href="#">Video Tutorials</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">RTI Application</a></li>
+          <li><a href="#">Annual Reports</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="#">📞 1800-345-3699</a></li>
+          <li><a href="#">✉ <span class="__cf_email__" data-cfemail="395358574a4c574e585079584a4a5854175e564f175057">[email&#160;protected]</span></a></li>
+          <li><a href="#">📍 Dispur, Guwahati – 781006</a></li>
+          <li><a href="#">📱 Download Mobile App</a></li>
+          <li><a href="#">💬 WhatsApp Helpdesk</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Government of Assam · Public Administration Department</span>
+      <span>Built with <span class="leaf">♥</span> for the citizens of Assam</span>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  function handleGrievanceSubmit() {
+  // 🛡️ 1. CHECK THE HONEYPOT FIRST
+  const honeypot = document.getElementById('bot_check_website').value;
+
+  // If the hidden field has ANY text in it, it's a bot!
+  if (honeypot !== "") {
+      console.warn("Spam Bot Detected! Grievance blocked.");
+      // We stop the function right here. The bot fails instantly.
+      return; 
+  }
+
+  // 2. Normal submission logic for humans
+  const btn = document.querySelector('.form-submit');
+  btn.textContent = '⏳ Submitting...';
+  btn.style.background = 'var(--mid-gray)';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.innerHTML = '✅ Submitted! Grievance ID: JSA-2026-' + Math.floor(100000 + Math.random() * 900000);
+    btn.style.background = '#166534';
+    setTimeout(() => {
+      btn.innerHTML = '📤 Submit Another Grievance';
+      btn.style.background = '';
+      btn.disabled = false;
+    }, 6000);
+  }, 1500);
+}
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.cat-card, .session-card, .testimonial-card, .step-item, .stat-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, box-shadow 0.24s ease, background 0.24s ease';
+    observer.observe(el);
+  });
+
+  // Character counter
+  const textarea = document.querySelector('textarea');
+  const counter = document.querySelector('.char-count');
+  if (textarea && counter) {
+    textarea.addEventListener('input', () => {
+      counter.textContent = `${textarea.value.length} / 1000 characters`;
+      if (textarea.value.length > 900) counter.style.color = '#dc2626';
+      else counter.style.color = 'var(--mid-gray)';
+    });
+  }
+
+  // Filter tabs for categories (if needed)
+  // Forms handled by municipal-integration.js
+  document.querySelectorAll('.sc-reg-btn:not(.full)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const original = undefined;
+    });
+  });
+</script>
+
+<script src="/js/auth.js"></script>
+<script src="/js/municipal-integration.js"></script>
+<style>
+  /* 1-Minute Warning Modal */
+  #inactivity-warning {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); z-index: 100000; align-items: center; justify-content: center; backdrop-filter: blur(8px);
+  }
+  .warning-box {
+    background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 450px;
+    border: 4px solid #F4991A; box-shadow: 0 20px 50px rgba(0,0,0,0.4); font-family: 'Poppins', sans-serif;
+  }
+  .warning-box h2 { color: #344F1F; margin-bottom: 15px; font-size: 24px; }
+  .warning-box p { color: #4a4a4a; font-size: 16px; line-height: 1.5; }
+
+  /* 2-Minute Public Awareness Screensaver (The Ad) */
+  #inactivity-screensaver {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1a2910 0%, #344F1F 100%); z-index: 100001;
+    align-items: center; justify-content: center; flex-direction: column; color: white;
+    font-family: 'Poppins', sans-serif; text-align: center; cursor: pointer;
+  }
+  .screensaver-content h1 { font-size: 5rem; color: #F4991A; margin-bottom: 10px; font-weight: 800; }
+  .screensaver-content h3 { font-size: 1.5rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; }
+  .screensaver-footer {
+    position: absolute; bottom: 40px; font-size: 18px; font-weight: 500;
+    animation: pulseText 2s infinite; color: #F2EAD3;
+  }
+  @keyframes pulseText { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+</style>
+
+<div id="inactivity-warning">
+  <div class="warning-box">
+    <h2>⚠️ Session Timeout Warning</h2>
+    <p>Your session will expire in 60 seconds due to inactivity. Move your mouse or touch the screen to remain logged in.</p>
+  </div>
+</div>
+
+<div id="inactivity-screensaver">
+  <div class="screensaver-content">
+    <h1>AWESOME ASSAM</h1>
+    <h3>The Land of the Red River and Blue Hills</h3>
+  </div>
+  <div class="screensaver-footer">TAP ANYWHERE TO LOGIN</div>
+</div>
+
+<style>
+  /* 1-Minute Warning Modal */
+  #inactivity-warning {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); z-index: 100000; align-items: center; justify-content: center; backdrop-filter: blur(8px);
+  }
+  .warning-box {
+    background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 450px;
+    border: 4px solid #F4991A; box-shadow: 0 20px 50px rgba(0,0,0,0.4); font-family: 'Poppins', sans-serif;
+  }
+  .warning-box h2 { color: #344F1F; margin-bottom: 15px; font-size: 24px; }
+  .warning-box p { color: #4a4a4a; font-size: 16px; line-height: 1.5; }
+
+  /* 2-Minute Public Awareness Screensaver (The Ad) */
+  #inactivity-screensaver {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1a2910 0%, #344F1F 100%); z-index: 100001;
+    align-items: center; justify-content: center; flex-direction: column; color: white;
+    font-family: 'Poppins', sans-serif; text-align: center; cursor: pointer;
+  }
+  .screensaver-content h1 { font-size: 5rem; color: #F4991A; margin-bottom: 10px; font-weight: 800; }
+  .screensaver-content h3 { font-size: 1.5rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; }
+  .screensaver-footer {
+    position: absolute; bottom: 40px; font-size: 18px; font-weight: 500;
+    animation: pulseText 2s infinite; color: #F2EAD3;
+  }
+  @keyframes pulseText { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+</style>
+
+<div id="inactivity-warning">
+  <div class="warning-box">
+    <h2>⚠️ Session Timeout Warning</h2>
+    <p>Your session will expire in 60 seconds due to inactivity. Move your mouse or touch the screen to remain logged in.</p>
+  </div>
+</div>
+
+<div id="inactivity-screensaver">
+  <div class="screensaver-content">
+    <h1>AWESOME ASSAM</h1>
+    <h3>The Land of the Red River and Blue Hills</h3>
+  </div>
+  <div class="screensaver-footer">TAP ANYWHERE TO LOGIN</div>
+</div>
+
+<script>
+  let warningTimer;
+  let logoutTimer;
+  let sayakHasSpoken = false;
+
+  // Timings: 1 min for warning, 2 mins for full logout + ad
+  const TIME_TO_WARNING = 60 * 1000;    
+  const TIME_TO_LOGOUT  = 120 * 1000;   
+
+  function resetTimers() {
+    // 1. If the screensaver is already up, don't reset (they are already logged out)
+    if (document.getElementById('inactivity-screensaver').style.display === 'flex') return;
+
+    // 2. Hide warning and cancel voice
+    document.getElementById('inactivity-warning').style.display = 'none';
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    sayakHasSpoken = false;
+
+    // 3. Clear existing clocks
+    clearTimeout(warningTimer);
+    clearTimeout(logoutTimer);
+
+    // 4. Start new clocks
+    warningTimer = setTimeout(triggerWarning, TIME_TO_WARNING);
+    logoutTimer = setTimeout(triggerLogout, TIME_TO_LOGOUT);
+  }
+
+  function triggerWarning() {
+    document.getElementById('inactivity-warning').style.display = 'flex';
+    
+    // Use your Sahayak female voice to alert the user
+    if (window.Sahayak && !sayakHasSpoken) {
+      Sahayak.speak("Attention. Your session is about to expire due to inactivity. Please interact with the screen to stay logged in.");
+      sayakHasSpoken = true;
+    }
+  }
+
+  function triggerLogout() {
+    // 🛡️ SECURITY STEP: Clear all login data
+    sessionStorage.clear();
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('suvidha_user');
+
+    // Show the Ad
+    document.getElementById('inactivity-warning').style.display = 'none';
+    document.getElementById('inactivity-screensaver').style.display = 'flex';
+    
+    // When the next person clicks the Ad, take them to Login
+    document.getElementById('inactivity-screensaver').onclick = function() {
+        window.location.href = 'login.html';
+    };
+  }
+
+  // Monitor all possible user movements
+  window.onload = resetTimers;
+  document.onmousemove = resetTimers;
+  document.onkeypress = resetTimers;
+  document.onclick = resetTimers;
+  document.onscroll = resetTimers;
+  document.ontouchstart = resetTimers;
+
+  console.log("🔒 Inactivity Monitor Active: Warning at 1m, Logout at 2m.");
+</script>
+
+</body>
+</html>

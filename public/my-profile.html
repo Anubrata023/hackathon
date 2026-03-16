@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | Suvidha Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --white: #FFFFFF;
+      --charcoal: #1C231F;
+      --forest: #3B6939;
+      --leaf: #5CBA60;
+      --amber: #F5A623;
+      --soft-gray: #E2E8F0;
+      --mid-gray: #8A9BA8;
+      --light-green: #EBF5EC;
+      --card-border: rgba(59, 105, 57, 0.15);
+      --shadow-card: 0 2px 16px rgba(28, 35, 31, 0.08);
+      --shadow-hover: 0 8px 32px rgba(28, 35, 31, 0.16);
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--charcoal);
+      background: var(--white);
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--forest);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    a:hover {
+      color: var(--leaf);
+    }
+
+    /* TOP UTILITY BAR */
+    .utility-bar {
+      background: var(--charcoal);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.7rem;
+      padding: 0.4rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* SIMPLE HEADER */
+    .site-header {
+      background: var(--white);
+      border-bottom: 3px solid var(--forest);
+      box-shadow: 0 2px 12px rgba(28, 35, 31, 0.10);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--charcoal);
+    }
+
+    .back-btn {
+      padding: 0.6rem 1.2rem;
+      background: var(--forest);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .back-btn:hover {
+      background: #2a5028;
+      color: var(--white);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.9rem;
+      color: var(--mid-gray);
+      margin-bottom: 2rem;
+    }
+
+    .profile-card {
+      background: var(--white);
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--soft-gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--forest), var(--leaf));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: var(--white);
+      font-weight: 700;
+      border: 3px solid var(--amber);
+    }
+
+    .profile-info h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--charcoal);
+      margin-bottom: 0.3rem;
+    }
+
+    .profile-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--mid-gray);
+    }
+
+    .profile-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--card-border);
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      color: var(--charcoal);
+      transition: all 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--forest);
+      box-shadow: 0 0 0 3px rgba(59, 105, 57, 0.1);
+    }
+
+    .form-group input:disabled {
+      background: var(--soft-gray);
+      cursor: not-allowed;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      padding-top: 1rem;
+      border-top: 1px solid var(--soft-gray);
+    }
+
+    .btn {
+      padding: 0.75rem 1.8rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--forest), var(--leaf));
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #2a5028, #4aa04e);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 105, 57, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--soft-gray);
+      color: var(--charcoal);
+    }
+
+    .btn-secondary:hover {
+      background: #d0d9e0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--light-green);
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--forest);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--mid-gray);
+      margin-top: 0.3rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: var(--mid-gray);
+    }
+
+    .spinner {
+      border: 3px solid var(--soft-gray);
+      border-top: 3px solid var(--forest);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- UTILITY BAR -->
+  <div class="utility-bar">
+    <span data-i18n="top_copy">© 2026 Government of Assam</span>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <select onchange="changeLanguage(this.value)" style="background:var(--charcoal); color:white; border:1px solid rgba(255,255,255,0.3); padding:2px 5px; border-radius:4px; font-size:0.75rem; outline:none; cursor:pointer;">
+            <option value="en">English</option>
+            <option value="as">অসমীয়া (Assamese)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="hi">हिंदी (Hindi)</option>
+        </select>
+        <a href="index.html" style="color: rgba(255,255,255,0.7);" data-i18n="back_home">← Back to Home</a>
+    </div>
+  </div>
+  <script src="/js/i18n.js"></script>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-text">My Profile</span>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <a href="index.html" class="back-btn" data-i18n="back_home">← Back to Home</a>
+        <button onclick="if(window.SuvidhaAuth) { window.SuvidhaAuth.logout(); } window.location.href='index.html';"
+          class="back-btn" style="background: #c53030;">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="page-title">My Profile</div>
+    <div class="page-subtitle">Manage your personal information and account settings</div>
+
+    <div id="loadingState" class="loading">
+      <div class="spinner"></div>
+      <p>Loading your profile...</p>
+    </div>
+
+    <div id="profileContent" style="display: none;">
+      <!-- PROFILE HEADER -->
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-avatar" id="avatarInitials">PS</div>
+          <div class="profile-info">
+            <h2 id="profileName">Loading...</h2>
+            <div class="profile-meta">
+              <span>📱 <span id="profilePhone">-</span></span>
+              <span>👤 <span id="profileRole">Citizen</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDIT FORM -->
+        <form id="profileForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" id="inputName" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" id="inputPhone" disabled>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="inputEmail" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label>Aadhaar Number</label>
+              <input type="text" id="inputAadhaar" placeholder="XXXX-XXXX-XXXX">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Address</label>
+            <textarea id="inputAddress" rows="3" placeholder="Your full address"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="loadProfile()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- STATS -->
+      <div class="profile-card">
+        <h3 style="margin-bottom: 1rem; font-family: 'Playfair Display', serif;">Account Activity</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="totalApplications">0</div>
+            <div class="stat-label">Total Applications</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="activeServices">0</div>
+            <div class="stat-label">Active Services</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="pendingRequests">0</div>
+            <div class="stat-label">Pending Requests</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/auth.js"></script>
+  <script>
+    // Wait for SuvidhaAuth to load and protect page
+    (function () {
+      if (!window.SuvidhaAuth) {
+        console.error('SuvidhaAuth not loaded');
+        window.location.href = '/login.html';
+        return;
+      }
+
+      // Protect page
+      window.SuvidhaAuth.requireAuth();
+
+      // Load profile on page load
+      window.addEventListener('DOMContentLoaded', loadProfile);
+    })();
+
+    // --- ADD THESE TWO MASKING FUNCTIONS HERE ---
+    function maskPhone(phoneNumber) {
+      if (!phoneNumber || phoneNumber.length < 10) return phoneNumber;
+      const start = phoneNumber.substring(0, 2);
+      const end = phoneNumber.substring(phoneNumber.length - 4);
+      return `${start}****${end}`;
+    }
+
+    function maskAadhaar(aadhaarNumber) {
+      if (!aadhaarNumber || aadhaarNumber.length < 12) return aadhaarNumber;
+      const end = aadhaarNumber.substring(aadhaarNumber.length - 4);
+      return `•••• •••• ${end}`;
+    }
+    // --------------------------------------------
+
+    async function loadProfile() {
+      try {
+        const result = await window.SuvidhaAuth.apiCall('/auth/me', 'GET');
+
+        if (result.success && result.data.data) {
+          const user = result.data.data;
+
+          // Update header
+          // Update header
+          document.getElementById('profileName').textContent = user.name || 'User';
+
+          // MASK THE PHONE NUMBER IN THE HEADER
+          document.getElementById('profilePhone').textContent = user.phone ? maskPhone(user.phone) : '-';
+
+          document.getElementById('profileRole').textContent = user.role || 'Citizen';
+
+          // Set avatar initials
+          const initials = (user.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+          document.getElementById('avatarInitials').textContent = initials;
+
+          // Populate form
+          document.getElementById('inputName').value = user.name || '';
+
+          // MASK THE PHONE NUMBER IN THE INPUT BOX
+          document.getElementById('inputPhone').value = user.phone ? maskPhone(user.phone) : '';
+
+          document.getElementById('inputEmail').value = user.email || '';
+
+          // MASK THE AADHAAR NUMBER IN THE INPUT BOX
+          document.getElementById('inputAadhaar').value = user.aadhaar ? maskAadhaar(user.aadhaar) : '';
+          document.getElementById('inputAddress').value = user.address || '';
+
+          // Load statistics (mock for now - can be replaced with real API)
+          await loadStatistics(user.id);
+
+          // Show content
+          document.getElementById('loadingState').style.display = 'none';
+          document.getElementById('profileContent').style.display = 'block';
+        } else {
+          window.SuvidhaAuth.showMessage('Failed to load profile', 'error');
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        window.SuvidhaAuth.showMessage('Error loading profile', 'error');
+      }
+    }
+
+    async function loadStatistics(userId) {
+      try {
+        // Get scholarship applications
+        const scholarshipResult = await window.SuvidhaAuth.apiCall('/scholarship/my-applications', 'GET');
+        const scholarshipCount = scholarshipResult.success ? (scholarshipResult.data.data?.length || 0) : 0;
+
+        // Get gas bookings
+        const gasResult = await window.SuvidhaAuth.apiCall('/gas/bookings', 'GET');
+        const gasCount = gasResult.success ? (gasResult.data.data?.length || 0) : 0;
+
+        // Get grievances
+        const grievanceResult = await window.SuvidhaAuth.apiCall('/municipal/grievance/my', 'GET');
+        const grievanceCount = grievanceResult.success ? (grievanceResult.data.data?.length || 0) : 0;
+
+        // Calculate totals
+        const total = scholarshipCount + gasCount + grievanceCount;
+        const pending = Math.floor(total * 0.4); // Mock pending count
+
+        document.getElementById('totalApplications').textContent = total;
+        document.getElementById('activeServices').textContent = Math.max(0, total - pending);
+        document.getElementById('pendingRequests').textContent = pending;
+      } catch (error) {
+        console.error('Error loading statistics:', error);
+      }
+    }
+
+    // Handle form submission
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const updatedData = {
+        name: document.getElementById('inputName').value,
+        email: document.getElementById('inputEmail').value,
+        aadhaar: document.getElementById('inputAadhaar').value,
+        address: document.getElementById('inputAddress').value
+      };
+
+      try {
+        const result = await window.SuvidhaAuth.apiCall('/auth/profile', 'PUT', updatedData);
+
+        if (result.success) {
+          // Update stored user data
+          const currentUser = window.SuvidhaAuth.getUserData();
+          window.SuvidhaAuth.setUserData({ ...currentUser, ...updatedData });
+
+          window.SuvidhaAuth.showMessage('Profile updated successfully!', 'success');
+          loadProfile(); // Reload to show updated data
+        } else {
+          window.SuvidhaAuth.showMessage(result.data.message || 'Failed to update profile', 'error');
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        window.SuvidhaAuth.showMessage('Error updating profile', 'error');
+      }
+    });
+
+    // Make loadProfile global so cancel button can call it
+    window.loadProfile = loadProfile;
+  </script>
+  <style>
+    /* 1-Minute Warning Modal */
+    #inactivity-warning {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 100000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .warning-box {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      max-width: 400px;
+      border: 3px solid #F5A623;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .warning-box h2 {
+      color: #c53030;
+      margin-bottom: 10px;
+    }
+
+    .warning-box p {
+      color: #333;
+      font-size: 14px;
+    }
+
+    /* 2-Minute Public Awareness Screensaver */
+    #inactivity-screensaver {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1C231F 0%, #3B6939 100%);
+      z-index: 100001;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      font-family: 'Playfair Display', serif;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .screensaver-content h1 {
+      font-size: 4rem;
+      color: #F5A623;
+      margin-bottom: 20px;
+    }
+
+    .screensaver-content h3 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    .screensaver-footer {
+      position: absolute;
+      bottom: 30px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      opacity: 0.7;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+  </style>
+
+  <div id="inactivity-warning">
+    <div class="warning-box">
+      <h2>⚠️ Are you still there?</h2>
+      <p>For your security, this session will close soon due to inactivity. Please move your mouse or tap the screen to
+        continue.</p>
+    </div>
+  </div>
+
+  <div id="inactivity-screensaver">
+    <div class="screensaver-content">
+      <h1>Awesome Assam</h1>
+      <h3>Explore the wildlife, culture, and heritage of the Northeast.</h3>
+    </div>
+    <div class="screensaver-footer">Tap anywhere on the screen to start a new session</div>
+  </div>
+
+  <script>
+    let warningTimer;
+    let screensaverTimer;
+    let isSahayakSpoken = false;
+
+    // Set times (in milliseconds)
+    const WARNING_TIME = 60 * 1000;      // 1 minute
+    const SCREENSAVER_TIME = 120 * 1000; // 2 minutes
+
+    function showWarning() {
+      document.getElementById('inactivity-warning').style.display = 'flex';
+
+      if (window.Sahayak && !isSahayakSpoken) {
+        Sahayak.speak("Your session is expiring soon. Please interact with the screen to continue.");
+        isSahayakSpoken = true;
+      }
+    }
+
+    function showScreensaver() {
+      // 1. DESTROY THE SESSION (Auto-Logout for Security)
+      sessionStorage.removeItem('authToken');
+      localStorage.removeItem('authToken');
+      console.log("🔒 Session destroyed due to inactivity.");
+
+      // 2. Hide the warning and show the Ad/Screensaver
+      document.getElementById('inactivity-warning').style.display = 'none';
+      document.getElementById('inactivity-screensaver').style.display = 'flex';
+
+      // 3. When the next person taps the screen, force them to the login page
+      document.getElementById('inactivity-screensaver').onclick = function () {
+        window.location.href = 'login.html';
+      };
+    }
+
+    function resetInactivity() {
+      // Only reset if the screensaver HAS NOT triggered yet. 
+      // If screensaver is showing, they are logged out and must click the screen to go to login.
+      if (document.getElementById('inactivity-screensaver').style.display === 'flex') return;
+
+      // Hide warning
+      document.getElementById('inactivity-warning').style.display = 'none';
+
+      // Stop speaking if it was talking
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      isSahayakSpoken = false;
+
+      // Clear old timers
+      clearTimeout(warningTimer);
+      clearTimeout(screensaverTimer);
+
+      // Start new timers
+      warningTimer = setTimeout(showWarning, WARNING_TIME);
+      screensaverTimer = setTimeout(showScreensaver, SCREENSAVER_TIME);
+    }
+
+    // Listen for ANY user interaction to reset the timer
+    window.onload = resetInactivity;
+    document.onmousemove = resetInactivity;
+    document.onkeypress = resetInactivity;
+    document.onclick = resetInactivity;
+    document.onscroll = resetInactivity;
+    document.ontouchstart = resetInactivity;
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Applications | Suvidha Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --white:         #FFFFFF;
+      --charcoal:      #1C231F;
+      --forest:        #3B6939;
+      --leaf:          #5CBA60;
+      --amber:         #F5A623;
+      --soft-gray:     #E2E8F0;
+      --mid-gray:      #8A9BA8;
+      --light-green:   #EBF5EC;
+      --card-border:   rgba(59, 105, 57, 0.15);
+      --shadow-card:   0 2px 16px rgba(28, 35, 31, 0.08);
+      --shadow-hover:  0 8px 32px rgba(28, 35, 31, 0.16);
+      --transition:    0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    * { margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--charcoal);
+      background: var(--white);
+      min-height: 100vh;
+    }
+
+    a { color: var(--forest); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--leaf); }
+
+    /* TOP UTILITY BAR */
+    .utility-bar {
+      background: var(--charcoal);
+      color: rgba(255,255,255,0.7);
+      font-size: 0.7rem;
+      padding: 0.4rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* SIMPLE HEADER */
+    .site-header {
+      background: var(--white);
+      border-bottom: 3px solid var(--forest);
+      box-shadow: 0 2px 12px rgba(28, 35, 31, 0.10);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand { display: flex; align-items: center; gap: 1rem; }
+    .brand-text { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--charcoal); }
+    .back-btn {
+      padding: 0.6rem 1.2rem;
+      background: var(--forest);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .back-btn:hover { background: #2a5028; color: var(--white); }
+
+    /* MAIN CONTENT */
+    .main-content {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 0.5rem;
+    }
+    .page-subtitle {
+      font-size: 0.9rem;
+      color: var(--mid-gray);
+      margin-bottom: 2rem;
+    }
+
+    /* FILTER TABS */
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--soft-gray);
+      overflow-x: auto;
+    }
+
+    .filter-tab {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--mid-gray);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .filter-tab:hover {
+      color: var(--forest);
+    }
+
+    .filter-tab.active {
+      color: var(--forest);
+      border-bottom-color: var(--forest);
+    }
+
+    /* APPLICATION CARDS */
+    .applications-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .app-card {
+      background: var(--white);
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card);
+      transition: all var(--transition);
+    }
+
+    .app-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .app-type {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      background: var(--light-green);
+      color: var(--forest);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .app-type.scholarship { background: #E8F4FD; color: #0369A1; }
+    .app-type.gas { background: #FEF3DC; color: #B45309; }
+    .app-type.electricity { background: #FEF2F2; color: #991B1B; }
+    .app-type.municipal { background: var(--light-green); color: var(--forest); }
+    .app-type.grievance { background: #F3E8FF; color: #6B21A8; }
+
+    .app-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin: 0.5rem 0 0.3rem;
+    }
+
+    .app-number {
+      font-size: 0.8rem;
+      color: var(--mid-gray);
+      font-family: monospace;
+    }
+
+    .status-badge {
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-pending {
+      background: #FEF3DC;
+      color: #B45309;
+    }
+
+    .status-approved {
+      background: var(--light-green);
+      color: var(--forest);
+    }
+
+    .status-rejected {
+      background: #FEE;
+      color: #991B1B;
+    }
+
+    .status-processing {
+      background: #E8F4FD;
+      color: #0369A1;
+    }
+
+    .app-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--soft-gray);
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .detail-label {
+      font-size: 0.75rem;
+      color: var(--mid-gray);
+      font-weight: 600;
+    }
+
+    .detail-value {
+      font-size: 0.9rem;
+      color: var(--charcoal);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: var(--mid-gray);
+    }
+
+    .spinner {
+      border: 3px solid var(--soft-gray);
+      border-top: 3px solid var(--forest);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--mid-gray);
+    }
+
+    .empty-state svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+
+    @media (max-width: 768px) {
+      .app-header { flex-direction: column; }
+      .app-details { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- UTILITY BAR -->
+<div class="utility-bar">
+  <span data-i18n="top_copy">© 2026 Government of Assam</span>
+  <div style="display:flex; align-items:center; gap:10px;">
+      <select onchange="changeLanguage(this.value)" style="background:var(--charcoal); color:white; border:1px solid rgba(255,255,255,0.3); padding:2px 5px; border-radius:4px; font-size:0.75rem; outline:none; cursor:pointer;">
+          <option value="en">English</option>
+          <option value="as">অসমীয়া (Assamese)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="hi">हिंदी (Hindi)</option>
+      </select>
+      <a href="index.html" style="color: rgba(255,255,255,0.7);" data-i18n="back_home">← Back to Home</a>
+  </div>
+</div>
+<script src="/js/i18n.js"></script>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-text">My Applications</span>
+    </div>
+    <a href="index.html" class="back-btn" data-i18n="back_home">← Back to Home</a>
+  </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <div class="page-title">My Applications</div>
+  <div class="page-subtitle">Track and manage all your service applications and requests</div>
+
+  <!-- FILTER TABS -->
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterApplications('all', event)">All Applications</button>
+    <button class="filter-tab" onclick="filterApplications('scholarship', event)">Scholarships</button>
+    <button class="filter-tab" onclick="filterApplications('gas', event)">Gas Services</button>
+    <button class="filter-tab" onclick="filterApplications('electricity', event)">Electricity</button>
+    <button class="filter-tab" onclick="filterApplications('municipal', event)">Municipal</button>
+    <button class="filter-tab" onclick="filterApplications('grievance', event)">Grievances</button>
+  </div>
+
+  <div id="loadingState" class="loading">
+    <div class="spinner"></div>
+    <p>Loading your applications...</p>
+  </div>
+
+  <div id="applicationsContent" style="display: none;">
+    <div class="applications-list" id="applicationsList"></div>
+    
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+      </svg>
+      <h3>No Applications Found</h3>
+      <p>You haven't submitted any applications yet.</p>
+    </div>
+  </div>
+</main>
+
+<script src="/js/auth.js"></script>
+<script>
+  // Wait for SuvidhaAuth to load and protect page
+  (function() {
+    if (!window.SuvidhaAuth) {
+      console.error('SuvidhaAuth not loaded');
+      window.location.href = '/login.html';
+      return;
+    }
+
+    // Protect page
+    window.SuvidhaAuth.requireAuth();
+  })();
+
+  let allApplications = [];
+  let currentFilter = 'all';
+
+  // Load applications on page load
+  window.addEventListener('DOMContentLoaded', loadAllApplications);
+
+  async function loadAllApplications() {
+    try {
+      allApplications = [];
+
+      // Load Scholarship Applications
+      const scholarshipResult = await window.SuvidhaAuth.apiCall('/scholarship/my-applications', 'GET');
+      if (scholarshipResult.success && scholarshipResult.data.data) {
+        scholarshipResult.data.data.forEach(app => {
+          allApplications.push({
+            type: 'scholarship',
+            title: app.scholarshipName || 'Scholarship Application',
+            number: app.applicationNumber,
+            status: app.status,
+            appliedDate: app.appliedDate || new Date().toISOString().split('T')[0],
+            amount: app.amount,
+            category: app.category
+          });
+        });
+      }
+
+      // Load Gas Bookings
+      const gasResult = await window.SuvidhaAuth.apiCall('/gas/bookings', 'GET');
+      if (gasResult.success && gasResult.data.data) {
+        gasResult.data.data.forEach(booking => {
+          allApplications.push({
+            type: 'gas',
+            title: 'LPG Cylinder Booking',
+            number: booking.bookingNumber,
+            status: booking.status,
+            appliedDate: booking.bookingDate || new Date().toISOString().split('T')[0],
+            quantity: booking.quantity,
+            deliveryAddress: booking.address
+          });
+        });
+      }
+
+      // Load Gas Connections
+      const gasConnResult = await window.SuvidhaAuth.apiCall('/gas/connections', 'GET');
+      if (gasConnResult.success && gasConnResult.data.data) {
+        gasConnResult.data.data.forEach(conn => {
+          allApplications.push({
+            type: 'gas',
+            title: 'Gas Connection Application',
+            number: conn.applicationNumber,
+            status: conn.status,
+            appliedDate: conn.applicationDate || new Date().toISOString().split('T')[0],
+            connectionType: conn.connectionType,
+            address: conn.address
+          });
+        });
+      }
+
+      // Load Electricity Connections
+      const elecResult = await window.SuvidhaAuth.apiCall('/electricity/connections', 'GET');
+      if (elecResult.success && elecResult.data.data) {
+        elecResult.data.data.forEach(conn => {
+          allApplications.push({
+            type: 'electricity',
+            title: 'Electricity Connection',
+            number: conn.applicationNumber,
+            status: conn.status,
+            appliedDate: conn.applicationDate || new Date().toISOString().split('T')[0],
+            loadRequired: conn.loadRequired,
+            connectionType: conn.connectionType
+          });
+        });
+      }
+
+      // Load Water Connections
+      const waterResult = await window.SuvidhaAuth.apiCall('/municipal/water/connections', 'GET');
+      if (waterResult.success && waterResult.data.data) {
+        waterResult.data.data.forEach(conn => {
+          allApplications.push({
+            type: 'municipal',
+            title: 'Water Connection Application',
+            number: conn.applicationNumber,
+            status: conn.status,
+            appliedDate: conn.applicationDate || new Date().toISOString().split('T')[0],
+            connectionType: conn.connectionType,
+            address: conn.address
+          });
+        });
+      }
+
+      // Load Grievances
+      const grievanceResult = await window.SuvidhaAuth.apiCall('/municipal/grievance/my', 'GET');
+      if (grievanceResult.success && grievanceResult.data.data) {
+        grievanceResult.data.data.forEach(griev => {
+          allApplications.push({
+            type: 'grievance',
+            title: griev.subject || 'Grievance',
+            number: griev.grievanceNumber,
+            status: griev.status,
+            appliedDate: griev.filedDate || new Date().toISOString().split('T')[0],
+            category: griev.category,
+            department: griev.department
+          });
+        });
+      }
+
+      // Sort by date (newest first)
+      allApplications.sort((a, b) => new Date(b.appliedDate) - new Date(a.appliedDate));
+
+      // Show content
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('applicationsContent').style.display = 'block';
+
+      // Display applications
+      displayApplications();
+
+    } catch (error) {
+      console.error('Error loading applications:', error);
+      window.SuvidhaAuth.showMessage('Error loading applications', 'error');
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('applicationsContent').style.display = 'block';
+      displayApplications();
+    }
+  }
+
+  function displayApplications() {
+    const filtered = currentFilter === 'all' 
+      ? allApplications 
+      : allApplications.filter(app => app.type === currentFilter);
+
+    const container = document.getElementById('applicationsList');
+    const emptyState = document.getElementById('emptyState');
+
+    if (filtered.length === 0) {
+      container.innerHTML = '';
+      emptyState.style.display = 'block';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    container.innerHTML = filtered.map(app => createApplicationCard(app)).join('');
+  }
+
+  function createApplicationCard(app) {
+    const statusClass = `status-${app.status}`;
+    const statusText = app.status.charAt(0).toUpperCase() + app.status.slice(1);
+
+    let detailsHTML = `
+      <div class="detail-item">
+        <div class="detail-label">Applied Date</div>
+        <div class="detail-value">${formatDate(app.appliedDate)}</div>
+      </div>
+    `;
+
+    // Add type-specific details
+    if (app.amount) {
+      detailsHTML += `
+        <div class="detail-item">
+          <div class="detail-label">Amount</div>
+          <div class="detail-value">₹${app.amount.toLocaleString()}</div>
+        </div>
+      `;
+    }
+    if (app.category) {
+      detailsHTML += `
+        <div class="detail-item">
+          <div class="detail-label">Category</div>
+          <div class="detail-value">${app.category}</div>
+        </div>
+      `;
+    }
+    if (app.quantity) {
+      detailsHTML += `
+        <div class="detail-item">
+          <div class="detail-label">Quantity</div>
+          <div class="detail-value">${app.quantity} Cylinder(s)</div>
+        </div>
+      `;
+    }
+    if (app.loadRequired) {
+      detailsHTML += `
+        <div class="detail-item">
+          <div class="detail-label">Load Required</div>
+          <div class="detail-value">${app.loadRequired} kW</div>
+        </div>
+      `;
+    }
+    if (app.connectionType) {
+      detailsHTML += `
+        <div class="detail-item">
+          <div class="detail-label">Connection Type</div>
+          <div class="detail-value">${app.connectionType}</div>
+        </div>
+      `;
+    }
+    if (app.department) {
+      detailsHTML += `
+        <div class="detail-item">
+          <div class="detail-label">Department</div>
+          <div class="detail-value">${app.department}</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="app-card">
+        <div class="app-header">
+          <div>
+            <div class="app-type ${app.type}">${app.type}</div>
+            <div class="app-title">${app.title}</div>
+            <div class="app-number">Application #${app.number}</div>
+          </div>
+          <div class="status-badge ${statusClass}">${statusText}</div>
+        </div>
+        <div class="app-details">
+          ${detailsHTML}
+        </div>
+      </div>
+    `;
+  }
+
+  function filterApplications(type, evt) {
+    currentFilter = type;
+    
+    // Update active tab
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    if (evt && evt.target) {
+      evt.target.classList.add('active');
+    }
+
+    displayApplications();
+  }
+
+  function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  // Make filterApplications global for onclick handlers
+  window.filterApplications = filterApplications;
+</script>
+
+</body>
+</html>

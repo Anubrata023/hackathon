@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Auth | Suvidha Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --assam-orange: #F4991A;
+            --assam-green: #344F1F;
+            --cream: #F9F5F0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .auth-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(52, 79, 31, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .status-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: var(--assam-green);
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--assam-green);
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            color: white;
+            transition: opacity 0.3s;
+        }
+        .btn-approve {
+            background: linear-gradient(135deg, var(--assam-green), #4a6f35);
+        }
+        .btn-deny {
+            background: #eee;
+            color: #666;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .success-state {
+            display: none;
+            color: var(--assam-green);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card" id="auth-form">
+        <div class="status-icon">📱</div>
+        <h2>Authorize Login</h2>
+        <p>You scanned a QR code to login to the Suvidha Portal on another device.</p>
+        
+        <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="tel" id="mobile" placeholder="Enter 10-digit number" maxlength="10">
+        </div>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="Your full name">
+        </div>
+
+        <button class="btn btn-approve" onclick="approveLogin()">Approve Login</button>
+        <button class="btn btn-deny" onclick="denyLogin()">Cancel</button>
+    </div>
+
+    <div class="auth-card success-state" id="success-state">
+        <div class="status-icon">✅</div>
+        <h2>Approved!</h2>
+        <p>You can now return to your original screen.</p>
+    </div>
+
+    <script>
+        // Get the session ID from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('sessionId');
+
+        if (!sessionId) {
+            document.body.innerHTML = '<div class="auth-card"><h2>❌ Invalid Link</h2><p>No valid session found.</p></div>';
+        }
+
+        function approveLogin() {
+            const phone = document.getElementById('mobile').value.trim();
+            const name = document.getElementById('name').value.trim();
+
+            if (phone.length !== 10) {
+                alert("Please enter a valid 10-digit mobile number.");
+                return;
+            }
+
+            if (!name) {
+                alert("Please enter your name.");
+                return;
+            }
+
+            // Mock creating a user profile payload
+            const userData = {
+                id: 'USR' + Math.floor(Math.random() * 10000),
+                name: name,
+                phone: phone,
+                role: 'Citizen',
+                verified: true
+            };
+
+            // Create a fake token
+            const fakeToken = "qr-" + Math.random().toString(36).substr(2, 9);
+
+            const payload = {
+                status: 'APPROVED',
+                token: fakeToken,
+                user: userData
+            };
+
+            // Store in localStorage for the other tab to pick up
+            localStorage.setItem('qr_session_' + sessionId, JSON.stringify(payload));
+
+            // Hide form, show success
+            document.getElementById('auth-form').style.display = 'none';
+            document.getElementById('success-state').style.display = 'block';
+        }
+
+        function denyLogin() {
+            const payload = { status: 'DENIED' };
+            localStorage.setItem('qr_session_' + sessionId, JSON.stringify(payload));
+            document.body.innerHTML = '<div class="auth-card"><h2>❌ Login Canceled</h2><p>You can close this tab safely.</p></div>';
+        }
+    </script>
+</body>
+</html>
