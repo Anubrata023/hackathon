@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Scholarship Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .log {
+            background: #f5f5f5;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 6px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        :root {
+            --forest: #2e7d32;
+            --leaf: #66bb6a;
+            --mid-gray: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scholarship Integration Test</h1>
+    
+    <div>
+        <h2>Test Actions:</h2>
+        <button onclick="testAuth()">1. Test Auth Status</button>
+        <button onclick="testGetScholarships()">2. Get Scholarships</button>
+        <button onclick="testCheckEligibility()">3. Check Eligibility</button>
+        <button onclick="testApplyScholarship()">4. Test Apply Form</button>
+    </div>
+
+    <div class="log" id="log">
+        Waiting for test actions...
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script>
+        const log = document.getElementById('log');
+        
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'blue';
+            log.innerHTML += `\n[${timestamp}] <span style="color:${color}">${message}</span>`;
+            log.scrollTop = log.scrollHeight;
+            console.log(message);
+        }
+
+        function testAuth() {
+            addLog('=== Testing Auth ===');
+            const token = window.SuvidhaAuth.getToken();
+            addLog('Token: ' + (token ? 'EXISTS (length: ' + token.length + ')' : 'NOT FOUND'), token ? 'success' : 'error');
+            const isAuth = window.SuvidhaAuth.isAuthenticated();
+            addLog('Is Authenticated: ' + isAuth, isAuth ? 'success' : 'error');
+            const userData = window.SuvidhaAuth.getUserData();
+            addLog('User Data: ' + (userData ? JSON.stringify(userData) : 'null'));
+        }
+
+        async function testGetScholarships() {
+            addLog('=== Testing Get Scholarships ===');
+            try {
+                const result = await window.SuvidhaAuth.apiCall('/scholarships?is_active=true', 'GET');
+                addLog('API Response: ' + JSON.stringify(result, null, 2), result.success ? 'success' : 'error');
+                if (result.success && result.data.data) {
+                    addLog('Found ' + result.data.data.length + ' scholarships', 'success');
+                }
+            } catch (error) {
+                addLog('ERROR: ' + error.message, 'error');
+            }
+        }
+
+        async function testCheckEligibility() {
+            addLog('=== Testing Check Eligibility ===');
+            const income = prompt('Enter annual family income (₹):', '100000');
+            const marks = prompt('Enter percentage of marks:', '80');
+            
+            if (income && marks) {
+                try {
+                    const result = await window.SuvidhaAuth.apiCall('/scholarships/check-eligibility', 'POST', {
+                        annual_income: parseFloat(income),
+                        marks_percentage: parseFloat(marks),
+                        class_level: '10',
+                        category: 'General'
+                    });
+                    addLog('API Response: ' + JSON.stringify(result, null, 2), result.success ? 'success' : 'error');
+                    if (result.success) {
+                        addLog('Eligible for ' + result.data.count + ' scholarships', 'success');
+                        window.SuvidhaAuth.showMessage('Eligible for ' + result.data.count + ' scholarships', 'success');
+                    }
+                } catch (error) {
+                    addLog('ERROR: ' + error.message, 'error');
+                }
+            }
+        }
+
+        async function testApplyScholarship() {
+            addLog('=== Testing Apply Scholarship ===');
+            
+            const data = {
+                scholarship_id: 1,
+                student_name: "Test Student",
+                father_name: "Test Father",
+                mother_name: "Test Mother",
+                dob: "2010-01-01",
+                gender: "Male",
+                category: "General",
+                annual_income: 100000,
+                class_level: "10",
+                school_college: "Test School",
+                marks_percentage: 85.5,
+                bank_account: "1234567890",
+                ifsc_code: "SBIN0001234"
+            };
+            
+            addLog('Submitting application data: ' + JSON.stringify(data, null, 2));
+            
+            try {
+                const result = await window.SuvidhaAuth.apiCall('/scholarships/apply', 'POST', data);
+                addLog('API Response: ' + JSON.stringify(result, null, 2), result.success ? 'success' : 'error');
+                if (result.success) {
+                    addLog('Application Number: ' + result.data.data.application_number, 'success');
+                    window.SuvidhaAuth.showMessage('Application submitted! Ref: ' + result.data.data.application_number, 'success');
+                } else {
+                    addLog('Failed: ' + (result.data.message || 'Unknown error'), 'error');
+                    window.SuvidhaAuth.showMessage(result.data.message || 'Failed to submit', 'error');
+                }
+            } catch (error) {
+                addLog('ERROR: ' + error.message, 'error');
+            }
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', function() {
+            addLog('Page loaded, SuvidhaAuth available: ' + (!!window.SuvidhaAuth));
+            setTimeout(testAuth, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+
+# Local database (Optional, but recommended if db.json is just for local testing)
+data/db.json
+
+# OS generated files
+.DS_Store

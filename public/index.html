@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Government of Assam | Suvidha Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Playfair+Display:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+  
+  <style>
+    /* ─── New High-Contrast Palette ─── */
+    :root {
+      --white:         #FFFFFF;
+      --charcoal:      #1C231F;
+      --forest:        #3B6939;
+      --leaf:          #5CBA60;
+      --amber:         #F5A623;
+      --soft-gray:     #E2E8F0;
+      --mid-gray:      #8A9BA8;
+      --light-green:   #EBF5EC;
+      --card-border:   rgba(59, 105, 57, 0.15);
+      --shadow-card:   0 2px 16px rgba(28, 35, 31, 0.08);
+      --shadow-hover:  0 8px 32px rgba(28, 35, 31, 0.16);
+      --transition:    0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    * { margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--charcoal);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    a { color: var(--forest); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--leaf); }
+
+    /* ─── TOP UTILITY BAR ─── */
+    .utility-bar {
+      background: var(--charcoal);
+      color: rgba(255,255,255,0.7);
+      font-size: 0.7rem;
+      font-family: 'Poppins', sans-serif;
+      letter-spacing: 0.03em;
+      padding: 0.4rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .utility-copy {
+      color: rgba(255,255,255,0.55);
+    }
+    .utility-links {
+      list-style: none;
+      display: flex;
+      gap: 0.5rem;
+    }
+    .utility-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      padding: 0 0.65rem;
+      border-right: 1px solid rgba(255,255,255,0.18);
+    }
+    .utility-links a:last-child { border-right: none; }
+    .utility-links a:hover { color: var(--amber); }
+
+    /* ─── SITE HEADER ─── */
+    .site-header {
+      background: var(--white);
+      border-bottom: 3px solid var(--forest);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 12px rgba(28, 35, 31, 0.10);
+    }
+
+/* ─── PROFESSIONAL HEADER & BRAND STYLING ─── */
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pushes Logo to Left, Nav to Right */
+}
+
+/* Brand Grouping */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+/* Logo Circle Alignment */
+.brand-emblem {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(145deg, var(--forest) 0%, #1e3a1c 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(245, 166, 35, 0.4);
+  overflow: hidden; /* Keeps logo inside the circle */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Ensuring Logo Fills the Circle completely */
+.brand-emblem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Fills the entire area without stretching */
+}
+
+/* Text Stacking Logic */
+.brand-text {
+  display: flex;
+  flex-direction: column; /* Stacks titles vertically */
+  gap: 2px;
+}
+
+.brand-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--charcoal);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+/* Assamese/Bengali Script Styling */
+.brand-sub {
+  font-family: 'Noto Sans Bengali', sans-serif;
+  font-size: 0.9rem;
+  color: var(--forest);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* ─── PROFESSIONAL NAV BUTTONS ─── */
+.nav-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Spacing between buttons */
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* Space between icon and text */
+  padding: 0.4rem 1.2rem; /* Reduced size */
+  border-radius: 50px; /* Professional pill-shaped rounded corners */
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem; /* Formal reduced size */
+  font-weight: 500; /* Medium weight for formal look */
+  letter-spacing: 0.02em;
+  text-transform: none; /* Removed all-caps for a more formal feel */
+  color: var(--charcoal);
+  background: var(--white);
+  border: 1px solid var(--soft-gray);
+  transition: all 0.2s ease-in-out;
+  min-width: auto; /* Buttons fit their content */
+  height: 38px;
+}
+
+/* Home Button Highlight */
+.nav-btn.nav-home {
+  background: var(--forest);
+  color: var(--white);
+  border: none;
+}
+
+.nav-btn.nav-home .nav-icon svg {
+  stroke: var(--white);
+}
+
+/* Hover Effects */
+.nav-btn:hover {
+  border-color: var(--forest);
+  background: var(--light-green);
+  color: var(--forest);
+  transform: translateY(-1px);
+}
+
+.nav-btn.nav-home:hover {
+  background: #2a5028;
+  color: var(--white);
+}
+
+.nav-icon {
+  width: 16px;
+  height: 16px;
+  margin: 0; /* Reset previous margins */
+}
+    .nav-icon svg {
+      width: 100%; height: 100%;
+      stroke: #8a9e92;
+      fill: none;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.22s ease;
+    }
+    .nav-btn:hover .nav-icon svg { stroke: var(--forest); }
+
+    .nav-btn.nav-home {
+      background: linear-gradient(145deg, var(--forest) 0%, #2a5028 100%);
+      color: var(--white);
+      border-color: transparent;
+      box-shadow: 0 3px 12px rgba(59,105,57,0.4);
+    }
+    .nav-btn.nav-home .nav-icon svg { stroke: rgba(255,255,255,0.88); }
+    .nav-btn.nav-home:hover {
+      background: linear-gradient(145deg, #2a5028 0%, #1a3a1a 100%);
+      box-shadow: 0 4px 18px rgba(28,35,31,0.35);
+    }
+
+    /* USER PROFILE BUTTON */
+    .nav-btn.nav-user {
+      background: linear-gradient(135deg, #f5a623 0%, #e8960f 100%);
+      color: var(--white);
+      border: none;
+      position: relative;
+      padding: 0.5rem 1.2rem 0.45rem;
+      min-width: 100px;
+    }
+    .nav-btn.nav-user .nav-icon svg { stroke: rgba(255,255,255,0.95); }
+    .nav-btn.nav-user:hover {
+      background: linear-gradient(135deg, #e8960f 0%, #d88a0d 100%);
+      transform: translateY(-1px);
+    }
+    .nav-user-name {
+      font-weight: 600;
+      font-size: 0.7rem;
+      color: var(--white);
+    }
+    .nav-user-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--white);
+      border: 1.5px solid var(--card-border);
+      border-radius: 8px;
+      box-shadow: var(--shadow-hover);
+      min-width: 140px;
+      z-index: 300;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+    .nav-btn.nav-user:hover .nav-user-menu,
+    .nav-user-menu.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .nav-user-menu a,
+    .nav-user-menu button {
+      display: block;
+      width: 100%;
+      padding: 0.65rem 1rem;
+      text-align: left;
+      font-size: 0.8rem;
+      color: var(--charcoal);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      text-decoration: none;
+      font-family: 'Poppins', sans-serif;
+    }
+    .nav-user-menu a:hover,
+    .nav-user-menu button:hover {
+      background: var(--light-green);
+      color: var(--forest);
+    }
+    .nav-user-menu button.logout-btn {
+      border-top: 1px solid var(--soft-gray);
+      color: #c53030;
+    }
+    .nav-user-menu button.logout-btn:hover {
+      background: #fee;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: var(--forest);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      width: 42px; height: 42px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .nav-toggle:hover { background: #2a5028; }
+
+    /* ─── HERO BANNER ─── */
+    .hero {
+      position: relative;
+      background: var(--charcoal);
+      min-height: 380px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 50%, rgba(59,105,57,0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 80% at 10% 80%, rgba(245,166,35,0.12) 0%, transparent 60%),
+        linear-gradient(135deg, #1C231F 0%, #2a3a2d 50%, #1a2a1d 100%);
+    }
+    .hero-pattern {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 45%;
+      height: 100%;
+      opacity: 0.06;
+      background-image:
+        repeating-linear-gradient(45deg, var(--amber) 0, var(--amber) 1px, transparent 0, transparent 50%);
+      background-size: 20px 20px;
+    }
+    .hero-accent-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--forest) 0%, var(--leaf) 40%, var(--amber) 100%);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-welcome {
+      font-family: 'Noto Sans Bengali', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+      margin-bottom: 0.6rem;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+    .hero-tagline {
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.8rem;
+    }
+    .tagline-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--leaf);
+    }
+    .hero-search {
+      display: flex;
+      gap: 0;
+      width: 100%;
+      max-width: 520px;
+    }
+    .hero-search input {
+      flex: 1;
+      padding: 0.85rem 1.25rem;
+      border: none;
+      border-radius: 8px 0 0 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+      outline: none;
+    }
+    .hero-search button {
+      padding: 0.85rem 1.5rem;
+      background: var(--amber);
+      color: var(--charcoal);
+      border: none;
+      border-radius: 0 8px 8px 0;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: background var(--transition);
+    }
+    .hero-search button:hover { background: #e8960f; }
+
+    .hero-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .stat-pill {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      min-width: 130px;
+    }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--amber);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 0.25rem;
+    }
+
+    /* ─── SERVICES SECTION ─── */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--soft-gray);
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--charcoal);
+    }
+    .section-bar {
+      display: block;
+      width: 48px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--forest), var(--leaf));
+      border-radius: 2px;
+      margin-top: 0.5rem;
+    }
+
+    /* SERVICE CARDS */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+    .service-card {
+      background: var(--white);
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      box-shadow: var(--shadow-card);
+      transition: all var(--transition);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+    }
+    .service-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--forest), var(--leaf));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+    }
+    .service-card:hover { 
+      transform: translateY(-4px); 
+      box-shadow: var(--shadow-hover); 
+      border-color: rgba(59,105,57,0.3); 
+    }
+    .service-card:hover::after { transform: scaleX(1); }
+
+    .card-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: var(--light-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 1.5px solid rgba(92,186,96,0.25);
+      transition: all var(--transition);
+    }
+    .service-card:hover .card-icon-wrap {
+      background: linear-gradient(135deg, var(--forest), var(--leaf));
+      transform: scale(1.1);
+    }
+    .card-title {
+      font-family: 'Poppins', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      line-height: 1.3;
+    }
+    .card-desc {
+      font-size: 0.82rem;
+      color: var(--mid-gray);
+      line-height: 1.5;
+    }
+    .card-arrow {
+      margin-top: auto;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--forest);
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .service-card:hover .card-arrow { color: var(--leaf); }
+
+    .card-amber .card-icon-wrap { 
+      background: #FEF3DC; 
+      border-color: rgba(245,166,35,0.3); 
+    }
+    .service-card.card-amber:hover .card-icon-wrap { 
+      background: linear-gradient(135deg, #e8960f, var(--amber)); 
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: linear-gradient(160deg, #162414 0%, #1e3018 50%, #1a2a14 100%);
+      color: rgba(255,255,255,0.65);
+      padding: 0;
+      position: relative;
+    }
+    footer::before {
+      content: '';
+      display: block;
+      height: 4px;
+      background: linear-gradient(90deg, var(--forest) 0%, var(--leaf) 40%, var(--amber) 100%);
+    }
+
+    .footer-main {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .footer-brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .footer-tagline {
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.45);
+      margin: 0.75rem 0;
+    }
+
+    .footer-col-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--amber);
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid rgba(245,166,35,0.2);
+    }
+    .footer-col a {
+      display: block;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      padding: 0.3rem 0;
+      transition: all 0.2s ease;
+    }
+    .footer-col a:hover {
+      color: var(--leaf);
+      padding-left: 0.35rem;
+    }
+
+    .footer-bottom-bar {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 920px) {
+      .header-inner { flex-wrap: wrap; padding: 0.6rem 1rem; }
+      .nav-toggle { display: block; }
+      .nav-wrap {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--white);
+        border: 1.5px solid var(--card-border);
+        border-radius: 10px;
+        padding: 0.5rem;
+        gap: 0.3rem;
+        margin-top: 0.5rem;
+      }
+      .nav-wrap.open { display: flex; }
+      .nav-btn {
+        width: 100%;
+        flex-direction: row;
+        gap: 0.75rem;
+        text-align: left;
+        padding: 0.65rem 1rem;
+      }
+      .nav-icon { margin: 0; }
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+      .hero-stats {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .stat-pill {
+        flex: 1;
+        min-width: 100px;
+      }
+      .footer-main { 
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .footer-main { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .service-card { animation: fadeUp 0.5s ease both; }
+    .service-card:nth-child(2) { animation-delay: 0.05s; }
+    .service-card:nth-child(3) { animation-delay: 0.1s; }
+    .service-card:nth-child(4) { animation-delay: 0.15s; }
+    .service-card:nth-child(5) { animation-delay: 0.2s; }
+  </style>
+
+</head>
+<body>
+
+<div class="utility-bar">
+  <span class="utility-copy" data-i18n="top_copy">© 2026 Government of Assam</span>
+  <div class="utility-links" style="display:flex; align-items:center; gap:10px;">
+    
+    <select id="global-lang-select" onchange="changeLanguage(this.value)" style="background:var(--charcoal); color:white; border:1px solid rgba(255,255,255,0.3); padding:2px 5px; border-radius:4px; font-size:0.75rem; outline:none; cursor:pointer;">
+        <option value="en">English</option>
+        <option value="as">অসমীয়া (Assamese)</option>
+        <option value="bn">বাংলা (Bengali)</option>
+        <option value="hi">हिंदी (Hindi)</option>
+    </select>
+
+    <a href="login.html" data-i18n="top_login">Login</a>
+    <a href="test.html">API Testing</a>
+    <a href="#help" data-i18n="top_help">Help</a>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="header-inner">
+    
+    <div class="brand">
+      <div class="brand-emblem">
+        <img src="logo.jpeg" alt="Sahayak Logo">
+      </div>
+      <div class="brand-text">
+        <span class="brand-title">Government of Assam</span>
+        <span class="brand-sub">অসম চৰকাৰ</span>
+      </div>
+    </div>
+
+    <nav>
+      <div class="nav-wrap" id="mainNav">
+        <a href="index.html" class="nav-btn nav-home">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"></path><path d="M9 21V12h6v9"></path></svg>
+          </span>
+          <span>Home</span>
+        </a>
+
+        <a href="#services" class="nav-btn">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+          </span>
+          <span>Services</span>
+        </a>
+
+        <a href="suvidha-admin-login.html" class="nav-btn">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          </span>
+          <span>Admins</span>
+        </a>
+
+        <a href="login.html" class="nav-btn" id="loginBtn">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg>
+          </span>
+          <span>Login</span>
+        </a>
+
+        <div class="nav-btn nav-user" id="userBtn" style="display: none;" onclick="this.querySelector('.nav-user-menu').classList.toggle('show'); event.stopPropagation();">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
+          </span>
+          <span class="nav-user-name" id="userName">User</span>
+          <div class="nav-user-menu" onclick="event.stopPropagation()">
+            <a href="my-profile.html">My Profile</a>
+            <a href="my-applications.html">My Applications</a>
+            <button class="logout-btn" onclick="logoutUser()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <button class="nav-toggle" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
+  </div>
+</header>
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-accent-line"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-welcome">WELCOME</div>
+      <h1 class="hero-title">Your Gateway to<br>Government Services</h1>
+      <div class="hero-tagline">
+        <span>Transparent</span>
+        <span class="tagline-dot"></span>
+        <span>Accountable</span>
+        <span class="tagline-dot"></span>
+        <span>Citizen-Centric</span>
+      </div>
+      <div class="hero-search">
+        <input type="text" placeholder="Search services, departments, notices…">
+        <button>Search</button>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-pill">
+        <div class="stat-number">30+</div>
+        <div class="stat-label">Services Online</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-number">35</div>
+        <div class="stat-label">Districts</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Modules</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="section-header">
+    <div class="section-title">
+      <span>Citizen Services</span>
+      <span class="section-bar"></span>
+    </div>
+  </div>
+
+ <section class="section" id="services">
+  <div class="section-header">
+    <div class="section-title">
+      <span data-i18n="sec_services">Citizen Services</span>
+      <span class="section-bar"></span>
+    </div>
+  </div>
+
+  <div class="services-grid">
+    <a href="municipal-services.html" class="service-card">
+      <div class="card-icon-wrap">🏛️</div>
+      <div class="card-title" data-i18n="card_muni_title">Municipal Corporation</div>
+      <div class="card-desc" data-i18n="card_muni_desc">Access municipal services, property tax, water supply, waste management and civic amenities.</div>
+      <div class="card-arrow" data-i18n="btn_access">Access Now →</div>
+    </a>
+
+    <a href="gas-services.html" class="service-card card-amber">
+      <div class="card-icon-wrap">🔥</div>
+      <div class="card-title" data-i18n="card_gas_title">Gas Services</div>
+      <div class="card-desc" data-i18n="card_gas_desc">Apply for new gas connection, book cylinders and track delivery status online.</div>
+      <div class="card-arrow" data-i18n="btn_apply">Apply Now →</div>
+    </a>
+
+    <a href="electricity-services.html" class="service-card">
+      <div class="card-icon-wrap">⚡</div>
+      <div class="card-title" data-i18n="card_elec_title">Electricity</div>
+      <div class="card-desc" data-i18n="card_elec_desc">Pay electricity bills, apply for new connection, view consumption and report outages.</div>
+      <div class="card-arrow" data-i18n="btn_pay">Pay Now →</div>
+    </a>
+  
+
+    <a href="scholarship-portal.html" class="service-card card-amber">
+      <div class="card-icon-wrap">🎓</div>
+      <div class="card-title" data-i18n="card_scholarship_title">Scholarship Schemes</div>
+      <div class="card-desc" data-i18n="card_scholarship_desc">Explore and apply for state scholarship programmes. Track application status online.</div>
+      <div class="card-arrow" data-i18n="btn_apply">Apply Now →</div>
+    </a>
+
+    <a href="grievance-portal.html" class="service-card">
+      <div class="card-icon-wrap">📝</div>
+      <div class="card-title" data-i18n="card_grievance_title">Grievance Portal</div>
+      <div class="card-desc" data-i18n="card_grievance_desc">Submit complaints, track status and access Jan Sunwai services for quick resolution.</div>
+      <div class="card-arrow" data-i18n="btn_submit">Submit Now →</div>
+    </a>
+  </div>    
+</section>
+
+<footer>
+  <div class="footer-main">
+
+    <div class="footer-brand-col">
+      <div class="footer-brand-name">Government of Assam</div>
+      <div class="footer-tagline">
+        Serving the 35 million citizens of Assam with transparency, accountability, and digital-first governance.
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <div class="footer-col-title">Quick Services</div>
+      <a href="municipal-services.html">Municipal Services</a>
+      <a href="water-supply.html">Water Supply</a>
+      <a href="waste-management.html">Waste Management</a>
+      <a href="grievance-portal.html">Grievances</a>
+      <a href="scholarship-portal.html">Scholarships</a>
+    </div>
+
+    <div class="footer-col">
+      <div class="footer-col-title">Utilities</div>
+      <a href="electricity-services.html">Electricity</a>
+      <a href="gas-services.html">Gas/LPG</a>
+      <a href="#services">View All Services</a>
+      <a href="login.html">Login/Register</a>
+    </div>
+
+    <div class="footer-col">
+      <div class="footer-col-title">Resources</div>
+      <a href="test.html">API Testing</a>
+      <a href="#help">Help & Support</a>
+      <a href="#contact">Contact Us</a>
+      <a href="#accessibility">Accessibility</a>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom-bar">
+    © 2026 Government of Assam. All rights reserved. | Built with ❤️ for the citizens of Assam
+  </div>
+</footer>
+
+<script src="/js/auth.js"></script>
+<script>
+  // Mobile nav toggle
+  document.querySelector('.nav-toggle').addEventListener('click', () => {
+    document.getElementById('mainNav').classList.toggle('open');
+  });
+
+  // Search functionality (can be enhanced)
+  document.querySelector('.hero-search button').addEventListener('click', () => {
+    const query = document.querySelector('.hero-search input').value;
+    if (query) {
+      alert('Search feature coming soon! You searched for: ' + query);
+    }
+  });
+
+  // Check if user is logged in and update navbar
+  function updateNavbar() {
+    const { getUserData, setUserData } = window.SuvidhaAuth;
+    let user = getUserData();
+    const loginBtn = document.getElementById('loginBtn');
+    const userBtn = document.getElementById('userBtn');
+    const userName = document.getElementById('userName');
+
+    if (user) {
+      if (!user.name || user.name.trim() === '') {
+        // Generate a random name if Aadhaar login didn't provide one
+        const randomNames = ["Anubrata", "Priya", "Rahul", "Neha", "Vikram", "Sneha"];
+        user.name = randomNames[Math.floor(Math.random() * randomNames.length)];
+        setUserData(user); // Save to session
+      }
+
+      // User is logged in - show user button
+      loginBtn.style.display = 'none';
+      userBtn.style.display = 'flex';
+      userName.textContent = user.name.split(' ')[0] + "'s";
+    } else {
+      // User is not logged in - show login button
+      loginBtn.style.display = 'flex';
+      userBtn.style.display = 'none';
+    }
+  }
+
+  // Logout function
+  function logoutUser() {
+    const { logout } = window.SuvidhaAuth;
+    if (confirm('Are you sure you want to logout?')) {
+      logout();
+      window.location.reload();
+    }
+  }
+
+  // Improved hover behavior for user menu with delay
+  let menuTimeout;
+  const userBtn = document.getElementById('userBtn');
+  const userMenu = userBtn?.querySelector('.nav-user-menu');
+
+  if (userBtn && userMenu) {
+    userBtn.addEventListener('mouseenter', () => {
+      clearTimeout(menuTimeout);
+      userMenu.classList.add('show');
+    });
+
+    userBtn.addEventListener('mouseleave', () => {
+      menuTimeout = setTimeout(() => {
+        userMenu.classList.remove('show');
+      }, 300); // 300ms delay before hiding
+    });
+
+    userMenu.addEventListener('mouseenter', () => {
+      clearTimeout(menuTimeout);
+      userMenu.classList.add('show');
+    });
+
+    userMenu.addEventListener('mouseleave', () => {
+      menuTimeout = setTimeout(() => {
+        userMenu.classList.remove('show');
+      }, 300);
+    });
+
+    // Close menu if clicked outside
+    document.addEventListener('click', () => {
+      userMenu.classList.remove('show');
+    });
+  }
+
+  // Update navbar on page load
+  if (window.SuvidhaAuth) {
+    updateNavbar();
+    // Re-attach event listeners after navbar update
+    setTimeout(() => {
+      const updatedBtn = document.getElementById('userBtn');
+      const updatedMenu = updatedBtn?.querySelector('.nav-user-menu');
+      if (updatedBtn && updatedMenu) {
+        updatedBtn.addEventListener('mouseenter', () => {
+          clearTimeout(menuTimeout);
+          updatedMenu.classList.add('show');
+        });
+        updatedBtn.addEventListener('mouseleave', () => {
+          menuTimeout = setTimeout(() => updatedMenu.classList.remove('show'), 300);
+        });
+        updatedMenu.addEventListener('mouseenter', () => clearTimeout(menuTimeout));
+        updatedMenu.addEventListener('mouseleave', () => {
+          menuTimeout = setTimeout(() => updatedMenu.classList.remove('show'), 300);
+        });
+      }
+    }, 100);
+  } else {
+    // Wait for auth.js to load
+    window.addEventListener('load', () => {
+      setTimeout(updateNavbar, 100);
+    });
+  }
+</script>
+<script src="/js/sahayak.js"></script>
+<script>
+    window.addEventListener('load', () => {
+        // Triggered when user successfully logs in
+        setTimeout(() => {
+            Sahayak.speak("Authentication successful. Welcome to your unified dashboard. Please select a service to continue.");
+        }, 1000);
+
+        // Let Sahayak explain specific departments when the user clicks the Help button
+        document.addEventListener('click', function(e) {
+            if(e.target && e.target.id == 'sahayak-btn'){
+                Sahayak.speak("You can choose any of the services from the screen: Electricity, Gas, Municipal Services, Scholarships, and other. Just click on the service you want to access and I'll guide you through the process.");
+            }
+        });
+    });
+
+</script>
+<script src="/js/chatbot.js"></script>
+
+<script src="/js/i18n.js"></script>
+
+<style>
+  /* 30-Second Warning Modal */
+  #inactivity-warning {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 100000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+  }
+  .warning-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    border: 3px solid #F5A623;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    font-family: 'Poppins', sans-serif;
+  }
+  .warning-box h2 { color: #c53030; margin-bottom: 10px; }
+  .warning-box p { color: #333; font-size: 14px; }
+
+  /* 60-Second "Ad" / Public Awareness Screensaver */
+  #inactivity-screensaver {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #1C231F 0%, #3B6939 100%);
+    z-index: 100001;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    cursor: pointer;
+  }
+  .screensaver-content h1 { font-size: 4rem; color: #F5A623; margin-bottom: 20px; }
+  .screensaver-content h3 { font-family: 'Poppins', sans-serif; font-weight: 300; letter-spacing: 2px; }
+  .screensaver-footer {
+    position: absolute; bottom: 30px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px; opacity: 0.7;
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+</style>
+
+<div id="inactivity-warning">
+  <div class="warning-box">
+    <h2>⚠️ Are you still there?</h2>
+    <p>For your security, this session will close soon due to inactivity. Please move your mouse or tap the screen to continue.</p>
+  </div>
+</div>
+
+<div id="inactivity-screensaver" onclick="resetInactivity()">
+  <div class="screensaver-content">
+    <h1>Awesome Assam</h1>
+    <h3>Explore the wildlife, culture, and heritage of the Northeast.</h3>
+  </div>
+  <div class="screensaver-footer">Tap anywhere on the screen to return to Suvidha Portal</div>
+</div>
+
+<script>
+  let warningTimer;
+  let screensaverTimer;
+  let isSahayakSpoken = false;
+
+  // Set times (in milliseconds)
+  const WARNING_TIME = 60 * 1000; // 1 minute (60 seconds)
+  const SCREENSAVER_TIME = 120 * 1000; // 2 minutes (120 seconds)
+
+
+  function showWarning() {
+    document.getElementById('inactivity-warning').style.display = 'flex';
+    
+    // Have Sahayak speak the warning (if the browser allows it)
+    if (window.Sahayak && !isSahayakSpoken) {
+      Sahayak.speak("Your session is expiring soon. Please interact with the screen to continue.");
+      isSahayakSpoken = true;
+    }
+  }
+
+  function showScreensaver() {
+    // Hide the warning and show the full-screen Ad/Screensaver
+    document.getElementById('inactivity-warning').style.display = 'none';
+    document.getElementById('inactivity-screensaver').style.display = 'flex';
+    
+    // Optional: Log the user out here for security if it was a real app
+    // if(window.SuvidhaAuth) window.SuvidhaAuth.logout();
+  }
+
+  function resetInactivity() {
+    // Hide both overlays
+    document.getElementById('inactivity-warning').style.display = 'none';
+    document.getElementById('inactivity-screensaver').style.display = 'none';
+    
+    // Stop speaking if it was talking
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    isSahayakSpoken = false;
+
+    // Clear old timers
+    clearTimeout(warningTimer);
+    clearTimeout(screensaverTimer);
+
+    // Start new timers
+    warningTimer = setTimeout(showWarning, WARNING_TIME);
+    screensaverTimer = setTimeout(showScreensaver, SCREENSAVER_TIME);
+  }
+
+  // Listen for ANY user interaction to reset the timer
+  window.onload = resetInactivity;
+  document.onmousemove = resetInactivity;
+  document.onkeypress = resetInactivity;
+  document.onclick = resetInactivity;
+  document.onscroll = resetInactivity;
+  document.ontouchstart = resetInactivity;
+</script>
+
+
+</body>
+</html>

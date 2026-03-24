@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Suvidha Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F9F5F0;
+            --beige: #F2EAD3;
+            --assam-orange: #F4991A;
+            --assam-green: #344F1F;
+            --green-dark: #1a2910;
+            --green-light: #4a6f35;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --shadow-sm: 0 2px 8px rgba(52, 79, 31, 0.08);
+            --shadow-lg: 0 12px 40px rgba(52, 79, 31, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(244, 153, 26, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(52, 79, 31, 0.06) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container { position: relative; z-index: 1; width: 100%; max-width: 450px; }
+
+        .login-card {
+            background: white; border-radius: 30px; padding: 40px;
+            box-shadow: var(--shadow-lg); border: 3px solid var(--beige);
+            position: relative; overflow: hidden;
+        }
+
+        .login-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px;
+            background: linear-gradient(90deg, var(--assam-orange), var(--assam-green), var(--assam-orange));
+        }
+
+        .logo-wrapper {
+            width: 100px; height: 100px; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; background: #fff; padding: 5px; box-shadow: var(--shadow-sm);
+        }
+
+        .logo-wrapper img { width: 100%; height: 100%; object-fit: contain; }
+
+        .login-title { font-size: 26px; font-weight: 700; color: var(--assam-green); text-align: center; }
+        .login-subtitle { font-size: 14px; color: var(--text-secondary); margin-bottom: 30px; text-align: center; }
+
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+        input {
+            width: 100%; padding: 14px 16px; border: 2px solid var(--beige);
+            border-radius: 12px; font-size: 15px; transition: all 0.3s;
+        }
+        input:focus { outline: none; border-color: var(--assam-green); box-shadow: 0 0 0 3px rgba(52, 79, 31, 0.1); }
+
+        .btn {
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 10px;
+        }
+        .btn-primary { background: linear-gradient(135deg, var(--assam-green), var(--green-light)); color: white; }
+        .btn-secondary { background: linear-gradient(135deg, var(--assam-orange), #e09510); color: white; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.95; }
+
+        .otp-section { display: none; animation: fadeIn 0.4s ease; }
+        .otp-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Login Tabs Styling */
+        .login-tabs { display: flex; margin-bottom: 20px; background: var(--beige); border-radius: 12px; padding: 4px; }
+        .login-tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-secondary); border-radius: 8px; transition: all 0.3s; }
+        .login-tab.active { background: white; color: var(--assam-green); box-shadow: var(--shadow-sm); }
+
+        /* QR Section Styling */
+        #qr-bridge { margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ddd; text-align: center; }
+        #qr-display { cursor: pointer; display: inline-block; padding: 10px; background: white; border: 2px solid var(--beige); border-radius: 15px; transition: 0.3s; }
+        #qr-display:hover { transform: scale(1.02); border-color: var(--assam-orange); }
+
+        .info-text { text-align: center; font-size: 11px; color: var(--text-secondary); margin-top: 25px; border-top: 1px solid var(--beige); padding-top: 15px; }
+    </style>
+</head>
+<body>
+  <!-- UTILITY BAR & I18N SCRIPT -->
+  <div class="utility-bar" style="background:var(--cream); color:var(--text-secondary); font-size:0.8rem; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; z-index:9999; position:absolute; top:0; left:0; width: 100%;">
+    <a href="index.html" style="color:var(--text-secondary); font-weight:600; text-decoration:none;" data-i18n="back_home">← Back to Home</a>
+    <select onchange="changeLanguage(this.value)" style="background:white; color:var(--assam-green); border:2px solid var(--beige); padding:4px 8px; border-radius:6px; font-size:0.8rem; outline:none; cursor:pointer; font-weight: 600;">
+        <option value="en">English</option>
+        <option value="as">অসমীয়া (Assamese)</option>
+        <option value="bn">বাংলা (Bengali)</option>
+        <option value="hi">हिंदी (Hindi)</option>
+    </select>
+  </div>
+  <script src="/js/i18n.js"></script>
+
+    <div class="container">
+        <div class="login-card">
+            <div class="logo-wrapper">
+                <img src="logo.jpeg" alt="Sahayak Logo">
+            </div>
+
+            <h1 class="login-title" data-i18n="login_title">Suvidha Portal</h1>
+            <p class="login-subtitle" data-i18n="login_subtitle">Government of Assam Digital Services</p>
+
+            <div id="phoneSection">
+                <div class="login-tabs">
+                    <div class="login-tab active" onclick="switchLoginType('mobile')" id="tab-mobile">Mobile Login</div>
+                    <div class="login-tab" onclick="switchLoginType('aadhaar')" id="tab-aadhaar">Aadhaar Login</div>
+                </div>
+                
+                <div class="form-group">
+                    <label id="phoneLabel" data-i18n="lbl_mobile">Mobile Number</label>
+                    <input type="tel" id="phone" placeholder="Enter 10-digit mobile number" maxlength="10">
+                </div>
+                <div class="form-group">
+                    <label>Full Name (Optional)</label>
+                    <input type="text" id="name" placeholder="Your name">
+                </div>
+                <button class="btn btn-primary" onclick="sendOTP(event)" data-i18n="btn_send_otp">Send OTP</button>
+
+                <div id="qr-bridge">
+                    <p style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">— Or Secure Scan —</p>
+                    <div id="qr-display" onclick="startQRHandshake()" style="cursor: pointer; display: inline-block; padding: 10px; background: white; border: 2px solid var(--beige); border-radius: 15px; transition: 0.3s;">
+                        <img src="" id="kiosk-qr" alt="Scan to Login" style="width: 140px; height: 140px;">
+                    </div>
+                    <p id="qr-status" style="font-size: 12px; margin-top: 10px; color: var(--assam-green); font-weight: 600;">
+                        Tap QR Code to setup Mobile Auth
+                    </p>
+                </div>
+            </div>
+
+            <div id="otpSection" class="otp-section">
+                <p style="font-size: 13px; text-align: center; margin-bottom: 15px;">
+                    Code sent to <strong id="phoneDisplay"></strong> 
+                    <span style="color:var(--assam-green); cursor:pointer; text-decoration:underline;" onclick="backToPhone()"> (Edit)</span>
+                </p>
+                <div class="form-group">
+                    <label>Enter 6-Digit OTP</label>
+                    <input type="text" id="otp" placeholder="000000" maxlength="6">
+                </div>
+                
+                <div id="otp-timer-container" style="display: none; margin-bottom: 15px; text-align: center;">
+                     <p style="color: #c53030; font-size: 0.9rem; font-weight: 600; margin: 0;">
+                         OTP expires in <span id="time-left">02:00</span>
+                    </p>
+                </div>
+
+                <button class="btn btn-secondary" onclick="verifyOTP(event)">Verify & Login</button>
+            </div>
+
+            <div class="info-text">
+                🔒 Secure verification powered by Sahayak AI<br>
+                Digital Infrastructure of Assam
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/sahayak.js"></script>
+    <script src="/js/chatbot.js"></script>
+
+    <script>
+        // Check if already logged in
+        if (sessionStorage.getItem('authToken')) { window.location.href = '/index.html'; }
+
+        let otpCountdownInterval;
+        let isOtpExpired = false;
+
+        // --- SECURITY: 3 OTP LIMIT ---
+        function checkOTPLimit() {
+            const MAX_OTPS = 3; 
+            const WINDOW_MS = 10 * 60 * 1000;
+            const now = Date.now();
+            let history = JSON.parse(localStorage.getItem('suvidha_otp_history')) || [];
+            history = history.filter(ts => (now - ts) < WINDOW_MS);
+
+            if (history.length >= MAX_OTPS) {
+                const oldest = history[0];
+                const wait = Math.ceil((WINDOW_MS - (now - oldest)) / 60000);
+                alert(`🚨 SECURITY: Max 3 OTPs allowed. Please wait ${wait} minutes.`);
+                return false;
+            }
+            history.push(now);
+            localStorage.setItem('suvidha_otp_history', JSON.stringify(history));
+            return true;
+        }
+
+        // --- SECURITY: 2 MINUTE TIMER ---
+        function startOTPTimer() {
+            clearInterval(otpCountdownInterval);
+            isOtpExpired = false;
+            let timeLeft = 120;
+            const container = document.getElementById('otp-timer-container');
+            const timeSpan = document.getElementById('time-left');
+            container.style.display = 'block';
+
+            otpCountdownInterval = setInterval(() => {
+                timeLeft--;
+                let min = Math.floor(timeLeft / 60);
+                let sec = timeLeft % 60;
+                timeSpan.textContent = `0${min}:${sec < 10 ? '0' + sec : sec}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(otpCountdownInterval);
+                    isOtpExpired = true;
+                    container.innerHTML = "<p style='color:#c53030; font-weight:600;'>❌ OTP Expired. Please request a new one.</p>";
+                }
+            }, 1000);
+        }
+
+        let qrPollInterval;
+        let qrSessionId;
+
+        // --- HANDSHAKE: QR LOGIN (DYNAMIC SESSION) ---
+        function startQRHandshake() {
+            // Generate unique session
+            qrSessionId = "SID-" + Math.random().toString(36).substr(2, 9);
+            
+            // Construct full URL pointing to mobile stub
+            const mobileUrl = window.location.origin + "/mobile-auth.html?sessionId=" + qrSessionId;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(mobileUrl)}`;
+            
+            document.getElementById('kiosk-qr').src = qrUrl;
+            document.getElementById('qr-status').innerText = 'Scan QR or tap to open authorization link';
+
+            // Change the click behavior of the QR to open the link instead
+            document.getElementById('qr-display').onclick = function() {
+                window.open(mobileUrl, '_blank');
+            };
+
+            // Start polling localStorage for auth token
+            clearInterval(qrPollInterval);
+            qrPollInterval = setInterval(pollForMobileAuth, 1000);
+        }
+
+        function pollForMobileAuth() {
+            const dataStr = localStorage.getItem('qr_session_' + qrSessionId);
+            if (dataStr) {
+                const data = JSON.parse(dataStr);
+                
+                if (data.status === 'APPROVED') {
+                    clearInterval(qrPollInterval);
+                    
+                    const status = document.getElementById('qr-status');
+                    const display = document.getElementById('qr-display');
+                    status.innerHTML = "✅ Identity Verified! Access Granted.";
+                    display.innerHTML = "<div style='font-size:50px;'>✅</div>";
+                    
+                    if (window.Sahayak) Sahayak.speak("Authentication successful. Welcome.");
+
+                    // Save token and actual user data from the mobile scan payload to session
+                    window.SuvidhaAuth.setToken(data.token);
+                    window.SuvidhaAuth.setUserData(data.user);
+                    
+                    // Clean up localStorage
+                    localStorage.removeItem('qr_session_' + qrSessionId);
+
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+
+                } else if (data.status === 'DENIED') {
+                    clearInterval(qrPollInterval);
+                    document.getElementById('qr-status').innerHTML = "❌ Login Request Denied";
+                    document.getElementById('qr-status').style.color = "#c53030";
+                    localStorage.removeItem('qr_session_' + qrSessionId);
+                    
+                    // Reset QR
+                    setTimeout(startQRHandshake, 3000);
+                }
+            }
+        }
+
+        // --- SEND OTP ---
+        async function sendOTP(event) {
+            const { apiCall, showMessage, showLoading, hideLoading } = window.SuvidhaAuth;
+            const phone = document.getElementById('phone').value.trim();
+            const btn = event.target;
+
+            if (currentLoginType === 'mobile' && phone.length !== 10) { showMessage('Enter 10-digit Mobile', 'error'); return; }
+            if (currentLoginType === 'aadhaar' && phone.length !== 12) { showMessage('Enter 12-digit Aadhaar', 'error'); return; }
+            if (!checkOTPLimit()) return;
+
+            showLoading(btn);
+            const result = await apiCall('/auth/send-otp', 'POST', { phone, name: document.getElementById('name').value });
+            hideLoading(btn);
+
+            if (result.success) {
+                const displayType = phone.length === 12 ? 'Aadhaar' : 'Mobile';
+                document.getElementById('phoneDisplay').textContent = phone;
+                document.getElementById('phoneSection').style.display = 'none';
+                document.getElementById('otpSection').classList.add('active');
+                startOTPTimer();
+                if(window.Sahayak) Sahayak.speak("O.T.P sent to your " + displayType + ". You have 2 minutes to verify.");
+            } else {
+                showMessage(result.data.message || 'Error', 'error');
+            }
+        }
+
+        // --- VERIFY OTP ---
+        async function verifyOTP(event) {
+            const { apiCall, setToken, setUserData, showMessage, showLoading, hideLoading } = window.SuvidhaAuth;
+            if (isOtpExpired) { showMessage('❌ OTP Expired!', 'error'); return; }
+
+            const phone = document.getElementById('phone').value.trim();
+            const otp = document.getElementById('otp').value.trim();
+            const btn = event.target;
+
+            showLoading(btn);
+            const result = await apiCall('/auth/verify-otp', 'POST', { phone, otp });
+            hideLoading(btn);
+
+            if (result.success) {
+                setToken(result.data.data.token);
+                setUserData(result.data.data.user);
+                window.location.href = '/index.html';
+            } else {
+                showMessage('Invalid OTP', 'error');
+            }
+        }
+
+        function backToPhone() {
+            clearInterval(otpCountdownInterval);
+            document.getElementById('otpSection').classList.remove('active');
+            document.getElementById('phoneSection').style.display = 'block';
+        }
+
+        window.addEventListener('load', () => {
+            startQRHandshake(); // Generate unique QR Code on page load
+            setTimeout(() => { if(window.Sahayak) Sahayak.speak("Welcome to Suvidha. Please enter your mobile or Aadhaar number, or tap the Q.R code to login via mobile."); }, 1000);
+        });
+
+        let currentLoginType = 'mobile';
+        function switchLoginType(type) {
+            currentLoginType = type;
+            document.getElementById('tab-mobile').classList.remove('active');
+            document.getElementById('tab-aadhaar').classList.remove('active');
+            document.getElementById('tab-' + type).classList.add('active');
+            
+            const input = document.getElementById('phone');
+            const label = document.getElementById('phoneLabel');
+            input.value = '';
+            
+            if (type === 'mobile') {
+                label.innerText = 'Mobile Number';
+                input.placeholder = 'Enter 10-digit mobile number';
+                input.maxLength = 10;
+            } else {
+                label.innerText = 'Aadhaar Number';
+                input.placeholder = 'Enter 12-digit Aadhaar number';
+                input.maxLength = 12;
+            }
+        }
+    </script>
+</body>
+</html>
