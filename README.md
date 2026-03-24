@@ -336,7 +336,7 @@ killall node
 │ Body: { phone: "9876543210" }                                   │
 │                                                                  │
 │ → Generate 6-digit OTP                                          │
-│ → Store in database with 10-min expiry                          │
+│ → Store in database with 2-min expiry                          │
 │ → (Development: Display OTP in console)                         │
 │ → (Production: Send via SMS gateway)                            │
 │                                                                  │
@@ -1088,12 +1088,12 @@ Before deploying or marking as complete, verify:
 
 #### Authentication
 - [ ] Can send OTP
-- [ ] OTP expires after 10 minutes
+- [ ] OTP expires after 2 minutes
 - [ ] Can verify OTP and get token
 - [ ] Token is valid JWT format
 - [ ] Can access protected routes with token
 - [ ] Cannot access protected routes without token
-- [ ] Token expires after 7 days
+- [ ] Token expires after logout
 
 #### Municipal Services
 - [ ] Can report waste issue
@@ -1122,7 +1122,6 @@ Before deploying or marking as complete, verify:
 #### Scholarship Services
 - [ ] Can browse scholarships without auth
 - [ ] Can check eligibility without auth
-- [ ] Can apply for scholarship with auth
 - [ ] Can view my applications
 - [ ] Can track application by number
 
@@ -1154,8 +1153,8 @@ Database file: `backend/data/suvidha.db`
 ## 🔒 Security Features
 
 - ✅ JWT-based authentication
-- ✅ OTP verification (10-minute expiry)
-- ✅ Rate limiting (100 requests per 15 minutes)
+- ✅ OTP verification (2-minute expiry)
+- ✅ Rate limiting (3 requests per 15 minutes)
 - ✅ Helmet.js security headers
 - ✅ CORS configuration
 - ✅ Input validation
