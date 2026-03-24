@@ -2525,17 +2525,17 @@ pm2 logs --lines 100
 ✅ **CORS Configuration** - Cross-origin support  
 ✅ **Error Handling** - Consistent error responses  
 ✅ **Interactive Testing** - Web-based API tester  
+✅ **Admin Dashboard** - Service management panel 
+✅ **API Rate Limiting per User** - Enhanced security  
 
 ### Upcoming Features
 
 🔜 **SMS Gateway Integration** - Real OTP delivery via SMS  
-🔜 **Payment Gateway** - Razorpay/Paytm integration  
+🔜 **Partial Payment Gateway** - Razorpay/Paytm integration  
 🔜 **Email Notifications** - Application status updates  
-🔜 **Document Upload** - File upload for applications  
-🔜 **Admin Dashboard** - Service management panel  
+🔜 **Document Upload** - File upload for applications by scanning
 🔜 **Analytics & Reporting** - Usage metrics and insights  
 🔜 **WebSocket Support** - Real-time notifications  
-🔜 **API Rate Limiting per User** - Enhanced security  
 
 ---
 
@@ -2579,9 +2579,6 @@ This is a government project for the citizens of Assam. Contributions are welcom
 
 ## 📄 License
 
-**Government of Assam - Official Portal**  
-© 2026 Guwahati Municipal Corporation
-
 This software is developed for public service delivery and is subject to government licensing terms.
 
 **Open Source Components**: This project uses open-source libraries (Express, JWT, etc.) which retain their original licenses.
@@ -2590,8 +2587,7 @@ This software is developed for public service delivery and is subject to governm
 
 ## 🙏 Acknowledgments
 
-- **Government of Assam** - For the initiative
-- **Guwahati Municipal Corporation** - Project oversight
+- **CDAC** - For the initiative
 - **Open Source Community** - For excellent libraries
 - **Citizens of Assam** - Our end users and motivation
 
@@ -2643,4 +2639,8 @@ A: Payment gateway integration is planned for v1.1.0. Endpoints are designed to 
 
 ---
 
-**Need help?** Open an issue or contact support@assamservices.gov.in
+**DEVELOPERS**
+-Anubrata Paul
+-Sakshi Sharma
+-Kislay Kumar
+-Aman Sagar
