@@ -3,7 +3,7 @@ const SahayakChat = {
     currentLang: 'en',
     recognition: null,
     isVoiceOutputEnabled: true, // Toggle for bot speaking back
-    
+
     // Multilingual Dictionary
     responses: {
         en: {
@@ -50,7 +50,7 @@ const SahayakChat = {
         }
     },
 
-    init: function() {
+    init: function () {
         this.injectStyles();
         this.createWidget();
         this.setupVoiceRecognition();
@@ -58,26 +58,26 @@ const SahayakChat = {
     },
 
     // 1. SPEECH-TO-TEXT (User Voice Input)
-    setupVoiceRecognition: function() {
+    setupVoiceRecognition: function () {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             this.recognition = new SpeechRecognition();
             this.recognition.continuous = false;
             this.recognition.interimResults = false;
-            
+
             this.recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
                 console.log("Voice detected:", transcript);
                 document.getElementById('chat-input').value = transcript;
-                this.sendMessage(); 
+                this.sendMessage();
             };
-            
-            this.recognition.onerror = (e) => { 
+
+            this.recognition.onerror = (e) => {
                 console.error("Speech Recognition Error:", e.error);
-                document.getElementById('mic-btn').style.color = '#1a1a1a'; 
+                document.getElementById('mic-btn').style.color = '#1a1a1a';
                 document.getElementById('mic-btn').classList.remove('pulsing-mic');
             };
-            
+
             this.recognition.onend = () => {
                 document.getElementById('mic-btn').style.color = '#1a1a1a';
                 document.getElementById('mic-btn').classList.remove('pulsing-mic');
@@ -85,39 +85,39 @@ const SahayakChat = {
         }
     },
 
-    startListening: function() {
+    startListening: function () {
         if (!this.recognition) return alert("Microphone not supported in this browser.");
         const langMap = { 'en': 'en-IN', 'hi': 'hi-IN', 'as': 'hi-IN' }; // Assamese falls back to Indian accent engine
         this.recognition.lang = langMap[this.currentLang];
-        
+
         const micBtn = document.getElementById('mic-btn');
-        micBtn.style.color = '#e11d48'; 
+        micBtn.style.color = '#e11d48';
         micBtn.classList.add('pulsing-mic');
-        
+
         this.addMessage(this.responses[this.currentLang].listening, 'bot-msg');
         try {
             this.recognition.start();
-        } catch(e) {
+        } catch (e) {
             console.warn("Speech recognition already running or failed to start:", e.message);
         }
     },
 
     // 2. TEXT-TO-SPEECH (Bot Voice Output)
-    speakReply: function(text) {
+    speakReply: function (text) {
         if (!this.isVoiceOutputEnabled) return;
         if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
-        
+
         let utter = new SpeechSynthesisUtterance(text);
         // --- FEMALE VOICE FILTER ---
         let availableVoices = window.speechSynthesis.getVoices();
-        let femaleVoice = availableVoices.find(voice => 
-            voice.name.includes('Female') || 
-            voice.name.includes('Zira') || 
-            voice.name.includes('Samantha') || 
-            voice.name.includes('Veena') || 
+        let femaleVoice = availableVoices.find(voice =>
+            voice.name.includes('Female') ||
+            voice.name.includes('Zira') ||
+            voice.name.includes('Samantha') ||
+            voice.name.includes('Veena') ||
             voice.name.includes('Aditi')
         );
-        
+
         if (femaleVoice) {
             utter.voice = femaleVoice;
         }
@@ -125,21 +125,21 @@ const SahayakChat = {
         utter.rate = 0.82; // Slightly slower and clearer
         // ---------------------------
         utter.rate = 0.82; // Slightly slower for kiosk users
-        const langMap = { 'en': 'en-IN', 'hi': 'hi-IN', 'as': 'hi-IN' }; 
+        const langMap = { 'en': 'en-IN', 'hi': 'hi-IN', 'as': 'hi-IN' };
         utter.lang = langMap[this.currentLang];
-        
+
         window.speechSynthesis.speak(utter);
     },
 
-    toggleVoiceOutput: function() {
+    toggleVoiceOutput: function () {
         this.isVoiceOutputEnabled = !this.isVoiceOutputEnabled;
         const speakerBtn = document.getElementById('speaker-btn');
         speakerBtn.innerText = this.isVoiceOutputEnabled ? '🔊' : '🔇';
-        if(!this.isVoiceOutputEnabled && window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+        if (!this.isVoiceOutputEnabled && window.speechSynthesis.speaking) window.speechSynthesis.cancel();
     },
 
     // 3. UI INJECTION & STYLES
-    injectStyles: function() {
+    injectStyles: function () {
         const style = document.createElement('style');
         style.innerHTML = `
             #sahayak-chat-wrapper { position: fixed; bottom: 180px; right: 30px; width: 350px; height: 500px; background: #fff; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); display: none; flex-direction: column; overflow: hidden; z-index: 10000; font-family: 'Poppins', sans-serif; border: 2px solid #344F1F; transition: opacity 0.3s; }
@@ -186,7 +186,7 @@ const SahayakChat = {
         document.head.appendChild(style);
     },
 
-    createWidget: function() {
+    createWidget: function () {
         const fab = document.createElement('button');
         fab.id = 'chat-fab';
         fab.innerHTML = '🤖';
@@ -224,7 +224,7 @@ const SahayakChat = {
     },
 
     // 4. DRAGGABLE WINDOW LOGIC
-    makeDraggable: function() {
+    makeDraggable: function () {
         const wrapper = document.getElementById('sahayak-chat-wrapper');
         const header = document.getElementById('chat-header');
         let isDragging = false, startX, startY, initialLeft, initialTop;
@@ -234,17 +234,17 @@ const SahayakChat = {
             if (e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT') return;
             isDragging = true;
             startX = e.clientX; startY = e.clientY;
-            
+
             // Convert fixed bottom/right to absolute top/left for dragging
             const rect = wrapper.getBoundingClientRect();
             wrapper.style.bottom = 'auto';
             wrapper.style.right = 'auto';
             wrapper.style.left = rect.left + 'px';
             wrapper.style.top = rect.top + 'px';
-            
+
             initialLeft = wrapper.offsetLeft;
             initialTop = wrapper.offsetTop;
-            
+
             document.onmousemove = (moveEvent) => {
                 if (!isDragging) return;
                 const dx = moveEvent.clientX - startX;
@@ -256,14 +256,14 @@ const SahayakChat = {
         };
     },
 
-    toggleChat: function() {
+    toggleChat: function () {
         this.isOpen = !this.isOpen;
         const wrapper = document.getElementById('sahayak-chat-wrapper');
         wrapper.style.display = this.isOpen ? 'flex' : 'none';
-        if(this.isOpen) document.getElementById('chat-input').focus();
+        if (this.isOpen) document.getElementById('chat-input').focus();
     },
 
-    clearChat: function() {
+    clearChat: function () {
         document.getElementById('chat-body').innerHTML = '';
         this.addMessage(this.responses[this.currentLang].cleared, 'bot-msg');
         setTimeout(() => {
@@ -273,14 +273,14 @@ const SahayakChat = {
         }, 1000);
     },
 
-    changeLanguage: function(lang) {
+    changeLanguage: function (lang) {
         this.currentLang = lang;
-        document.getElementById('chat-body').innerHTML = ''; 
+        document.getElementById('chat-body').innerHTML = '';
         this.addMessage(this.responses[this.currentLang].welcome, 'bot-msg');
         this.speakReply(this.responses[this.currentLang].welcome);
     },
 
-    addMessage: function(text, type, actionLink = null, actionText = null) {
+    addMessage: function (text, type, actionLink = null, actionText = null) {
         const body = document.getElementById('chat-body');
         const msg = document.createElement('div');
         msg.className = `chat-msg ${type}`;
@@ -295,10 +295,10 @@ const SahayakChat = {
         }
 
         body.appendChild(msg);
-        body.scrollTop = body.scrollHeight; 
+        body.scrollTop = body.scrollHeight;
     },
 
-    showTypingIndicator: function() {
+    showTypingIndicator: function () {
         const body = document.getElementById('chat-body');
         const typing = document.createElement('div');
         typing.id = 'typing-indicator';
@@ -308,13 +308,13 @@ const SahayakChat = {
         body.scrollTop = body.scrollHeight;
     },
 
-    removeTypingIndicator: function() {
+    removeTypingIndicator: function () {
         const typing = document.getElementById('typing-indicator');
         if (typing) typing.remove();
     },
 
     // 5. CORE LOGIC & API FETCHING
-    sendMessage: async function() {
+    sendMessage: async function () {
         const input = document.getElementById('chat-input');
         const text = input.value.trim().toLowerCase();
         if (!text) return;
@@ -330,7 +330,7 @@ const SahayakChat = {
 
             if (text.includes('bill') || text.includes('electricity') || text.includes('বিজুলী') || text.includes('बिजली')) {
                 try {
-                    const token = sessionStorage.getItem('authToken'); 
+                    const token = sessionStorage.getItem('authToken');
                     if (token) {
                         const response = await fetch('/api/electricity/bills', {
                             method: 'GET',
@@ -341,41 +341,41 @@ const SahayakChat = {
                         if (data.success && data.data && data.data.length > 0) {
                             const pendingAmount = data.data[0].amount;
                             const replyText = `I found your APDCL bill. You have a pending amount of ₹${pendingAmount}.`;
-                            this.addMessage(replyText, 'bot-msg');
+                            this.addMessage(replyText, 'bot-msg', '/electricity-services.html', `Pay ₹${pendingAmount} Now`);
                             this.speakReply(replyText);
-                            setTimeout(() => window.location.href = '/electricity-services.html', 2000);
-                            return; 
+                            setTimeout(() => window.location.href = '/electricity-services.html', 2500);
+                            return;
                         }
                     }
-                    this.addMessage(this.responses[this.currentLang].electricity, 'bot-msg');
+                    this.addMessage(this.responses[this.currentLang].electricity, 'bot-msg', '/electricity-services.html', 'Go to Electricity Portal');
                     this.speakReply(this.responses[this.currentLang].electricity);
-                    setTimeout(() => window.location.href = '/electricity-services.html', 2000);
+                    setTimeout(() => window.location.href = '/electricity-services.html', 2500);
                 } catch (error) {
                     console.error("Chatbot API Error:", error);
-                    this.addMessage(this.responses[this.currentLang].electricity, 'bot-msg');
+                    this.addMessage(this.responses[this.currentLang].electricity, 'bot-msg', '/electricity-services.html', 'Go to Electricity Portal');
                     this.speakReply(this.responses[this.currentLang].electricity);
-                    setTimeout(() => window.location.href = '/electricity-services.html', 2000);
+                    setTimeout(() => window.location.href = '/electricity-services.html', 2500);
                 }
             } else if (text.includes('gas') || text.includes('lpg') || text.includes('গেছ') || text.includes('गैस')) {
-                this.addMessage(this.responses[this.currentLang].gas, 'bot-msg');
+                this.addMessage(this.responses[this.currentLang].gas, 'bot-msg', '/gas-services.html', 'Book LPG Cylinder');
                 this.speakReply(this.responses[this.currentLang].gas);
-                setTimeout(() => window.location.href = '/gas-services.html', 1500);
+                setTimeout(() => window.location.href = '/gas-services.html', 2500);
             } else if (text.includes('municipal') || text.includes('corporation') || text.includes('পৌৰ') || text.includes('नगर')) {
-                this.addMessage("Navigating to Municipal Corporation services...", 'bot-msg');
+                this.addMessage("Navigating to Municipal Corporation services...", 'bot-msg', '/municipal-services.html', 'Go to Municipal Services');
                 this.speakReply("Navigating to Municipal Corporation services");
-                setTimeout(() => window.location.href = '/municipal-services.html', 1500);
+                setTimeout(() => window.location.href = '/municipal-services.html', 2500);
             } else if (text.includes('scholarship') || text.includes('student') || text.includes('বিদ্যালয়') || text.includes('छात्र')) {
-                this.addMessage(this.responses[this.currentLang].scholarship, 'bot-msg');
+                this.addMessage(this.responses[this.currentLang].scholarship, 'bot-msg', '/scholarship-portal.html', 'Apply for Scholarship');
                 this.speakReply(this.responses[this.currentLang].scholarship);
-                setTimeout(() => window.location.href = '/scholarship-portal.html', 1500);
+                setTimeout(() => window.location.href = '/scholarship-portal.html', 2500);
             } else if (text.includes('water') || text.includes('pani') || text.includes('পানী') || text.includes('पानी')) {
-                this.addMessage(this.responses[this.currentLang].water, 'bot-msg');
+                this.addMessage(this.responses[this.currentLang].water, 'bot-msg', '/water-supply.html', 'Go to Water Supply');
                 this.speakReply(this.responses[this.currentLang].water);
-                setTimeout(() => window.location.href = '/water-supply.html', 1500);
+                setTimeout(() => window.location.href = '/water-supply.html', 2500);
             } else if (text.includes('waste') || text.includes('garbage') || text.includes('আৱৰ্জনা') || text.includes('अपशिष्ट') || text.includes('कचरा')) {
-                this.addMessage(this.responses[this.currentLang].waste, 'bot-msg');
+                this.addMessage(this.responses[this.currentLang].waste, 'bot-msg', '/waste-management.html', 'Go to Waste Management');
                 this.speakReply(this.responses[this.currentLang].waste);
-                setTimeout(() => window.location.href = '/waste-management.html', 1500);
+                setTimeout(() => window.location.href = '/waste-management.html', 2500);
             } else if (text.includes('document') || text.includes('aadhaar') || text.includes('pan') || text.includes('দস্তাবেজ') || text.includes('दस्तावेज़')) {
                 this.addMessage(this.responses[this.currentLang].documents, 'bot-msg');
                 this.speakReply(this.responses[this.currentLang].documents);
@@ -383,9 +383,9 @@ const SahayakChat = {
                 this.addMessage(this.responses[this.currentLang].help, 'bot-msg');
                 this.speakReply(this.responses[this.currentLang].help);
             } else if (text.includes('complaint') || text.includes('problem') || text.includes('অভিযোগ') || text.includes('शिकायत')) {
-                this.addMessage(this.responses[this.currentLang].grievance, 'bot-msg');
+                this.addMessage(this.responses[this.currentLang].grievance, 'bot-msg', '/grievance-portal.html', 'File a Complaint');
                 this.speakReply(this.responses[this.currentLang].grievance);
-                setTimeout(() => window.location.href = '/grievance-portal.html', 1500);
+                setTimeout(() => window.location.href = '/grievance-portal.html', 2500);
             } else {
                 this.addMessage(this.responses[this.currentLang].fallback, 'bot-msg');
                 this.speakReply(this.responses[this.currentLang].fallback);
